@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { VRButton } from "three/addons/webxr/VRButton.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createMap } from "./world/map";
+import { createVRMovement } from "./world/movement";
 import "./style.css";
 
 const container = document.getElementById("app");
@@ -10,7 +11,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
 
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(15, 10, 15);
+camera.position.set(0, 1.6, 0);
 
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -27,6 +28,73 @@ controls.update();
 const vrButton = VRButton.createButton(renderer);
 document.body.appendChild(vrButton);
 
+const playerRig = new THREE.Group();
+playerRig.add(camera);
+scene.add(playerRig);
+
+const rigHelper = new THREE.AxesHelper(1);
+playerRig.add(rigHelper);
+
+const rigMarker = new THREE.Mesh(
+    new THREE.BoxGeometry(0.2, 0.2, 0.2),
+    new THREE.MeshBasicMaterial({ color: 0xff00ff, wireframe: true })
+);
+rigMarker.position.set(0, 0, -0.5);
+playerRig.add(rigMarker);
+
+const leftController = renderer.xr.getController(0);
+const rightController = renderer.xr.getController(1);
+
+leftController.addEventListener("connected", (event) => {
+    leftController.userData.handedness = event.data.handedness;
+    leftController.userData.gamepad = event.data.gamepad || null;
+});
+
+leftController.addEventListener("disconnected", () => {
+    leftController.userData.gamepad = null;
+});
+
+rightController.addEventListener("connected", (event) => {
+    rightController.userData.handedness = event.data.handedness;
+    rightController.userData.gamepad = event.data.gamepad || null;
+});
+
+rightController.addEventListener("disconnected", () => {
+    rightController.userData.gamepad = null;
+});
+
+playerRig.add(leftController);
+playerRig.add(rightController);
+
+const controller1Marker = new THREE.Mesh(
+    new THREE.BoxGeometry(0.08, 0.08, 0.15),
+    new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+);
+
+const controller2Marker = new THREE.Mesh(
+    new THREE.BoxGeometry(0.08, 0.08, 0.15),
+    new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+);
+leftController.add(controller1Marker);
+
+rightController.add(controller2Marker);
+
+const debug = document.createElement("pre");
+debug.className = "vr-debug";
+document.body.appendChild(debug);
+
+const movement = createVRMovement({
+    renderer,
+    camera,
+    playerRig,
+    leftController,
+    controllerMarker: controller1Marker,
+
+    onDebug: (text) => {
+        debug.textContent = text;
+    },
+});
+
 const hint = document.createElement("div");
 hint.className = "vr-hint";
 hint.textContent = "Desktop: drag to orbit. VR: click Enter VR.";
@@ -41,22 +109,9 @@ scene.add(dirLight);
 
 createMap(scene);
 
-// for (let i = 0; i < 28; i += 1) {
-//     const hue = 0.52 + (i / 28) * 0.2;
-//     const material = new THREE.MeshStandardMaterial({
-//         color: new THREE.Color().setHSL(hue, 0.55, 0.45),
-//         roughness: 0.35,
-//         metalness: 0.1
-//     });
 
-//     const cube = new THREE.Mesh(cubeGeometry, material);
-//     const angle = (i / 28) * Math.PI * 2;
-//     const radius = 2 + (i % 3) * 0.6;
-//     cube.position.set(Math.cos(angle) * radius, 1 + (i % 4) * 0.3, Math.sin(angle) * radius);
-//     cube.rotation.set(angle * 0.2, angle * 0.4, 0);
-//     cubes.push(cube);
-//     scene.add(cube);
-// }
+
+
 
 window.addEventListener("resize", () => {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -64,18 +119,10 @@ window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-const clock = new THREE.Clock();
 
 
 renderer.setAnimationLoop(() => {
-    // const t = clock.getElapsedTime();
-
-    // for (let i = 0; i < cubes.length; i += 1) {
-    //     const cube = cubes[i];
-    //     cube.rotation.y += 0.004 + i * 0.00003;
-    //     cube.position.y += Math.sin(t * 1.5 + i) * 0.0008;
-    // }
-
+    movement.update();
     controls.update();
     renderer.render(scene, camera);
 });
