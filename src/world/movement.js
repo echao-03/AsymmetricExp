@@ -5,6 +5,7 @@ export function createVRMovement({
     camera,
     playerRig,
     leftController,
+    rightController,
     controllerMarker,
     onDebug,
     speed = 2.0,      // units per second
@@ -17,14 +18,18 @@ export function createVRMovement({
     function update() {
         if (!renderer.xr.isPresenting) return;
 
-        const gamepad = leftController.userData?.gamepad ?? null;
+        // Use gamepad stored in userData from connected event
+        const gamepad = rightController.userData?.gamepad;
+
         if (!gamepad) {
-            controllerMarker.material.color.set(0xffff00);
-            onDebug?.("No gamepad");
+            controllerMarker.material.color.set(0xffff00); // Yellow = no gamepad
+            onDebug?.(`No gamepad found on rightController`);
             return;
         }
 
         const axes = gamepad.axes || [];
+
+
 
         // Try common XR thumbstick mappings
         const usePair01 =
@@ -38,7 +43,7 @@ export function createVRMovement({
         controllerMarker.material.color.set(active ? 0xff0000 : 0x00ff00);
 
         onDebug?.(
-            `hand=${leftController.userData?.handedness || "unknown"} axes=[${axes.map(v => v.toFixed(2)).join(", ")}] active=${active}`
+            `gamepad=${gamepad.id} axes=[${axes.map(v => v.toFixed(2)).join(", ")}] active=${active}`
         );
 
         if (!active) return;

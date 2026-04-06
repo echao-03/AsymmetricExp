@@ -3,6 +3,8 @@ import { VRButton } from "three/addons/webxr/VRButton.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createMap } from "./world/map";
 import { createVRMovement } from "./world/movement";
+import NetworkClient from "./NetworkClient.js";
+import Avatar from "./Avatar.js";
 import "./style.css";
 
 const container = document.getElementById("app");
@@ -11,7 +13,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
 
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 1.6, 0);
+camera.position.set(0, 15, 0);
 
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -57,6 +59,7 @@ leftController.addEventListener("disconnected", () => {
 rightController.addEventListener("connected", (event) => {
     rightController.userData.handedness = event.data.handedness;
     rightController.userData.gamepad = event.data.gamepad || null;
+    console.log(rightController.userData.gamepad);
 });
 
 rightController.addEventListener("disconnected", () => {
@@ -88,7 +91,8 @@ const movement = createVRMovement({
     camera,
     playerRig,
     leftController,
-    controllerMarker: controller1Marker,
+    rightController,
+    controllerMarker: controller2Marker,
 
     onDebug: (text) => {
         debug.textContent = text;
@@ -109,9 +113,60 @@ scene.add(dirLight);
 
 createMap(scene);
 
+// ============================================================
+// MULTIPLAYER NETWORKING SETUP
+// ============================================================
 
+// Prompt user for their username
 
+const username = "Player";
 
+// Initialize network client
+const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
+const network = new NetworkClient(`${wsProtocol}://${window.location.host}/ws`, username);
+const remoteAvatars = new Map(); // Map<clientId, Avatar>
+
+// Handle when our client connects and gets assigned an ID
+network.on("connected", (data) => {
+    console.log(
+        `[Main] Connected as client ${data.clientId}, color: #${data.color.toString(16).padStart(6, "0")}`
+    );
+});
+
+// Handle when a new remote user joins
+network.on("user-joined", (user) => {
+    console.log(`[Main] User joined: ${user.username} (ID: ${user.clientId})`);
+
+    // Create avatar for the new user
+    const avatar = new Avatar(user.clientId, user.username, user.color, scene);
+    remoteAvatars.set(user.clientId, avatar);
+});
+
+// Handle when a remote user leaves
+network.on("user-left", (clientId) => {
+    console.log(`[Main] User left: ID ${clientId}`);
+
+    const avatar = remoteAvatars.get(clientId);
+    if (avatar) {
+        avatar.dispose();
+        remoteAvatars.delete(clientId);
+    }
+});
+
+// Handle pose updates from remote users
+network.on("pose-update", (data) => {
+    const avatar = remoteAvatars.get(data.clientId);
+    if (avatar) {
+        avatar.updatePose(
+            data.hmdPosition,
+            data.hmdRotation,
+            data.leftControllerMatrix,
+            data.rightControllerMatrix
+        );
+    }
+});
+
+// ============================================================
 
 window.addEventListener("resize", () => {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -124,6 +179,13 @@ window.addEventListener("resize", () => {
 renderer.setAnimationLoop(() => {
     movement.update();
     controls.update();
+
+    // Send local player pose to all other players
+    if (network && network.isConnected) {
+        const poseCamera = renderer.xr.isPresenting ? renderer.xr.getCamera(camera) : camera;
+        network.sendPose(poseCamera, leftController, rightController);
+    }
+
     renderer.render(scene, camera);
 });
 
@@ -134,4 +196,14 @@ renderer.xr.addEventListener("sessionstart", () => {
 renderer.xr.addEventListener("sessionend", () => {
     controls.enabled = true;
     controls.update();
+});
+
+// Clean up network when page unloads
+window.addEventListener("beforeunload", () => {
+    if (network) {
+        network.disconnect();
+    }
+    remoteAvatars.forEach((avatar) => {
+        avatar.dispose();
+    });
 });
