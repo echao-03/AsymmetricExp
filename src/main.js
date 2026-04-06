@@ -12,13 +12,13 @@ const container = document.getElementById("app");
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
 
-const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 100);
+const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 100);
 camera.position.set(0, 15, 0);
 
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.xr.enabled = true;
 container.appendChild(renderer.domElement);
 
@@ -26,13 +26,20 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.target.set(0, 1.2, 0);
 controls.update();
+controls.enableRotate = false;
+controls.enablePan = false;
+controls.enableZoom = false;
 
 const vrButton = VRButton.createButton(renderer);
 document.body.appendChild(vrButton);
 
 const playerRig = new THREE.Group();
-playerRig.add(camera);
 scene.add(playerRig);
+
+const cameraGroup = new THREE.Group();
+cameraGroup.add(camera);
+cameraGroup.rotation.y = Math.PI / 2;
+scene.add(cameraGroup)
 
 const rigHelper = new THREE.AxesHelper(1);
 playerRig.add(rigHelper);
@@ -175,9 +182,9 @@ network.on("pose-update", (data) => {
 // ============================================================
 
 window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(container.clientWidth, container.clientHeight);
 });
 
 
