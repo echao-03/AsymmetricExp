@@ -93,10 +93,6 @@ const debug = document.createElement("pre");
 debug.className = "vr-debug";
 document.body.appendChild(debug);
 
-const { walls } = createMap(scene);
-
-
-
 const movement = createVRMovement({
     renderer,
     camera,
@@ -104,12 +100,10 @@ const movement = createVRMovement({
     leftController,
     rightController,
     controllerMarker: controller2Marker,
-    walls,
-    playerRadius: 0.25,
+
     onDebug: (text) => {
         debug.textContent = text;
     },
-
 });
 
 const hint = document.createElement("div");
@@ -124,7 +118,7 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
 dirLight.position.set(2, 4, 1);
 scene.add(dirLight);
 
-
+createMap(scene);
 
 // ============================================================
 // MULTIPLAYER NETWORKING SETUP
