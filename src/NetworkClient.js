@@ -1,3 +1,6 @@
+import * as THREE from "three";
+
+
 /**
  * NetworkClient - Handles WebSocket connection and pose synchronization
  * 
@@ -21,7 +24,7 @@ class NetworkClient {
         this.color = null;
         this.remoteUsers = new Map(); // Map<clientId, { username, color, pose }>
         this.listeners = new Map(); // Map<eventType, Set<callbacks>>
-        this.poseThrottle = 10; // ms - 10Hz update rate
+        this.poseThrottle = 10; // ms - 1Hz update rate (More fluid, may change it if becomes more graphical intensive)
         this.lastPoseSentTime = 0;
         this.isConnected = false;
 
@@ -178,7 +181,7 @@ class NetworkClient {
 
     /**
      * Send local player's pose (camera + controllers)
-     * Throttled to ~10Hz (100ms)
+     * Throttled to ~1Hz (10ms)
      * 
      * @param {THREE.Camera} camera - Local player's HMD/camera
      * @param {THREE.Object3D} leftController - Left controller object
@@ -192,55 +195,21 @@ class NetworkClient {
 
         this.lastPoseSentTime = now;
 
-        // Ensure world matrices are current before extracting pose
+        // Ensure world transforms are current
         camera.updateMatrixWorld(true);
         leftController.updateMatrixWorld(true);
         rightController.updateMatrixWorld(true);
 
-        // Read HMD pose from world matrix (works for desktop and XR camera)
-        const hmdPos = { x: 0, y: 0, z: 0 };
-        const hmdQuat = { x: 0, y: 0, z: 0, w: 1 };
-        const tempScale = { x: 1, y: 1, z: 1 };
+        // Read HMD pose in world space so rig locomotion is included
+        const hmdWorldPos = new THREE.Vector3();
+        const hmdWorldQuat = new THREE.Quaternion();
+        camera.getWorldPosition(hmdWorldPos);
+        camera.getWorldQuaternion(hmdWorldQuat);
 
-        const _pos = new Float32Array(3);
-        const _quat = new Float32Array(4);
+        const hmdPosition = [hmdWorldPos.x, hmdWorldPos.y, hmdWorldPos.z];
+        const hmdRotation = [hmdWorldQuat.x, hmdWorldQuat.y, hmdWorldQuat.z, hmdWorldQuat.w];
 
-        // Decompose matrixWorld using THREE-style arrays
-        const m = camera.matrixWorld.elements;
-        _pos[0] = m[12]; _pos[1] = m[13]; _pos[2] = m[14];
-
-        // Quaternion from matrix (minimal robust extraction)
-        const trace = m[0] + m[5] + m[10];
-        if (trace > 0) {
-            const s = 0.5 / Math.sqrt(trace + 1.0);
-            _quat[3] = 0.25 / s;
-            _quat[0] = (m[6] - m[9]) * s;
-            _quat[1] = (m[8] - m[2]) * s;
-            _quat[2] = (m[1] - m[4]) * s;
-        } else if (m[0] > m[5] && m[0] > m[10]) {
-            const s = 2.0 * Math.sqrt(1.0 + m[0] - m[5] - m[10]);
-            _quat[3] = (m[6] - m[9]) / s;
-            _quat[0] = 0.25 * s;
-            _quat[1] = (m[4] + m[1]) / s;
-            _quat[2] = (m[8] + m[2]) / s;
-        } else if (m[5] > m[10]) {
-            const s = 2.0 * Math.sqrt(1.0 + m[5] - m[0] - m[10]);
-            _quat[3] = (m[8] - m[2]) / s;
-            _quat[0] = (m[4] + m[1]) / s;
-            _quat[1] = 0.25 * s;
-            _quat[2] = (m[9] + m[6]) / s;
-        } else {
-            const s = 2.0 * Math.sqrt(1.0 + m[10] - m[0] - m[5]);
-            _quat[3] = (m[1] - m[4]) / s;
-            _quat[0] = (m[8] + m[2]) / s;
-            _quat[1] = (m[9] + m[6]) / s;
-            _quat[2] = 0.25 * s;
-        }
-
-        const hmdPosition = [_pos[0], _pos[1], _pos[2]];
-        const hmdRotation = [_quat[0], _quat[1], _quat[2], _quat[3]];
-
-        // Send controllers in world space
+        // Controllers already sent in world space
         const leftControllerMatrix = this.matrix4ToArray(leftController.matrixWorld);
         const rightControllerMatrix = this.matrix4ToArray(rightController.matrixWorld);
 
@@ -264,7 +233,7 @@ class NetworkClient {
      * Convert array [16 elements] to Three.js Matrix4
      */
     arrayToMatrix4(array) {
-        const matrix = new window.THREE.Matrix4();
+        const matrix = new THREE.Matrix4();
         matrix.fromArray(array);
         return matrix;
     }

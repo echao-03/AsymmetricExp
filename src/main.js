@@ -182,8 +182,8 @@ renderer.setAnimationLoop(() => {
 
     // Send local player pose to all other players
     if (network && network.isConnected) {
-        const poseCamera = renderer.xr.isPresenting ? renderer.xr.getCamera(camera) : camera;
-        network.sendPose(poseCamera, leftController, rightController);
+        playerRig.updateMatrixWorld(true);
+        network.sendPose(camera, leftController, rightController);
     }
 
     renderer.render(scene, camera);

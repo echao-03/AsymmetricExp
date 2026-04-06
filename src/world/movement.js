@@ -9,7 +9,7 @@ export function createVRMovement({
     controllerMarker,
     onDebug,
     speed = 2.0,      // units per second
-    deadzone = 0.15,
+    deadzone = 0,
 }) {
     const forward = new THREE.Vector3();
     const right = new THREE.Vector3();
@@ -45,19 +45,20 @@ export function createVRMovement({
         onDebug?.(
             `gamepad=${gamepad.id} axes=[${axes.map(v => v.toFixed(2)).join(", ")}] active=${active}`
         );
-
-        if (!active) return;
-
-        // Move relative to headset forward direction, flattened to ground plane
-        camera.getWorldDirection(forward);
-        forward.y = 0;
-        forward.normalize();
-
-        right.crossVectors(forward, camera.up).normalize();
-
         const dt = clock.getDelta();
-        playerRig.position.addScaledVector(forward, -y * speed * dt);
-        playerRig.position.addScaledVector(right, x * speed * dt);
+
+        if (active) {
+
+            // Move relative to headset forward direction, flattened to ground plane
+            camera.getWorldDirection(forward);
+            forward.y = 0;
+            forward.normalize();
+
+            right.crossVectors(forward, camera.up).normalize();
+
+            playerRig.position.addScaledVector(forward, -y * speed * dt);
+            playerRig.position.addScaledVector(right, x * speed * dt);
+        }
     }
 
     return { update };
