@@ -3,18 +3,23 @@ import { VRButton } from "three/addons/webxr/VRButton.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createMap } from "./world/map";
 import { createVRMovement } from "./world/movement";
-import NetworkClient from "./NetworkClient.js";
-import Avatar from "./Avatar.js";
+import { createMultiplayer } from "./world/multiplayer";
 import "./style.css";
+import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
 
 const container = document.getElementById("app");
+const mapContainer = document.getElementById("map-quadrant");
+const cameraContainer = document.getElementById("top-right");
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
 
-const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 100);
-camera.position.set(0, 15, 0);
+const VRCamera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 100);
 
+const mapCamera = new THREE.PerspectiveCamera(75, mapContainer.clientWidth / mapContainer.clientHeight, 0.1, 100);
+
+mapCamera.position.set(0, 15, 0);
+mapCamera.lookAt(0, 1.2, 0);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -22,7 +27,7 @@ renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.xr.enabled = true;
 container.appendChild(renderer.domElement);
 
-const controls = new OrbitControls(camera, renderer.domElement);
+const controls = new OrbitControls(VRCamera, renderer.domElement);
 controls.enableDamping = true;
 controls.target.set(0, 1.2, 0);
 controls.update();
@@ -33,13 +38,19 @@ controls.enableZoom = false;
 const vrButton = VRButton.createButton(renderer);
 document.body.appendChild(vrButton);
 
-const playerRig = new THREE.Group();
-scene.add(playerRig);
+const cameraGroup = new THREE.ArrayCamera();
+const intersectionCamera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / cameraContainer.clientHeight, 0.1, 100)
+intersectionCamera.position.set(-1, 2.5, -1);
+intersectionCamera.lookAt(1, 0, 2);
 
-const cameraGroup = new THREE.Group();
-cameraGroup.add(camera);
-cameraGroup.rotation.y = Math.PI / 2;
-scene.add(cameraGroup)
+cameraGroup.cameras.push(intersectionCamera);
+
+console.log(cameraGroup);
+
+const playerRig = new THREE.Group();
+playerRig.add(VRCamera);
+playerRig.children[0].rotateY(20);
+scene.add(playerRig);
 
 const rigHelper = new THREE.AxesHelper(1);
 playerRig.add(rigHelper);
@@ -66,7 +77,6 @@ leftController.addEventListener("disconnected", () => {
 rightController.addEventListener("connected", (event) => {
     rightController.userData.handedness = event.data.handedness;
     rightController.userData.gamepad = event.data.gamepad || null;
-    console.log(rightController.userData.gamepad);
 });
 
 rightController.addEventListener("disconnected", () => {
@@ -93,14 +103,17 @@ const debug = document.createElement("pre");
 debug.className = "vr-debug";
 document.body.appendChild(debug);
 
+const { walls } = createMap(scene);
+
 const movement = createVRMovement({
     renderer,
-    camera,
+    camera: VRCamera,
     playerRig,
     leftController,
     rightController,
     controllerMarker: controller2Marker,
-
+    walls,
+    playerRadius: 0.25,
     onDebug: (text) => {
         debug.textContent = text;
     },
@@ -118,82 +131,52 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
 dirLight.position.set(2, 4, 1);
 scene.add(dirLight);
 
-createMap(scene);
 
-// ============================================================
-// MULTIPLAYER NETWORKING SETUP
-// ============================================================
 
-// Prompt user for their username
-
-const username = "Player";
-
-// Initialize network client
-const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
-const network = new NetworkClient(`${wsProtocol}://${window.location.host}/ws`, username);
-const remoteAvatars = new Map(); // Map<clientId, Avatar>
-
-// Handle when our client connects and gets assigned an ID
-network.on("connected", (data) => {
-    console.log(
-        `[Main] Connected as client ${data.clientId}, color: #${data.color.toString(16).padStart(6, "0")}`
-    );
-});
-
-// Handle when a new remote user joins
-network.on("user-joined", (user) => {
-    console.log(`[Main] User joined: ${user.username} (ID: ${user.clientId})`);
-
-    // Create avatar for the new user
-    const avatar = new Avatar(user.clientId, user.username, user.color, scene);
-    remoteAvatars.set(user.clientId, avatar);
-});
-
-// Handle when a remote user leaves
-network.on("user-left", (clientId) => {
-    console.log(`[Main] User left: ID ${clientId}`);
-
-    const avatar = remoteAvatars.get(clientId);
-    if (avatar) {
-        avatar.dispose();
-        remoteAvatars.delete(clientId);
-    }
-});
-
-// Handle pose updates from remote users
-network.on("pose-update", (data) => {
-    const avatar = remoteAvatars.get(data.clientId);
-    if (avatar) {
-        avatar.updatePose(
-            data.hmdPosition,
-            data.hmdRotation,
-            data.leftControllerMatrix,
-            data.rightControllerMatrix
-        );
-    }
-});
-
-// ============================================================
+const multiplayer = createMultiplayer({ scene, username: "Player" });
 
 window.addEventListener("resize", () => {
-    camera.aspect = container.clientWidth / container.clientHeight;
-    camera.updateProjectionMatrix();
+    mapCamera.aspect = container.clientWidth / container.clientHeight;
+    mapCamera.updateProjectionMatrix();
     renderer.setSize(container.clientWidth, container.clientHeight);
 });
 
+function renderInContainer(cam, el) {
+    const r = el.getBoundingClientRect();
+
+    const x = Math.floor(r.left);
+    const y = Math.floor(window.innerHeight - r.bottom); // WebGL origin is bottom-left
+    const w = Math.floor(r.width);
+    const h = Math.floor(r.height);
+
+    cam.aspect = w / h;
+    cam.updateProjectionMatrix();
+
+    renderer.setViewport(x, y, w, h);
+    renderer.setScissor(x, y, w, h);
+    renderer.render(scene, cam);
+}
 
 
 renderer.setAnimationLoop(() => {
     movement.update();
     controls.update();
+    multiplayer.updatePose(VRCamera, leftController, rightController, playerRig);
 
-    // Send local player pose to all other players
-    if (network && network.isConnected) {
-        playerRig.updateMatrixWorld(true);
-        network.sendPose(camera, leftController, rightController);
+    if (renderer.xr.isPresenting) {
+        renderer.render(scene, VRCamera);
     }
 
-    renderer.render(scene, camera);
+    else {
+
+        renderer.setScissorTest(true);
+        renderer.clear();
+
+        renderInContainer(mapCamera, mapContainer);             // top-left
+        renderInContainer(intersectionCamera, cameraContainer); // top-right
+
+        renderer.setScissorTest(false);
+    }
 });
 
 renderer.xr.addEventListener("sessionstart", () => {
@@ -207,10 +190,5 @@ renderer.xr.addEventListener("sessionend", () => {
 
 // Clean up network when page unloads
 window.addEventListener("beforeunload", () => {
-    if (network) {
-        network.disconnect();
-    }
-    remoteAvatars.forEach((avatar) => {
-        avatar.dispose();
-    });
+    multiplayer.dispose();
 });
