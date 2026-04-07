@@ -48,20 +48,114 @@ body {
     left: 0;
 }
 
-#top-right {
+#camera-quadrant {
     top: 0;
     right: 0;
 }
 
-#bottom-left {
+#utilities-quadrant {
     bottom: 0;
     left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
 }
 
-#bottom-right {
+#description-quadrant {
     bottom: 0;
     right: 0;
 }
+
+.quadrant {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.quadrant-label {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.5rem;
+    background: rgba(5, 10, 18, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #e5ecff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    pointer-events: auto;
+}
+
+.utilities-row {
+    width: 650px;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.utility-card {
+    flex: 1;
+    width: 100px;
+    height: 200px;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(12, 16, 24, 0.85);
+    color: #e5ecff;
+    text-align: center;
+    pointer-events: auto;
+}
+
+.utility-button {
+    flex: 1;
+    width: 250px;
+    height: 50px;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(12, 16, 24, 0.85);
+    color: #e5ecff;
+    text-align: center;
+    pointer-events: auto;
+}
+
+.vertical-utility-container {
+    width: 250px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+}
+
+.camera-controls {
+    width: 250px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.camera-button {
+    flex: 1;
+    width: 150px;
+    height: 50px;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(12, 16, 24, 0.85);
+    color: #e5ecff;
+    text-align: center;
+    pointer-events: auto;
+}
+
+
 
 .vr-hint {
     position: fixed;
@@ -75,4 +169,26 @@ body {
     border: 1px solid rgba(180, 210, 255, 0.25);
     backdrop-filter: blur(4px);
     pointer-events: none;
+}
+
+.description-text {
+    color: #e5ecff;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 1rem 0;
+    pointer-events: auto;
+}
+
+.description-container {
+    position: absolute;
+    top: 4rem;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: rgba(12, 16, 24, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    overflow-y: auto;
+    pointer-events: auto;
 }

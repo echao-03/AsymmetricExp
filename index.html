@@ -18,10 +18,36 @@
 <body>
     <div id="app"></div>
     <div id="ui-overlay">
-        <div class="quadrant" id="map-quadrant"></div>
-        <div class="quadrant" id="top-right"></div>
-        <div class="quadrant" id="bottom-left"></div>
-        <div class="quadrant" id="bottom-right"></div>
+        <div class="quadrant" id="map-quadrant">
+            <div class="quadrant-label">Map</div>
+        </div>
+        <div class="quadrant" id="camera-quadrant">
+            <div class="quadrant-label">Camera</div>
+        </div>
+        <div class="quadrant" id="utilities-quadrant">
+            <div class="quadrant-label">Utilities</div>
+            <div class="utilities-row">
+                <div class="utility-card">Keypad</div>
+                <div class="utility-card">Handbook</div>
+                <div class="vertical-utility-container">
+                    <div class="utility-button">Unlock</div>
+                    <div class="utility-button">Hack</div>
+                    <div class="camera-controls">
+                        <div class="camera-button" id="prev-button">Prev</div>
+                        <div class="camera-button" id="next-button">Next</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="quadrant" id="description-quadrant">
+            <div class="quadrant-label">Description</div>
+            <div class="description-container">
+                <p class="description-text">Hacker can only the room player is in</p>
+                <p class="description-text">Flip cameras using the buttons in the utilities section</p>
+                <p class="description-text">You have the ability to unlock and hack items in the VR world</p>
+                <p class="description-text">ADD RULES HERE ETC</p>
+            </div>
+        </div>
     </div>
     <script type="module" src="/src/main.js"></script>
 </body>
