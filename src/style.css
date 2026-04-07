@@ -56,6 +56,10 @@ body {
 #bottom-left {
     bottom: 0;
     left: 0;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #bottom-right {
@@ -75,4 +79,34 @@ body {
     border: 1px solid rgba(180, 210, 255, 0.25);
     backdrop-filter: blur(4px);
     pointer-events: none;
+}
+
+.camera-controls {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    background: rgba(7, 13, 22, 0.72);
+    border: 1px solid rgba(180, 210, 255, 0.25);
+    backdrop-filter: blur(4px);
+}
+
+.camera-controls button {
+    appearance: none;
+    border: 1px solid rgba(201, 225, 255, 0.35);
+    background: linear-gradient(180deg, rgba(52, 75, 104, 0.95), rgba(24, 36, 51, 0.95));
+    color: #eef6ff;
+    border-radius: 0.5rem;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.camera-controls button:hover {
+    background: linear-gradient(180deg, rgba(72, 98, 132, 0.95), rgba(35, 49, 67, 0.95));
+}
+
+.camera-controls button:active {
+    transform: translateY(1px);
 }

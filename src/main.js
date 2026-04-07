@@ -10,6 +10,9 @@ import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
 const container = document.getElementById("app");
 const mapContainer = document.getElementById("map-quadrant");
 const cameraContainer = document.getElementById("top-right");
+const cameraPrevButton = document.getElementById("camera-prev");
+const cameraResetButton = document.getElementById("camera-reset");
+const cameraNextButton = document.getElementById("camera-next");
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
@@ -17,6 +20,24 @@ scene.background = new THREE.Color(0x05070b);
 const VRCamera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 100);
 
 const mapCamera = new THREE.PerspectiveCamera(75, mapContainer.clientWidth / mapContainer.clientHeight, 0.1, 100);
+
+let cameraNum = 0;
+
+function setCameraNum(nextCameraNum) {
+    cameraNum = ((nextCameraNum % 3) + 3) % 3;
+}
+
+cameraPrevButton?.addEventListener("click", () => {
+    setCameraNum(cameraNum - 1);
+});
+
+cameraResetButton?.addEventListener("click", () => {
+    setCameraNum(0);
+});
+
+cameraNextButton?.addEventListener("click", () => {
+    setCameraNum(cameraNum + 1);
+});
 
 mapCamera.position.set(0, 15, 0);
 mapCamera.lookAt(0, 1.2, 0);
@@ -43,7 +64,15 @@ const intersectionCamera = new THREE.PerspectiveCamera(75, cameraContainer.clien
 intersectionCamera.position.set(-1, 2.5, -1);
 intersectionCamera.lookAt(1, 0, 2);
 
-cameraGroup.cameras.push(intersectionCamera);
+const R1Camera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / cameraContainer.clientHeight, 0.1, 100)
+R1Camera.position.set(9, 2, 0);
+R1Camera.lookAt(1, 1, 0);
+
+
+const R2Camera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / cameraContainer.clientHeight, 0.1, 100)
+R2Camera.position.set(-9, 2, 0);
+R2Camera.lookAt(1, 1, 0);
+
 
 console.log(cameraGroup);
 
@@ -173,7 +202,17 @@ renderer.setAnimationLoop(() => {
         renderer.clear();
 
         renderInContainer(mapCamera, mapContainer);             // top-left
-        renderInContainer(intersectionCamera, cameraContainer); // top-right
+        if (cameraNum == 0) {
+            renderInContainer(intersectionCamera, cameraContainer); // top-right
+        }
+
+        else if (cameraNum == 1) {
+            renderInContainer(R1Camera, cameraContainer); // top-right
+        }
+
+        else if (cameraNum == 2) {
+            renderInContainer(R2Camera, cameraContainer); // top-right
+        }
 
         renderer.setScissorTest(false);
     }
