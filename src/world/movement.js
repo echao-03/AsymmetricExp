@@ -8,12 +8,30 @@ export function createVRMovement({
     rightController,
     controllerMarker,
     onDebug,
+    walls = [],
+    playerRadius = 0.25,
     speed = 2.0,      // units per second
     deadzone = 0,
 }) {
     const forward = new THREE.Vector3();
     const right = new THREE.Vector3();
     const clock = new THREE.Clock();
+
+    const wallBoxes = walls.map((wall) => new THREE.Box3().setFromObject(wall));
+
+    const collidesXZ = (x, z) => {
+        for (const box of wallBoxes) {
+            const minX = box.min.x - playerRadius;
+            const maxX = box.max.x + playerRadius;
+            const minZ = box.min.z - playerRadius;
+            const maxZ = box.max.z + playerRadius;
+
+            if (x >= minX && x <= maxX && z >= minZ && z <= maxZ) {
+                return true;
+            }
+        }
+        return false;
+    };
 
     function update() {
         if (!renderer.xr.isPresenting) return;
@@ -48,16 +66,36 @@ export function createVRMovement({
         const dt = clock.getDelta();
 
         if (active) {
-
-            // Move relative to headset forward direction, flattened to ground plane
             camera.getWorldDirection(forward);
             forward.y = 0;
             forward.normalize();
-
             right.crossVectors(forward, camera.up).normalize();
 
-            playerRig.position.addScaledVector(forward, -y * speed * dt);
-            playerRig.position.addScaledVector(right, x * speed * dt);
+            const moveForward = -y * speed * dt;
+            const moveRight = x * speed * dt;
+
+            const dx = forward.x * moveForward + right.x * moveRight;
+            const dz = forward.z * moveForward + right.z * moveRight;
+
+            const currentX = playerRig.position.x;
+            const currentZ = playerRig.position.z;
+
+            const nextX = currentX + dx;
+            const nextZ = currentZ + dz;
+
+            // Move X if no collision
+            if (!collidesXZ(nextX, currentZ)) {
+                playerRig.position.x = nextX;
+            }
+
+            // Move Z if no collision
+            if (!collidesXZ(playerRig.position.x, nextZ)) {
+                playerRig.position.z = nextZ;
+            }
+
+            // Optional: keep player on floor bounds (20x25 floor centered at origin)
+            playerRig.position.x = THREE.MathUtils.clamp(playerRig.position.x, -9.7, 9.7);
+            playerRig.position.z = THREE.MathUtils.clamp(playerRig.position.z, -12.2, 12.2);
         }
     }
 
