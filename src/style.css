@@ -69,6 +69,83 @@ body {
     right: 0;
 }
 
+.keypad-popup {
+    position: fixed;           /* stays in the viewport */
+    width: 400px;
+    height: 600px;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #BAB8B8;
+    color: white;
+    padding: 40px;
+    border-radius: 10px;
+    display: none;             
+    z-index: 9999;             
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    justify-content: space-between;
+    flex-direction: column;
+    cursor: grab;
+    user-select: none;
+}
+
+.keypad-popup.dragging {
+    cursor: grabbing;
+}
+
+.keypad-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.key {
+    width: 90px;
+    height: 90px;
+    background: #767676;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.close-button{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    background: #CE5353;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#clear{
+    background: #CE5353
+}
+
+#accept{
+    background: #58B276
+}
+
+.view-bar{
+    display: flex;
+    gap: 10px;
+    height: 90px;
+    justify-content: center;
+    z-index: 1;
+    background: #D5FFD5;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
 .quadrant {
     position: absolute;
     width: 50%;

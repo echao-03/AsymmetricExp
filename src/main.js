@@ -14,6 +14,50 @@ const cameraContainer = document.getElementById("camera-quadrant");
 const cameraPrevButton = document.getElementById("prev-button");
 const cameraResetButton = document.getElementById("reset-button");
 const cameraNextButton = document.getElementById("next-button");
+const keypad = document.getElementById("keypad");
+const keypadButton = document.getElementById("keypad-button");
+const keypadClose = document.getElementById("keypad-close");
+
+keypadButton.addEventListener("click", () => {
+    keypad.style.display = "flex"; // show popup
+});
+
+keypadClose.addEventListener("click", () => {
+    keypad.style.display = "none"; // hide popup
+});
+
+// Event handling for dragging the keypad
+let isDragging = false;
+let offsetX = 0;
+let offsetY = 0;
+
+keypad.addEventListener("mousedown", (e) => {
+    isDragging = true;
+
+    // Calculate offset between mouse and keypad top-left corner
+    offsetX = e.clientX - keypad.getBoundingClientRect().left;
+    offsetY = e.clientY - keypad.getBoundingClientRect().top;
+
+    keypad.classList.add("dragging");
+});
+
+window.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+
+    // Move keypad to new mouse position minus the initial offset
+    keypad.style.left = `${e.clientX - offsetX}px`;
+    keypad.style.top = `${e.clientY - offsetY}px`;
+    keypad.style.bottom = "auto"; // override bottom if previously set
+    keypad.style.transform = "none"; // remove translateX(-50%)
+});
+
+window.addEventListener("mouseup", () => {
+    if (isDragging) {
+        isDragging = false;
+        keypad.classList.remove("dragging");
+    }
+});
+// End of keypad drag handling
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
