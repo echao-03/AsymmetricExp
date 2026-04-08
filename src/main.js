@@ -6,13 +6,14 @@ import { createVRMovement } from "./world/movement";
 import { createMultiplayer } from "./world/multiplayer";
 import "./style.css";
 import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
+import { CameraManager } from "./cameraManager";
 
 const container = document.getElementById("app");
 const mapContainer = document.getElementById("map-quadrant");
-const cameraContainer = document.getElementById("top-right");
-const cameraPrevButton = document.getElementById("camera-prev");
-const cameraResetButton = document.getElementById("camera-reset");
-const cameraNextButton = document.getElementById("camera-next");
+const cameraContainer = document.getElementById("camera-quadrant");
+const cameraPrevButton = document.getElementById("prev-button");
+const cameraResetButton = document.getElementById("reset-button");
+const cameraNextButton = document.getElementById("next-button");
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
@@ -20,44 +21,6 @@ scene.background = new THREE.Color(0x05070b);
 const VRCamera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 100);
 
 const mapCamera = new THREE.PerspectiveCamera(75, mapContainer.clientWidth / mapContainer.clientHeight, 0.1, 100);
-
-let cameraNum = 0;
-
-function setCameraNum(nextCameraNum) {
-    cameraNum = ((nextCameraNum % 3) + 3) % 3;
-}
-
-cameraPrevButton?.addEventListener("click", () => {
-    setCameraNum(cameraNum - 1);
-});
-
-cameraResetButton?.addEventListener("click", () => {
-    setCameraNum(0);
-});
-
-cameraNextButton?.addEventListener("click", () => {
-    setCameraNum(cameraNum + 1);
-});
-
-mapCamera.position.set(0, 15, 0);
-mapCamera.lookAt(0, 1.2, 0);
-
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(container.clientWidth, container.clientHeight);
-renderer.xr.enabled = true;
-container.appendChild(renderer.domElement);
-
-const controls = new OrbitControls(VRCamera, renderer.domElement);
-controls.enableDamping = true;
-controls.target.set(0, 1.2, 0);
-controls.update();
-controls.enableRotate = false;
-controls.enablePan = false;
-controls.enableZoom = false;
-
-const vrButton = VRButton.createButton(renderer);
-document.body.appendChild(vrButton);
 
 const cameraGroup = new THREE.ArrayCamera();
 const intersectionCamera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / cameraContainer.clientHeight, 0.1, 100)
@@ -73,8 +36,39 @@ const R2Camera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / c
 R2Camera.position.set(-9, 2, 0);
 R2Camera.lookAt(1, 1, 0);
 
+const cameras = [R1Camera, intersectionCamera, R2Camera];
 
-console.log(cameraGroup);
+const cameraManager = new CameraManager({
+    cameraContainer,
+    prevButton: cameraPrevButton,
+    resetButton: cameraResetButton,
+    nextButton: cameraNextButton,
+    cameras: cameras,
+});
+
+mapCamera.position.set(0, 15, 0);
+mapCamera.lookAt(0, 1.2, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(container.clientWidth, container.clientHeight);
+renderer.xr.enabled = true;
+container.appendChild(renderer.domElement);
+
+console.log(container); // should print <div id="app">...</div>
+console.log(renderer.domElement); // should print <canvas> element
+
+const controls = new OrbitControls(VRCamera, renderer.domElement);
+controls.enableDamping = true;
+controls.target.set(0, 1.2, 0);
+controls.update();
+controls.enableRotate = false;
+controls.enablePan = false;
+controls.enableZoom = false;
+
+const vrButton = VRButton.createButton(renderer);
+document.body.appendChild(vrButton);
+
 
 const playerRig = new THREE.Group();
 playerRig.add(VRCamera);
@@ -200,20 +194,8 @@ renderer.setAnimationLoop(() => {
 
         renderer.setScissorTest(true);
         renderer.clear();
-
-        renderInContainer(mapCamera, mapContainer);             // top-left
-        if (cameraNum == 0) {
-            renderInContainer(intersectionCamera, cameraContainer); // top-right
-        }
-
-        else if (cameraNum == 1) {
-            renderInContainer(R1Camera, cameraContainer); // top-right
-        }
-
-        else if (cameraNum == 2) {
-            renderInContainer(R2Camera, cameraContainer); // top-right
-        }
-
+        renderInContainer(mapCamera, mapContainer);             
+        renderInContainer(cameraManager.getActiveCamera(), cameraContainer);
         renderer.setScissorTest(false);
     }
 });
