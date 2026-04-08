@@ -36,7 +36,6 @@ const R2Camera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / c
 R2Camera.position.set(-9, 2, 0);
 R2Camera.lookAt(1, 1, 0);
 
-let cameraNum = 0;
 const cameras = [R1Camera, intersectionCamera, R2Camera];
 
 const cameraManager = new CameraManager({
@@ -44,7 +43,7 @@ const cameraManager = new CameraManager({
     prevButton: cameraPrevButton,
     resetButton: cameraResetButton,
     nextButton: cameraNextButton,
-    cameras: [intersectionCamera, R1Camera, R2Camera],
+    cameras: cameras,
 });
 
 mapCamera.position.set(0, 15, 0);
@@ -55,6 +54,9 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.xr.enabled = true;
 container.appendChild(renderer.domElement);
+
+console.log(container); // should print <div id="app">...</div>
+console.log(renderer.domElement); // should print <canvas> element
 
 const controls = new OrbitControls(VRCamera, renderer.domElement);
 controls.enableDamping = true;
@@ -192,7 +194,6 @@ renderer.setAnimationLoop(() => {
 
         renderer.setScissorTest(true);
         renderer.clear();
-
         renderInContainer(mapCamera, mapContainer);             
         renderInContainer(cameraManager.getActiveCamera(), cameraContainer);
         renderer.setScissorTest(false);
