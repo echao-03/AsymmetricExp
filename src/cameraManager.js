@@ -1,0 +1,37 @@
+export class CameraManager {
+    constructor({cameraContainer, prevButton, resetButton, nextButton, cameras}) {
+        this.cameraContainer = cameraContainer;
+        this.prevButton = prevButton;
+        this.resetButton = resetButton;
+        this.nextButton = nextButton;
+        this.cameras = cameras;
+        this.cameraNum = 0;
+
+        this.prevButton?.addEventListener("click", () => this.prevCamera());
+        this.resetButton?.addEventListener("click", () => this.resetCamera());
+        this.nextButton?.addEventListener("click", () => this.nextCamera());
+    }
+
+    setCameraNum(nextCameraNum) {
+        this.cameraNum = ((nextCameraNum % 3) + 3) % 3;
+    }
+
+    prevCamera() {
+        console.log("Moving to previous camera...")
+        this.setCameraNum(this.cameraNum - 1);
+    }
+
+    resetCamera() {
+        console.log("Resetting camera...")
+        this.setCameraNum(0);
+    }
+
+    nextCamera() {
+        console.log("Moving to next camera...")
+        this.setCameraNum(this.cameraNum + 1);
+    }
+
+    getActiveCamera(){
+        return this.cameras[this.cameraNum];
+    }
+}

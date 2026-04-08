@@ -6,13 +6,14 @@ import { createVRMovement } from "./world/movement";
 import { createMultiplayer } from "./world/multiplayer";
 import "./style.css";
 import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
+import { CameraManager } from "./cameraManager";
 
 const container = document.getElementById("app");
 const mapContainer = document.getElementById("map-quadrant");
-const cameraContainer = document.getElementById("top-right");
-const cameraPrevButton = document.getElementById("camera-prev");
-const cameraResetButton = document.getElementById("camera-reset");
-const cameraNextButton = document.getElementById("camera-next");
+const cameraContainer = document.getElementById("camera-quadrant");
+const cameraPrevButton = document.getElementById("prev-button");
+const cameraResetButton = document.getElementById("reset-button");
+const cameraNextButton = document.getElementById("next-button");
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
@@ -21,22 +22,29 @@ const VRCamera = new THREE.PerspectiveCamera(75, container.clientWidth / contain
 
 const mapCamera = new THREE.PerspectiveCamera(75, mapContainer.clientWidth / mapContainer.clientHeight, 0.1, 100);
 
+const cameraGroup = new THREE.ArrayCamera();
+const intersectionCamera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / cameraContainer.clientHeight, 0.1, 100)
+intersectionCamera.position.set(-1, 2.5, -1);
+intersectionCamera.lookAt(1, 0, 2);
+
+const R1Camera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / cameraContainer.clientHeight, 0.1, 100)
+R1Camera.position.set(9, 2, 0);
+R1Camera.lookAt(1, 1, 0);
+
+
+const R2Camera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / cameraContainer.clientHeight, 0.1, 100)
+R2Camera.position.set(-9, 2, 0);
+R2Camera.lookAt(1, 1, 0);
+
 let cameraNum = 0;
+const cameras = [R1Camera, intersectionCamera, R2Camera];
 
-function setCameraNum(nextCameraNum) {
-    cameraNum = ((nextCameraNum % 3) + 3) % 3;
-}
-
-cameraPrevButton?.addEventListener("click", () => {
-    setCameraNum(cameraNum - 1);
-});
-
-cameraResetButton?.addEventListener("click", () => {
-    setCameraNum(0);
-});
-
-cameraNextButton?.addEventListener("click", () => {
-    setCameraNum(cameraNum + 1);
+const cameraManager = new CameraManager({
+    cameraContainer,
+    prevButton: cameraPrevButton,
+    resetButton: cameraResetButton,
+    nextButton: cameraNextButton,
+    cameras: [intersectionCamera, R1Camera, R2Camera],
 });
 
 mapCamera.position.set(0, 15, 0);
@@ -59,22 +67,6 @@ controls.enableZoom = false;
 const vrButton = VRButton.createButton(renderer);
 document.body.appendChild(vrButton);
 
-const cameraGroup = new THREE.ArrayCamera();
-const intersectionCamera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / cameraContainer.clientHeight, 0.1, 100)
-intersectionCamera.position.set(-1, 2.5, -1);
-intersectionCamera.lookAt(1, 0, 2);
-
-const R1Camera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / cameraContainer.clientHeight, 0.1, 100)
-R1Camera.position.set(9, 2, 0);
-R1Camera.lookAt(1, 1, 0);
-
-
-const R2Camera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / cameraContainer.clientHeight, 0.1, 100)
-R2Camera.position.set(-9, 2, 0);
-R2Camera.lookAt(1, 1, 0);
-
-
-console.log(cameraGroup);
 
 const playerRig = new THREE.Group();
 playerRig.add(VRCamera);
@@ -201,19 +193,8 @@ renderer.setAnimationLoop(() => {
         renderer.setScissorTest(true);
         renderer.clear();
 
-        renderInContainer(mapCamera, mapContainer);             // top-left
-        if (cameraNum == 0) {
-            renderInContainer(intersectionCamera, cameraContainer); // top-right
-        }
-
-        else if (cameraNum == 1) {
-            renderInContainer(R1Camera, cameraContainer); // top-right
-        }
-
-        else if (cameraNum == 2) {
-            renderInContainer(R2Camera, cameraContainer); // top-right
-        }
-
+        renderInContainer(mapCamera, mapContainer);             
+        renderInContainer(cameraManager.getActiveCamera(), cameraContainer);
         renderer.setScissorTest(false);
     }
 });
