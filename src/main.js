@@ -17,6 +17,9 @@ const cameraNextButton = document.getElementById("next-button");
 const keypad = document.getElementById("keypad");
 const keypadButton = document.getElementById("keypad-button");
 const keypadClose = document.getElementById("keypad-close");
+const keys = document.querySelectorAll(".key");
+const keypadDisplay = document.getElementById("num-view-bar");
+const clearButton = document.getElementById("clear-button");
 
 keypadButton.addEventListener("click", () => {
     keypad.style.display = "flex"; // show popup
@@ -24,6 +27,7 @@ keypadButton.addEventListener("click", () => {
 
 keypadClose.addEventListener("click", () => {
     keypad.style.display = "none"; // hide popup
+    keypadDisplay.textContent = "ENTER CODE"; // reset display
 });
 
 // Event handling for dragging the keypad
@@ -58,6 +62,26 @@ window.addEventListener("mouseup", () => {
     }
 });
 // End of keypad drag handling
+
+let enteredCode = "";
+keys.forEach(key => {
+    key.addEventListener("click", () => {
+        // limit length if you want (e.g. 4-digit code)
+        if (enteredCode.length >= 6) return;
+
+        enteredCode += key.textContent;
+        updateDisplay(enteredCode);
+    });
+});
+
+clearButton.addEventListener("click", () => {
+    enteredCode = "";
+    updateDisplay("ENTER CODE");
+});
+
+function updateDisplay(code) {
+    keypadDisplay.textContent = code;
+}
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);

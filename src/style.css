@@ -127,11 +127,11 @@ body {
     justify-content: center;
 }
 
-#clear{
+#clear-button{
     background: #CE5353
 }
 
-#accept{
+#accept-button{
     background: #58B276
 }
 
@@ -144,6 +144,10 @@ body {
     background: #D5FFD5;
     padding: 5px 10px;
     border-radius: 5px;
+    font-size: 50px;
+    justify-content: center;
+    align-items: center;
+    color: #04070b;
 }
 
 .quadrant {
