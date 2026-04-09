@@ -161,8 +161,8 @@ body {
     position: absolute;
     top: 0;
     right: 0;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     background: #CE5353;
     border: none;
     color: white;
@@ -180,6 +180,57 @@ body {
 
 #accept-button{
     background: #58B276
+}
+
+.keypad-button {
+    flex: 1;
+    background: #BAB8B8;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    text-align: center;
+    padding: 1rem;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    flex-direction: column;
+    border: 2px solid yellow
+
+}
+
+.view-bar-button{
+    display: flex;
+    gap: 10px;
+    height: 45px;
+    width: 174px;
+    justify-content: center;
+    z-index: 1;
+    background: #D5FFD5;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 50px;
+    justify-content: center;
+    align-items: center;
+    color: #04070b;
+}
+
+.keypad-button-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.key-small {
+    width: 50px;
+    height: 50px;
+    background: #767676;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .view-bar{
@@ -337,6 +388,12 @@ body {
 .camera-button:hover,
 .utility-card:hover {
     background: rgba(12, 16, 24, 0.95);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #f0f5ff;
+    cursor: pointer;
+}
+
+.keypad-button:hover {
     border-color: rgba(255, 255, 255, 0.3);
     color: #f0f5ff;
     cursor: pointer;

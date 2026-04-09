@@ -24,6 +24,9 @@ const keys = document.querySelectorAll(".key");
 const keypadDisplay = document.getElementById("num-view-bar");
 const clearButton = document.getElementById("clear-button");
 
+// Audio Loader
+const buttonPush = new Audio("./audio/ButtonPush.wav");
+
 keypadButton.addEventListener("click", () => {
     keypad.style.display = "flex"; // show popup
 });
@@ -41,15 +44,18 @@ handbookClose.addEventListener("click", () => {
     handbook.style.display = "none"; // hide popup
 });
 
-makeDraggable(keypad);
-makeDraggable(handbook);
+makeDraggable(keypad, ".key");
+makeDraggable(handbook, "textarea");
 
-function makeDraggable(element){
+// Making popups draggable
+function makeDraggable(element, exceptionSelector){
     let isDragging = false;
     let offsetX = 0;
     let offsetY = 0;
 
     element.addEventListener("mousedown", (e) => {
+        if (e.target.closest(exceptionSelector)) return;
+
         isDragging = true;
 
         // Calculate offset between mouse and keypad top-left corner
@@ -76,16 +82,20 @@ function makeDraggable(element){
         }
     });
 }
-// Event handling for dragging the keypad
 
-// End of keypad drag handling
-
+// Keypad input handling
 let enteredCode = "";
 keys.forEach(key => {
     key.addEventListener("click", () => {
+
+        // play audio
+        //buttonPush.currentTime = 0; // restart if already playing
+        //buttonPush.play();
+
         // limit length if you want (e.g. 4-digit code)
         if (enteredCode.length >= 6) return;
 
+        if (key.textContent === "Accept") return;
         enteredCode += key.textContent;
         updateDisplay(enteredCode);
     });
