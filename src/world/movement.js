@@ -17,6 +17,10 @@ export function createVRMovement({
     const right = new THREE.Vector3();
     const clock = new THREE.Clock();
 
+    const headWorld = new THREE.Vector3();
+    const rigWorld = new THREE.Vector3();
+    const headOffset = new THREE.Vector3();
+
     const wallBoxes = walls.map((wall) => new THREE.Box3().setFromObject(wall));
 
     const collidesXZ = (x, z) => {
@@ -47,9 +51,6 @@ export function createVRMovement({
 
         const axes = gamepad.axes || [];
 
-
-
-        // Try common XR thumbstick mappings
         const usePair01 =
             Math.abs(axes[0] ?? 0) + Math.abs(axes[1] ?? 0) >=
             Math.abs(axes[2] ?? 0) + Math.abs(axes[3] ?? 0);
@@ -57,6 +58,7 @@ export function createVRMovement({
         const x = usePair01 ? (axes[0] ?? 0) : (axes[2] ?? 0);
         const y = usePair01 ? (axes[1] ?? 0) : (axes[3] ?? 0);
 
+        // Checks if thumbstick is moving, will set hand to color red
         const active = Math.abs(x) > deadzone || Math.abs(y) > deadzone;
         controllerMarker.material.color.set(active ? 0xff0000 : 0x00ff00);
 
@@ -77,25 +79,31 @@ export function createVRMovement({
             const dx = forward.x * moveForward + right.x * moveRight;
             const dz = forward.z * moveForward + right.z * moveRight;
 
-            const currentX = playerRig.position.x;
-            const currentZ = playerRig.position.z;
+            camera.getWorldPosition(headWorld);
+            playerRig.getWorldPosition(rigWorld);
 
-            const nextX = currentX + dx;
-            const nextZ = currentZ + dz;
+            headOffset.copy(headWorld).sub(rigWorld);
 
-            // Move X if no collision
-            if (!collidesXZ(nextX, currentZ)) {
-                playerRig.position.x = nextX;
+            let nextHeadX = headWorld.x + dx;
+            let nextHeadZ = headWorld.z + dz;
+
+            // If head position collides, then don't move
+            // Current problem is that if head is sticking through walls,
+            // Player cannot move, even resetting position will reset player back to where the camera is positioned
+            // todo: Find a way so that if player get stuck in wall, reset and they are outside the wall
+            if (!collidesXZ(nextHeadX, headWorld.z)) {
+                headWorld.x = nextHeadX;
+            }
+            if (!collidesXZ(headWorld.x, nextHeadZ)) {
+                headWorld.z = nextHeadZ;
             }
 
-            // Move Z if no collision
-            if (!collidesXZ(playerRig.position.x, nextZ)) {
-                playerRig.position.z = nextZ;
-            }
+            headWorld.x = THREE.MathUtils.clamp(headWorld.x, -9.7, 9.7);
+            headWorld.z = THREE.MathUtils.clamp(headWorld.z, -12.2, 12.2);
 
-            // Optional: keep player on floor bounds (20x25 floor centered at origin)
-            playerRig.position.x = THREE.MathUtils.clamp(playerRig.position.x, -9.7, 9.7);
-            playerRig.position.z = THREE.MathUtils.clamp(playerRig.position.z, -12.2, 12.2);
+            // 4) Reconstruct rig so headset ends at desired headWorld
+            playerRig.position.x = headWorld.x - headOffset.x;
+            playerRig.position.z = headWorld.z - headOffset.z;
         }
     }
 

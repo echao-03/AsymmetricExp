@@ -44,7 +44,7 @@ handbookClose.addEventListener("click", () => {
 makeDraggable(keypad);
 makeDraggable(handbook);
 
-function makeDraggable(element){
+function makeDraggable(element) {
     let isDragging = false;
     let offsetX = 0;
     let offsetY = 0;
@@ -107,7 +107,6 @@ const VRCamera = new THREE.PerspectiveCamera(75, container.clientWidth / contain
 
 const mapCamera = new THREE.PerspectiveCamera(75, mapContainer.clientWidth / mapContainer.clientHeight, 0.1, 100);
 
-const cameraGroup = new THREE.ArrayCamera();
 const intersectionCamera = new THREE.PerspectiveCamera(75, cameraContainer.clientWidth / cameraContainer.clientHeight, 0.1, 100)
 intersectionCamera.position.set(-1, 2.5, -1);
 intersectionCamera.lookAt(1, 0, 2);
@@ -160,6 +159,7 @@ playerRig.add(VRCamera);
 playerRig.children[0].rotateY(20);
 scene.add(playerRig);
 
+// Righelper helps find rig position, if reset, camera resets to righelper position
 const rigHelper = new THREE.AxesHelper(1);
 playerRig.add(rigHelper);
 
@@ -279,7 +279,7 @@ renderer.setAnimationLoop(() => {
 
         renderer.setScissorTest(true);
         renderer.clear();
-        renderInContainer(mapCamera, mapContainer);             
+        renderInContainer(mapCamera, mapContainer);
         renderInContainer(cameraManager.getActiveCamera(), cameraContainer);
         renderer.setScissorTest(false);
     }
