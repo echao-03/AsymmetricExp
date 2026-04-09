@@ -62,7 +62,7 @@ function makeDraggable(element, exceptionSelector){
         offsetX = e.clientX - element.getBoundingClientRect().left;
         offsetY = e.clientY - element.getBoundingClientRect().top;
 
-        keypad.classList.add("dragging");
+        element.classList.add("dragging");
     });
 
     window.addEventListener("mousemove", (e) => {
