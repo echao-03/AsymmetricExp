@@ -153,7 +153,7 @@ const cameraManager = new CameraManager({
   nextButton: cameraNextButton,
   cameras: cameras,
 });
-
+// mapCamera original Position: (0, 1.2, 0) *Moved position to see maze room*
 mapCamera.position.set(-12, 20, 0);
 mapCamera.lookAt(-12, 0, 0);
 

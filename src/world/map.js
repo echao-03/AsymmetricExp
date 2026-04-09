@@ -21,7 +21,7 @@ export function createMap(scene) {
     roomShort: new THREE.BoxGeometry(0.5, 2, 3),
     roomLong: new THREE.BoxGeometry(0.5, 2, 4),
     roomLonger: new THREE.BoxGeometry(0.5, 2, 6),
-    mazeRoomLS1: new THREE.BoxGeometry(0.5, 2, 20),
+    mazeRoomLS1: new THREE.BoxGeometry(0.5, 2, 25),
     mazeRoomLS2: new THREE.BoxGeometry(0.5, 2, 22),
   };
 
@@ -48,12 +48,11 @@ export function createMap(scene) {
     // Room frame for Maze Room
     { geo: "long", x: -6.5, z: -6 },
     { geo: "long", x: -6.5, z: 6 },
-    { geo: "mazeRoomLS1", x: -16, z: -11, ry: Math.PI / 2 },
-    { geo: "mazeRoomLS1", x: -16, z: 11, ry: Math.PI / 2 },
+    { geo: "mazeRoomLS1", x: -18, z: -11, ry: Math.PI / 2 },
+    { geo: "mazeRoomLS1", x: -18, z: 11, ry: Math.PI / 2 },
     { geo: "mazeRoomLS2", x: -25.5, z: 0 },
 
     // Main hallway for Maze Room
-
     { geo: "roomLonger", x: -9, z: -1.5, ry: Math.PI / 2 },
     { geo: "roomLonger", x: -9, z: 1.5, ry: Math.PI / 2 },
     { geo: "roomShort", x: -16, z: 1.5, ry: Math.PI / 2 },
@@ -61,6 +60,9 @@ export function createMap(scene) {
     { geo: "roomShort", x: -21, z: 1.5, ry: Math.PI / 2 },
     { geo: "roomShort", x: -21, z: -1.5, ry: Math.PI / 2 },
     { geo: "roomShort", x: -22, z: 0 },
+
+    // Top right quadrant of Maze Room
+    { geo: "roomLonger", x: -12, z: -4.25 },
   ];
 
   const walls = wallSpecs.map(({ geo, x, y = 1, z, ry = 0 }) => {
