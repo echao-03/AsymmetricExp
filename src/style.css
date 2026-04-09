@@ -117,7 +117,7 @@ body {
 }
 
 .keypad-popup {
-    position: fixed;           
+    position: relative;           
     width: 400px;
     height: 600px;
     top: 50%; 
@@ -174,11 +174,13 @@ body {
     justify-content: center;
 }
 
-#clear-button{
+#clear-button,
+#clear-button-small{
     background: #CE5353
 }
 
-#accept-button{
+#accept-button,
+#accept-button-small{
     background: #58B276
 }
 
@@ -196,8 +198,10 @@ body {
     justify-content: space-between;
     font-size: 1.2rem;
     flex-direction: column;
-    border: 2px solid yellow
-
+    border: 2px solid yellow;
+    position: relative;
+    width: 100px;
+    height: 300px;
 }
 
 .view-bar-button{
@@ -393,8 +397,24 @@ body {
     cursor: pointer;
 }
 
-.keypad-button:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    color: #f0f5ff;
+.popup-text{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: rgba(12, 16, 24, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.2s;
+    z-index: 10;
+    border-radius: 10px;
+}
+
+.popup-text:hover{
+    opacity: 1;
     cursor: pointer;
 }
