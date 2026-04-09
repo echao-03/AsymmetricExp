@@ -15,6 +15,9 @@ const cameraPrevButton = document.getElementById("prev-button");
 const cameraResetButton = document.getElementById("reset-button");
 const cameraNextButton = document.getElementById("next-button");
 const keypad = document.getElementById("keypad");
+const handbookButton = document.getElementById("handbook-button");
+const handbook = document.getElementById("handbook");
+const handbookClose = document.getElementById("handbook-close");
 const keypadButton = document.getElementById("keypad-button");
 const keypadClose = document.getElementById("keypad-close");
 const keys = document.querySelectorAll(".key");
@@ -30,37 +33,51 @@ keypadClose.addEventListener("click", () => {
     keypadDisplay.textContent = "ENTER CODE"; // reset display
 });
 
+handbookButton.addEventListener("click", () => {
+    handbook.style.display = "flex"; // show popup
+});
+
+handbookClose.addEventListener("click", () => {
+    handbook.style.display = "none"; // hide popup
+});
+
+makeDraggable(keypad);
+makeDraggable(handbook);
+
+function makeDraggable(element){
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    element.addEventListener("mousedown", (e) => {
+        isDragging = true;
+
+        // Calculate offset between mouse and keypad top-left corner
+        offsetX = e.clientX - element.getBoundingClientRect().left;
+        offsetY = e.clientY - element.getBoundingClientRect().top;
+
+        keypad.classList.add("dragging");
+    });
+
+    window.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+
+        // Move keypad to new mouse position minus the initial offset
+        element.style.left = `${e.clientX - offsetX}px`;
+        element.style.top = `${e.clientY - offsetY}px`;
+        element.style.bottom = "auto"; // override bottom if previously set
+        element.style.transform = "none"; // remove translateX(-50%)
+    });
+
+    window.addEventListener("mouseup", () => {
+        if (isDragging) {
+            isDragging = false;
+            element.classList.remove("dragging");
+        }
+    });
+}
 // Event handling for dragging the keypad
-let isDragging = false;
-let offsetX = 0;
-let offsetY = 0;
 
-keypad.addEventListener("mousedown", (e) => {
-    isDragging = true;
-
-    // Calculate offset between mouse and keypad top-left corner
-    offsetX = e.clientX - keypad.getBoundingClientRect().left;
-    offsetY = e.clientY - keypad.getBoundingClientRect().top;
-
-    keypad.classList.add("dragging");
-});
-
-window.addEventListener("mousemove", (e) => {
-    if (!isDragging) return;
-
-    // Move keypad to new mouse position minus the initial offset
-    keypad.style.left = `${e.clientX - offsetX}px`;
-    keypad.style.top = `${e.clientY - offsetY}px`;
-    keypad.style.bottom = "auto"; // override bottom if previously set
-    keypad.style.transform = "none"; // remove translateX(-50%)
-});
-
-window.addEventListener("mouseup", () => {
-    if (isDragging) {
-        isDragging = false;
-        keypad.classList.remove("dragging");
-    }
-});
 // End of keypad drag handling
 
 let enteredCode = "";
