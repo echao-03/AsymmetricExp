@@ -14,6 +14,91 @@ const cameraContainer = document.getElementById("camera-quadrant");
 const cameraPrevButton = document.getElementById("prev-button");
 const cameraResetButton = document.getElementById("reset-button");
 const cameraNextButton = document.getElementById("next-button");
+const keypad = document.getElementById("keypad");
+const handbookButton = document.getElementById("handbook-button");
+const handbook = document.getElementById("handbook");
+const handbookClose = document.getElementById("handbook-close");
+const keypadButton = document.getElementById("keypad-button");
+const keypadClose = document.getElementById("keypad-close");
+const keys = document.querySelectorAll(".key");
+const keypadDisplay = document.getElementById("num-view-bar");
+const clearButton = document.getElementById("clear-button");
+
+keypadButton.addEventListener("click", () => {
+    keypad.style.display = "flex"; // show popup
+});
+
+keypadClose.addEventListener("click", () => {
+    keypad.style.display = "none"; // hide popup
+    keypadDisplay.textContent = "ENTER CODE"; // reset display
+});
+
+handbookButton.addEventListener("click", () => {
+    handbook.style.display = "flex"; // show popup
+});
+
+handbookClose.addEventListener("click", () => {
+    handbook.style.display = "none"; // hide popup
+});
+
+makeDraggable(keypad);
+makeDraggable(handbook);
+
+function makeDraggable(element){
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    element.addEventListener("mousedown", (e) => {
+        isDragging = true;
+
+        // Calculate offset between mouse and keypad top-left corner
+        offsetX = e.clientX - element.getBoundingClientRect().left;
+        offsetY = e.clientY - element.getBoundingClientRect().top;
+
+        keypad.classList.add("dragging");
+    });
+
+    window.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+
+        // Move keypad to new mouse position minus the initial offset
+        element.style.left = `${e.clientX - offsetX}px`;
+        element.style.top = `${e.clientY - offsetY}px`;
+        element.style.bottom = "auto"; // override bottom if previously set
+        element.style.transform = "none"; // remove translateX(-50%)
+    });
+
+    window.addEventListener("mouseup", () => {
+        if (isDragging) {
+            isDragging = false;
+            element.classList.remove("dragging");
+        }
+    });
+}
+// Event handling for dragging the keypad
+
+// End of keypad drag handling
+
+let enteredCode = "";
+keys.forEach(key => {
+    key.addEventListener("click", () => {
+        // limit length if you want (e.g. 4-digit code)
+        if (enteredCode.length >= 6) return;
+
+        enteredCode += key.textContent;
+        updateDisplay(enteredCode);
+    });
+});
+
+clearButton.addEventListener("click", () => {
+    enteredCode = "";
+    updateDisplay("ENTER CODE");
+});
+
+function updateDisplay(code) {
+    keypadDisplay.textContent = code;
+}
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);

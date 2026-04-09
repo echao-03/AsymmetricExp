@@ -69,6 +69,134 @@ body {
     right: 0;
 }
 
+.handbook-popup {
+    position: fixed;           
+    width: 400px;
+    height: 600px;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #BAB8B8;
+    color: white;
+    padding: 40px;
+    border-radius: 10px;
+    display: none;             
+    z-index: 9999;             
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    justify-content: space-between;
+    flex-direction: column;
+    cursor: grab;
+    user-select: none;
+    gap: 10px;
+}
+
+.handbook-top {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+}
+
+.hint-container {
+    display: flex;
+    gap: 10px;
+    align-items: left;
+    flex-direction: column;
+    width: 50%;
+}
+
+#handbook-input {
+    flex: 1; /* fills remaining space */
+    width: 100%;
+    resize: none;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+.keypad-popup {
+    position: fixed;           
+    width: 400px;
+    height: 600px;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #BAB8B8;
+    color: white;
+    padding: 40px;
+    border-radius: 10px;
+    display: none;             
+    z-index: 9999;             
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    justify-content: space-between;
+    flex-direction: column;
+    cursor: grab;
+    user-select: none;
+}
+
+.keypad-popup.dragging {
+    cursor: grabbing;
+}
+
+.keypad-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.key {
+    width: 90px;
+    height: 90px;
+    background: #767676;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.close-button{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    background: #CE5353;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#clear-button{
+    background: #CE5353
+}
+
+#accept-button{
+    background: #58B276
+}
+
+.view-bar{
+    display: flex;
+    gap: 10px;
+    height: 90px;
+    justify-content: center;
+    z-index: 1;
+    background: #D5FFD5;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 50px;
+    justify-content: center;
+    align-items: center;
+    color: #04070b;
+}
+
 .quadrant {
     position: absolute;
     width: 50%;
@@ -178,7 +306,16 @@ body {
     color: #e5ecff;
     font-size: 0.9rem;
     line-height: 1.5;
-    margin: 0 0 1rem 0;
+    margin: 0 0 .5rem 0;
+    pointer-events: auto;
+}
+
+.handbook-text {
+    color: #04070b;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: .5rem .5rem .5rem .5rem;
+    text-align: left;
     pointer-events: auto;
 }
 

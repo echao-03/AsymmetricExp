@@ -27,11 +27,11 @@
             <div class="quadrant" id="utilities-quadrant">
                 <div class="quadrant-label">Utilities</div>
                 <div class="utilities-row">
-                    <div class="utility-card">Keypad</div>
-                    <div class="utility-card">Handbook</div>
+                    <div class="utility-card" id="keypad-button">Keypad</div>
+                    <div class="utility-card" id="handbook-button">Handbook</div>
                     <div class="vertical-utility-container">
-                        <div class="utility-button">Unlock</div>
-                        <div class="utility-button">Hack</div>
+                        <div class="utility-button" id="hack-button">Hack</div>
+                        <div class="utility-button" id="scan-button">Scan</div>
                         <div class="camera-controls">
                             <div class="camera-button" id="prev-button">Prev</div>
                             <div class="camera-button" id="reset-button">Reset</div>
@@ -52,6 +52,49 @@
         </div>
     </div>
 
+    <div class="keypad-popup" id="keypad">
+        <div class="close-button" id="keypad-close">X</div>
+        <div class="view-bar" id="num-view-bar">ENTER CODE</div>
+        <div class="keypad-row">
+            <button class="key" id="1">1</button>
+            <button class="key" id="2">2</button>
+            <button class="key" id="3">3</button>
+        </div>
+        <div class="keypad-row">
+            <button class="key" id="4">4</button>
+            <button class="key" id="5">5</button>
+            <button class="key" id="6">6</button>
+        </div>
+        <div class="keypad-row">
+            <button class="key" id="7">7</button>
+            <button class="key" id="8">8</button>
+            <button class="key" id="9">9</button>
+        </div>
+        <div class="keypad-row">
+            <button class="key" id="clear-button">Clear</button>
+            <button class="key" id="0">0</button>
+            <button class="key" id="accept-button">Accept</button>
+        </div>
+    </div>
+
+    <div class="handbook-popup" id="handbook">
+        <div class="close-button" id="handbook-close">X</div>
+        <div class="handbook-top">
+            <div class="hint-container">
+                <p class="handbook-text">RULE 1</p>
+                <p class="handbook-text">RULE 2</p>
+                <p class="handbook-text">RULE 3</p>
+                <p class="handbook-text">RULE 4</p>
+            </div>
+            <div class="hint-container">
+                <p class="handbook-text">RULE 5</p>
+                <p class="handbook-text">RULE 6</p>
+                <p class="handbook-text">RULE 7</p>
+                <p class="handbook-text">RULE 8</p>
+            </div>
+        </div>
+        <textarea id="handbook-input" placeholder="Type your notes here..."></textarea>
+    </div>
     <script type="module" src="/src/main.js"></script>
 </body>
 
