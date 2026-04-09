@@ -130,8 +130,8 @@ const cameraManager = new CameraManager({
     cameras: cameras,
 });
 
-mapCamera.position.set(0, 15, 0);
-mapCamera.lookAt(0, 1.2, 0);
+mapCamera.position.set(-5, 20, 0);
+mapCamera.lookAt(-5, 0, 0);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);

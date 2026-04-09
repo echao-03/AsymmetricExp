@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 export function createMap(scene) {
-    const floorGeometry = new THREE.BoxGeometry(20, 0.5, 25);
+    const floorGeometry = new THREE.BoxGeometry(700, 0.5, 30);
     const floorMaterial = new THREE.MeshStandardMaterial({
         color: "gray",
         roughness: 0.35,
@@ -21,6 +21,8 @@ export function createMap(scene) {
         roomShort: new THREE.BoxGeometry(0.5, 2, 3),
         roomLong: new THREE.BoxGeometry(0.5, 2, 4),
         roomLonger: new THREE.BoxGeometry(0.5, 2, 10),
+        mazeRoomLS1: new THREE.BoxGeometry(0.5, 2, 20),
+        mazeRoomLS2: new THREE.BoxGeometry(0.5, 2, 22),
     };
 
     const wallSpecs = [
@@ -43,11 +45,17 @@ export function createMap(scene) {
         { geo: "roomShort", x: 8, z: -5, ry: Math.PI / 2 },
         { geo: "roomLonger", x: 9.5, z: 0 },
 
-        { geo: "roomLong", x: -6.5, z: -3 },
-        { geo: "roomLong", x: -6.5, z: 3 },
-        { geo: "roomShort", x: -8, z: 5, ry: Math.PI / 2 },
-        { geo: "roomShort", x: -8, z: -5, ry: Math.PI / 2 },
-        { geo: "roomLonger", x: -9.5, z: 0 },
+        // Room frame for Maze Room
+        { geo: "roomLonger", x: -6.5, z: -6 },
+        { geo: "roomLonger", x: -6.5, z: 6 },
+        { geo: "mazeRoomLS1", x: -16, z: -11, ry: Math.PI / 2 },
+        { geo: "mazeRoomLS1", x: -16, z: 11, ry: Math.PI / 2 },
+        { geo: "mazeRoomLS2", x: -25.5, z: 0, },
+
+        // Main hallway for Maze Room
+
+
+
     ];
 
     const walls = wallSpecs.map(({ geo, x, y = 1, z, ry = 0 }) => {
