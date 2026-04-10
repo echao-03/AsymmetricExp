@@ -9,6 +9,7 @@ export function createVRMovement({
     controllerMarker,
     onDebug,
     walls = [],
+    floor,
     playerRadius = 0.25,
     speed = 2.0,      // units per second
     deadzone = 0,
@@ -22,7 +23,6 @@ export function createVRMovement({
     const headOffset = new THREE.Vector3();
 
     const wallBoxes = walls.map((wall) => new THREE.Box3().setFromObject(wall));
-
     const collidesXZ = (x, z) => {
         for (const box of wallBoxes) {
             const minX = box.min.x - playerRadius;
@@ -98,8 +98,8 @@ export function createVRMovement({
                 headWorld.z = nextHeadZ;
             }
 
-            headWorld.x = THREE.MathUtils.clamp(headWorld.x, -9.7, 9.7);
-            headWorld.z = THREE.MathUtils.clamp(headWorld.z, -12.2, 12.2);
+            headWorld.x = THREE.MathUtils.clamp(headWorld.x, -300, 300);
+            headWorld.z = THREE.MathUtils.clamp(headWorld.z, -300, 300);
 
             // 4) Reconstruct rig so headset ends at desired headWorld
             playerRig.position.x = headWorld.x - headOffset.x;
