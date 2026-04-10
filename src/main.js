@@ -7,6 +7,7 @@ import { createMultiplayer } from "./world/multiplayer";
 import "./style.css";
 import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
 import { CameraManager } from "./cameraManager";
+import { Keypad } from "./keypad";
 
 const container = document.getElementById("app");
 const mapContainer = document.getElementById("map-quadrant");
@@ -27,14 +28,19 @@ const clearButton = document.getElementById("clear-button");
 // Audio Loader
 const buttonPush = new Audio("./audio/ButtonPush.wav");
 
-keypadButton.addEventListener("click", () => {
-    keypad.style.display = "flex"; // show popup
+
+// Init Keypad
+const keypadObj = new Keypad({
+    keypad: keypad,
+    keys: keys,
+    clearButton: clearButton,
+    display: keypadDisplay,
+    maxLength: 6,
+    closeButton: keypadClose,
+    popupButton: keypadButton
 });
 
-keypadClose.addEventListener("click", () => {
-    keypad.style.display = "none"; // hide popup
-    keypadDisplay.textContent = "ENTER CODE"; // reset display
-});
+keypadObj.init();
 
 handbookButton.addEventListener("click", () => {
     handbook.style.display = "flex"; // show popup
@@ -44,7 +50,7 @@ handbookClose.addEventListener("click", () => {
     handbook.style.display = "none"; // hide popup
 });
 
-makeDraggable(keypad, ".key");
+makeDraggable(keypadObj.keypad, ".key");
 makeDraggable(handbook, "textarea");
 
 // Making popups draggable
@@ -81,33 +87,6 @@ function makeDraggable(element, exceptionSelector){
             element.classList.remove("dragging");
         }
     });
-}
-
-// Keypad input handling
-let enteredCode = "";
-keys.forEach(key => {
-    key.addEventListener("click", () => {
-
-        // play audio
-        //buttonPush.currentTime = 0; // restart if already playing
-        //buttonPush.play();
-
-        // limit length if you want (e.g. 4-digit code)
-        if (enteredCode.length >= 6) return;
-
-        if (key.textContent === "Accept") return;
-        enteredCode += key.textContent;
-        updateDisplay(enteredCode);
-    });
-});
-
-clearButton.addEventListener("click", () => {
-    enteredCode = "";
-    updateDisplay("ENTER CODE");
-});
-
-function updateDisplay(code) {
-    keypadDisplay.textContent = code;
 }
 
 const scene = new THREE.Scene();
