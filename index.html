@@ -27,8 +27,42 @@
             <div class="quadrant" id="utilities-quadrant">
                 <div class="quadrant-label">Utilities</div>
                 <div class="utilities-row">
-                    <div class="utility-card" id="keypad-button">Keypad</div>
-                    <div class="utility-card" id="handbook-button">Handbook</div>
+                    <div class="keypad-button" id="keypad-button">
+                        <div class="popup-text" id="keypad-popup-text">Keypad</div>
+                        <div class="view-bar-button" id="num-view-bar-button"></div>
+                        <div class="keypad-button-row">
+                            <button class="key-small" id="1"></button>
+                            <button class="key-small" id="2"></button>
+                            <button class="key-small" id="3"></button>
+                        </div>
+                        <div class="keypad-button-row">
+                            <button class="key-small" id="4"></button>
+                            <button class="key-small" id="5"></button>
+                            <button class="key-small" id="6"></button>
+                        </div>
+                        <div class="keypad-button-row">
+                            <button class="key-small" id="7"></button>
+                            <button class="key-small" id="8"></button>
+                            <button class="key-small" id="9"></button>
+                        </div>
+                        <div class="keypad-button-row">
+                            <button class="key-small" id="clear-button-small"></button>
+                            <button class="key-small" id="0"></button>
+                            <button class="key-small" id="accept-button-small"></button>
+                        </div>
+                    </div>
+                    <div class="handbook-button" id="handbook-button">
+                        <div class="popup-text" id="handbook-popup-text">Handbook</div>
+                        <div class="handbook-top-small"></div>
+                        <div class="handbook-input-small">
+                            <p class="handbook-input-placeholder">________________________</p>
+                            <p class="handbook-input-placeholder">________________________</p>
+                            <p class="handbook-input-placeholder">________________________</p>
+                            <p class="handbook-input-placeholder">________________________</p>
+                            <p class="handbook-input-placeholder">________________________</p>
+                            <p class="handbook-input-placeholder">________________________</p>
+                        </div>
+                    </div>
                     <div class="vertical-utility-container">
                         <div class="utility-button" id="hack-button">Hack</div>
                         <div class="utility-button" id="scan-button">Scan</div>
@@ -51,7 +85,7 @@
             </div>
         </div>
     </div>
-
+        
     <div class="keypad-popup" id="keypad">
         <div class="close-button" id="keypad-close">X</div>
         <div class="view-bar" id="num-view-bar">ENTER CODE</div>
@@ -75,6 +109,7 @@
             <button class="key" id="0">0</button>
             <button class="key" id="accept-button">Accept</button>
         </div>
+        
     </div>
 
     <div class="handbook-popup" id="handbook">

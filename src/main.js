@@ -7,6 +7,8 @@ import { createMultiplayer } from "./world/multiplayer";
 import "./style.css";
 import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
 import { CameraManager } from "./cameraManager";
+import { Keypad } from "./keypad";
+import { Handbook } from "./handbook";
 
 const container = document.getElementById("app");
 const mapContainer = document.getElementById("map-quadrant");
@@ -24,80 +26,69 @@ const keys = document.querySelectorAll(".key");
 const keypadDisplay = document.getElementById("num-view-bar");
 const clearButton = document.getElementById("clear-button");
 
-keypadButton.addEventListener("click", () => {
-  keypad.style.display = "flex"; // show popup
+// Audio Loader
+const buttonPush = new Audio("./audio/ButtonPush.wav");
+
+// Init Keypad
+const keypadObj = new Keypad({
+    keypad: keypad,
+    keys: keys,
+    clearButton: clearButton,
+    display: keypadDisplay,
+    maxLength: 6,
+    closeButton: keypadClose,
+    popupButton: keypadButton
 });
 
-keypadClose.addEventListener("click", () => {
-  keypad.style.display = "none"; // hide popup
-  keypadDisplay.textContent = "ENTER CODE"; // reset display
+// Init handbook
+const handbookObj = new Handbook({
+    handbook: handbook,
+    popupButton: handbookButton,
+    closeButton: handbookClose
 });
 
-handbookButton.addEventListener("click", () => {
-  handbook.style.display = "flex"; // show popup
-});
+// Call init() for handbook and keypad for event listeners
+keypadObj.init();
+handbookObj.init();
 
-handbookClose.addEventListener("click", () => {
-  handbook.style.display = "none"; // hide popup
-});
+// Allow popups to be dragged
+makeDraggable(keypadObj.keypad, ".key");
+makeDraggable(handbookObj.handbook, "textarea");
 
-makeDraggable(keypad);
-makeDraggable(handbook);
+// Making popups draggable
+function makeDraggable(element, exceptionSelector){
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
 
-function makeDraggable(element) {
-  let isDragging = false;
-  let offsetX = 0;
-  let offsetY = 0;
+    element.addEventListener("mousedown", (e) => {
+        if (e.target.closest(exceptionSelector)) return;
 
-  element.addEventListener("mousedown", (e) => {
-    isDragging = true;
+        isDragging = true;
 
-    // Calculate offset between mouse and keypad top-left corner
-    offsetX = e.clientX - element.getBoundingClientRect().left;
-    offsetY = e.clientY - element.getBoundingClientRect().top;
+        // Calculate offset between mouse and keypad top-left corner
+        offsetX = e.clientX - element.getBoundingClientRect().left;
+        offsetY = e.clientY - element.getBoundingClientRect().top;
 
-    keypad.classList.add("dragging");
-  });
+        element.classList.add("dragging");
+    });
 
-  window.addEventListener("mousemove", (e) => {
-    if (!isDragging) return;
+    window.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
 
-    // Move keypad to new mouse position minus the initial offset
-    element.style.left = `${e.clientX - offsetX}px`;
-    element.style.top = `${e.clientY - offsetY}px`;
-    element.style.bottom = "auto"; // override bottom if previously set
-    element.style.transform = "none"; // remove translateX(-50%)
-  });
+        // Move keypad to new mouse position minus the initial offset
+        element.style.left = `${e.clientX - offsetX}px`;
+        element.style.top = `${e.clientY - offsetY}px`;
+        element.style.bottom = "auto"; // override bottom if previously set
+        element.style.transform = "none"; // remove translateX(-50%)
+    });
 
-  window.addEventListener("mouseup", () => {
-    if (isDragging) {
-      isDragging = false;
-      element.classList.remove("dragging");
-    }
-  });
-}
-// Event handling for dragging the keypad
-
-// End of keypad drag handling
-
-let enteredCode = "";
-keys.forEach((key) => {
-  key.addEventListener("click", () => {
-    // limit length if you want (e.g. 4-digit code)
-    if (enteredCode.length >= 6) return;
-
-    enteredCode += key.textContent;
-    updateDisplay(enteredCode);
-  });
-});
-
-clearButton.addEventListener("click", () => {
-  enteredCode = "";
-  updateDisplay("ENTER CODE");
-});
-
-function updateDisplay(code) {
-  keypadDisplay.textContent = code;
+    window.addEventListener("mouseup", () => {
+        if (isDragging) {
+            isDragging = false;
+            element.classList.remove("dragging");
+        }
+    });
 }
 
 const scene = new THREE.Scene();
@@ -162,9 +153,6 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.xr.enabled = true;
 container.appendChild(renderer.domElement);
-
-console.log(container); // should print <div id="app">...</div>
-console.log(renderer.domElement); // should print <canvas> element
 
 const controls = new OrbitControls(VRCamera, renderer.domElement);
 controls.enableDamping = true;
