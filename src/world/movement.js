@@ -79,31 +79,57 @@ export function createVRMovement({
             const dx = forward.x * moveForward + right.x * moveRight;
             const dz = forward.z * moveForward + right.z * moveRight;
 
-            camera.getWorldPosition(headWorld);
-            playerRig.getWorldPosition(rigWorld);
+            const currentX = playerRig.position.x;
+            const currentZ = playerRig.position.z;
 
-            headOffset.copy(headWorld).sub(rigWorld);
+            const nextX = currentX + dx;
+            const nextZ = currentZ + dz;
 
-            let nextHeadX = headWorld.x + dx;
-            let nextHeadZ = headWorld.z + dz;
-
-            // If head position collides, then don't move
-            // Current problem is that if head is sticking through walls,
-            // Player cannot move, even resetting position will reset player back to where the camera is positioned
-            // todo: Find a way so that if player get stuck in wall, reset and they are outside the wall
-            if (!collidesXZ(nextHeadX, headWorld.z)) {
-                headWorld.x = nextHeadX;
-            }
-            if (!collidesXZ(headWorld.x, nextHeadZ)) {
-                headWorld.z = nextHeadZ;
+            // Move X if no collision
+            if (!collidesXZ(nextX, currentZ)) {
+                playerRig.position.x = nextX;
             }
 
-            headWorld.x = THREE.MathUtils.clamp(headWorld.x, -300, 300);
-            headWorld.z = THREE.MathUtils.clamp(headWorld.z, -300, 300);
+            // Move Z if no collision
+            if (!collidesXZ(playerRig.position.x, nextZ)) {
+                playerRig.position.z = nextZ;
+            }
 
-            // 4) Reconstruct rig so headset ends at desired headWorld
-            playerRig.position.x = headWorld.x - headOffset.x;
-            playerRig.position.z = headWorld.z - headOffset.z;
+            // Optional: keep player on floor bounds (20x25 floor centered at origin)
+            playerRig.position.x = THREE.MathUtils.clamp(playerRig.position.x, -9.7, 9.7);
+            playerRig.position.z = THREE.MathUtils.clamp(playerRig.position.z, -12.2, 12.2);
+
+            // const moveForward = -y * speed * dt;
+            // const moveRight = x * speed * dt;
+
+            // const dx = forward.x * moveForward + right.x * moveRight;
+            // const dz = forward.z * moveForward + right.z * moveRight;
+
+            // camera.getWorldPosition(headWorld);
+            // playerRig.getWorldPosition(rigWorld);
+
+            // headOffset.copy(headWorld).sub(rigWorld);
+
+            // let nextHeadX = headWorld.x + dx;
+            // let nextHeadZ = headWorld.z + dz;
+
+            // // If head position collides, then don't move
+            // // Current problem is that if head is sticking through walls,
+            // // Player cannot move, even resetting position will reset player back to where the camera is positioned
+            // // todo: Find a way so that if player get stuck in wall, reset and they are outside the wall
+            // if (!collidesXZ(nextHeadX, headWorld.z)) {
+            //     headWorld.x = nextHeadX;
+            // }
+            // if (!collidesXZ(headWorld.x, nextHeadZ)) {
+            //     headWorld.z = nextHeadZ;
+            // }
+
+            // headWorld.x = THREE.MathUtils.clamp(headWorld.x, -300, 300);
+            // headWorld.z = THREE.MathUtils.clamp(headWorld.z, -300, 300);
+
+            // // 4) Reconstruct rig so headset ends at desired headWorld
+            // playerRig.position.x = headWorld.x - headOffset.x;
+            // playerRig.position.z = headWorld.z - headOffset.z;
         }
     }
 

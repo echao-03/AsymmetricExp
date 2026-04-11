@@ -76,6 +76,24 @@ export function createMap(scene) {
         { geo: "roomShort", x: -18.25, z: -5.5, ry: Math.PI / 2 },
         { geo: "roomShorter", x: -19, z: -4.75, },
 
+        { geo: "roomLong", x: -19, z: -9, ry: Math.PI / 2 },
+        { geo: "roomShorter", x: -17.25, z: -8, },
+        { geo: "roomShorter", x: -18, z: -7, ry: Math.PI / 2 },
+
+        { geo: "roomLong", x: -23, z: -9, },
+        { geo: "roomShort", x: -24.25, z: -7, ry: Math.PI / 2 },
+        { geo: "roomShorter", x: -26, z: -7.75, },
+        { geo: "roomShorter", x: -27, z: -8.5, ry: Math.PI / 2 },
+
+        { geo: "roomShort", x: -24.75, z: -4, },
+        { geo: "roomShorter", x: -22.25, z: -4, ry: Math.PI / 2 },
+
+        { geo: "roomShorter", x: -29.25, z: -6, ry: Math.PI / 2 },
+
+        { geo: "roomShort", x: -27.5, z: -2, },
+
+        { geo: "roomShorter", x: -29.25, z: 1, ry: Math.PI / 2 },
+
 
 
 
