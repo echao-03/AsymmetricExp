@@ -8,6 +8,7 @@ import "./style.css";
 import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
 import { CameraManager } from "./cameraManager";
 import { Keypad } from "./keypad";
+import { Handbook } from "./handbook";
 
 const container = document.getElementById("app");
 const mapContainer = document.getElementById("map-quadrant");
@@ -28,7 +29,6 @@ const clearButton = document.getElementById("clear-button");
 // Audio Loader
 const buttonPush = new Audio("./audio/ButtonPush.wav");
 
-
 // Init Keypad
 const keypadObj = new Keypad({
     keypad: keypad,
@@ -40,18 +40,20 @@ const keypadObj = new Keypad({
     popupButton: keypadButton
 });
 
+// Init handbook
+const handbookObj = new Handbook({
+    handbook: handbook,
+    popupButton: handbookButton,
+    closeButton: handbookClose
+});
+
+// Call init() for handbook and keypad for event listeners
 keypadObj.init();
+handbookObj.init();
 
-handbookButton.addEventListener("click", () => {
-    handbook.style.display = "flex"; // show popup
-});
-
-handbookClose.addEventListener("click", () => {
-    handbook.style.display = "none"; // hide popup
-});
-
+// Allow popups to be dragged
 makeDraggable(keypadObj.keypad, ".key");
-makeDraggable(handbook, "textarea");
+makeDraggable(handbookObj.handbook, "textarea");
 
 // Making popups draggable
 function makeDraggable(element, exceptionSelector){
@@ -128,9 +130,6 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.xr.enabled = true;
 container.appendChild(renderer.domElement);
-
-console.log(container); // should print <div id="app">...</div>
-console.log(renderer.domElement); // should print <canvas> element
 
 const controls = new OrbitControls(VRCamera, renderer.domElement);
 controls.enableDamping = true;
