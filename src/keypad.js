@@ -1,5 +1,5 @@
 export class Keypad{
-    constructor({keypad, keys, clearButton, display, maxLength = 6, closeButton, popupButton}) {
+    constructor({keypad, keys, clearButton, display, maxLength = 6, closeButton, acceptButton, popupButton}) {
         this.keypad = keypad;
         this.keys = keys;
         this.clearButton = clearButton;
@@ -7,6 +7,7 @@ export class Keypad{
         this.maxLength = maxLength;
         this.enteredCode = "";
         this.closeButton = closeButton;
+        this.acceptButton = acceptButton;
         this.popupButton = popupButton;
     }
 
@@ -17,6 +18,7 @@ export class Keypad{
 
         this.clearButton.addEventListener("click", () => this.reset());
         this.closeButton.addEventListener("click", () => this.close());
+        this.acceptButton.addEventListener("click", () => this.submit());
         this.popupButton.addEventListener("click", () => this.show());
     }
 
@@ -44,6 +46,10 @@ export class Keypad{
     close() {
         this.keypad.style.display = "none";
         this.display.textContent = "ENTER CODE";
+    }
+
+    submit() {
+        // Placeholder for code submission logic
     }
 
     show() {

@@ -7,8 +7,7 @@ import { createMultiplayer } from "./world/multiplayer";
 import "./style.css";
 import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
 import { CameraManager } from "./cameraManager";
-import { Keypad } from "./keypad";
-import { Handbook } from "./handbook";
+import initPopups from "./initPopups";
 
 const container = document.getElementById("app");
 const mapContainer = document.getElementById("map-quadrant");
@@ -16,80 +15,12 @@ const cameraContainer = document.getElementById("camera-quadrant");
 const cameraPrevButton = document.getElementById("prev-button");
 const cameraResetButton = document.getElementById("reset-button");
 const cameraNextButton = document.getElementById("next-button");
-const keypad = document.getElementById("keypad");
-const handbookButton = document.getElementById("handbook-button");
-const handbook = document.getElementById("handbook");
-const handbookClose = document.getElementById("handbook-close");
-const keypadButton = document.getElementById("keypad-button");
-const keypadClose = document.getElementById("keypad-close");
-const keys = document.querySelectorAll(".key");
-const keypadDisplay = document.getElementById("num-view-bar");
-const clearButton = document.getElementById("clear-button");
 
 // Audio Loader
 const buttonPush = new Audio("./audio/ButtonPush.wav");
 
-// Init Keypad
-const keypadObj = new Keypad({
-    keypad: keypad,
-    keys: keys,
-    clearButton: clearButton,
-    display: keypadDisplay,
-    maxLength: 6,
-    closeButton: keypadClose,
-    popupButton: keypadButton
-});
-
-// Init handbook
-const handbookObj = new Handbook({
-    handbook: handbook,
-    popupButton: handbookButton,
-    closeButton: handbookClose
-});
-
-// Call init() for handbook and keypad for event listeners
-keypadObj.init();
-handbookObj.init();
-
-// Allow popups to be dragged
-makeDraggable(keypadObj.keypad, ".key");
-makeDraggable(handbookObj.handbook, "textarea");
-
-// Making popups draggable
-function makeDraggable(element, exceptionSelector){
-    let isDragging = false;
-    let offsetX = 0;
-    let offsetY = 0;
-
-    element.addEventListener("mousedown", (e) => {
-        if (e.target.closest(exceptionSelector)) return;
-
-        isDragging = true;
-
-        // Calculate offset between mouse and keypad top-left corner
-        offsetX = e.clientX - element.getBoundingClientRect().left;
-        offsetY = e.clientY - element.getBoundingClientRect().top;
-
-        element.classList.add("dragging");
-    });
-
-    window.addEventListener("mousemove", (e) => {
-        if (!isDragging) return;
-
-        // Move keypad to new mouse position minus the initial offset
-        element.style.left = `${e.clientX - offsetX}px`;
-        element.style.top = `${e.clientY - offsetY}px`;
-        element.style.bottom = "auto"; // override bottom if previously set
-        element.style.transform = "none"; // remove translateX(-50%)
-    });
-
-    window.addEventListener("mouseup", () => {
-        if (isDragging) {
-            isDragging = false;
-            element.classList.remove("dragging");
-        }
-    });
-}
+// Initialize popups
+initPopups();
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
