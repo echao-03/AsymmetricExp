@@ -6,7 +6,7 @@ export class CameraManager {
         this.nextButton = nextButton;
         this.roomCameras = roomCameras;
         this.cameraNum = 0;
-        this.roomNum = 0;
+        this.roomNum = 1;
 
         this.prevButton?.addEventListener("click", () => this.prevCamera());
         this.resetButton?.addEventListener("click", () => this.resetCamera());
@@ -14,7 +14,7 @@ export class CameraManager {
     }
 
     setCameraNum(nextCameraNum) {
-        this.cameraNum = ((nextCameraNum % 3) + 3) % 3;
+        this.cameraNum = ((nextCameraNum % this.roomCameras[this.roomNum].length) + this.roomCameras[this.roomNum].length) % this.roomCameras[this.roomNum].length;
     }
 
     prevCamera() {
