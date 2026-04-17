@@ -204,18 +204,65 @@ export function createVRMovement({
     };
 
     const teleportPlayer = () => {
+        console.log("in teleport", teleportTarget.visible);
         if (!teleportTarget.visible) {
             return;
         }
-
         playerRig.position.x = teleportDestination.x;
         playerRig.position.z = teleportDestination.z;
     };
 
-    function update() {
+    const fadePlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(2, 2),
+        new THREE.MeshBasicMaterial({
+            color: 0x000000,
+            transparent: true,
+            opacity: 0,
+            depthTest: false,
+            depthWrite: false,
+        })
+    );
+    fadePlane.position.set(0, 0, -0.5);
+    camera.add(fadePlane);
+
+    const fadeState = {
+        active: false,
+        direction: 0, // 1 = fade out, -1 = fade in
+        opacity: 0,
+        duration: 0.18,
+        onMidpoint: null,
+    };
+
+    function startTeleportFade(onMidpoint) {
+        fadeState.active = true;
+        fadeState.direction = 1;
+        fadeState.opacity = 0;
+        fadeState.onMidpoint = onMidpoint || null;
+        fadePlane.material.opacity = 0;
+        fadePlane.visible = true;
+    }
+
+    function updateTeleportFade(delta) {
+        if (!fadeState.active) return;
+
+        fadeState.opacity += fadeState.direction * (delta / fadeState.duration);
+        fadeState.opacity = Math.min(1, Math.max(0, fadeState.opacity));
+        fadePlane.material.opacity = fadeState.opacity;
+
+        if (fadeState.direction === 1 && fadeState.opacity >= 1) {
+            if (fadeState.onMidpoint) fadeState.onMidpoint();
+            fadeState.direction = -1;
+        } else if (fadeState.direction === -1 && fadeState.opacity <= 0) {
+            fadeState.active = false;
+            fadePlane.visible = false;
+        }
+    }
+    function update(delta) {
         if (!renderer.xr.isPresenting) return;
 
         const gamepad = rightController.userData?.gamepad;
+
+        updateTeleportFade(delta);
 
         if (!gamepad) {
             teleportReleaseLock.active = false;
@@ -246,7 +293,11 @@ export function createVRMovement({
 
         if (teleportReleaseLock.active) {
             if (teleportTarget.visible) {
-                teleportPlayer();
+                console.log("in main", teleportTarget.visible);
+                startTeleportFade(() => {
+                    teleportTarget.visible = true; // I think when changing the target to be visible initially, it changes to false when entering startTeleportFade
+                    teleportPlayer();
+                });
                 onDebug?.(`teleport committed`);
             } else {
                 onDebug?.(`teleport cancelled`);
