@@ -205,9 +205,10 @@ function renderInContainer(cam, el) {
   renderer.setScissor(x, y, w, h);
   renderer.render(scene, cam);
 }
-
+const clock = new THREE.Clock();
 renderer.setAnimationLoop(() => {
-  movement.update();
+  const delta = clock.getDelta();
+  movement.update(delta);
   controls.update();
   multiplayer.updatePose(VRCamera, leftController, rightController, playerRig);
 
