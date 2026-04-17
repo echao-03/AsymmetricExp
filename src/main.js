@@ -6,15 +6,19 @@ import { createVRMovement } from "./world/movement";
 import { createMultiplayer } from "./world/multiplayer";
 import "./style.css";
 import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
-import { CameraManager } from "./cameraManager";
 import initPopups from "./initPopups";
+import initCameras from "./initCameras";
 
 const container = document.getElementById("app");
-const mapContainer = document.getElementById("map-quadrant");
 const cameraContainer = document.getElementById("camera-quadrant");
-const cameraPrevButton = document.getElementById("prev-button");
-const cameraResetButton = document.getElementById("reset-button");
-const cameraNextButton = document.getElementById("next-button");
+const mapContainer = document.getElementById("map-quadrant");
+
+// Initialize cameras and camera manager
+const {
+  cameraManager,
+  VRCamera,
+  mapCamera
+} = initCameras();
 
 // Audio Loader
 const buttonPush = new Audio("./audio/ButtonPush.wav");
@@ -24,60 +28,6 @@ initPopups();
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
-
-const VRCamera = new THREE.PerspectiveCamera(
-  75,
-  container.clientWidth / container.clientHeight,
-  0.1,
-  100,
-);
-
-const mapCamera = new THREE.PerspectiveCamera(
-  75,
-  mapContainer.clientWidth / mapContainer.clientHeight,
-  0.1,
-  100,
-);
-
-const intersectionCamera = new THREE.PerspectiveCamera(
-  75,
-  cameraContainer.clientWidth / cameraContainer.clientHeight,
-  0.1,
-  100,
-);
-intersectionCamera.position.set(-1, 2.5, -1);
-intersectionCamera.lookAt(1, 0, 2);
-
-const R1Camera = new THREE.PerspectiveCamera(
-  75,
-  cameraContainer.clientWidth / cameraContainer.clientHeight,
-  0.1,
-  100,
-);
-R1Camera.position.set(9, 2, 0);
-R1Camera.lookAt(1, 1, 0);
-
-const R2Camera = new THREE.PerspectiveCamera(
-  75,
-  cameraContainer.clientWidth / cameraContainer.clientHeight,
-  0.1,
-  100,
-);
-R2Camera.position.set(-9, 2, 0);
-R2Camera.lookAt(1, 1, 0);
-
-const cameras = [R1Camera, intersectionCamera, R2Camera];
-
-const cameraManager = new CameraManager({
-  cameraContainer,
-  prevButton: cameraPrevButton,
-  resetButton: cameraResetButton,
-  nextButton: cameraNextButton,
-  cameras: cameras,
-});
-// mapCamera original Position: (0, 1.2, 0) *Moved position to see maze room*
-mapCamera.position.set(-12, 20, 0);
-mapCamera.lookAt(-12, 0, 0);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);

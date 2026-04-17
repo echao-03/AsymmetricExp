@@ -1,11 +1,12 @@
 export class CameraManager {
-    constructor({cameraContainer, prevButton, resetButton, nextButton, cameras}) {
+    constructor({cameraContainer, prevButton, resetButton, nextButton, roomCameras}) {
         this.cameraContainer = cameraContainer;
         this.prevButton = prevButton;
         this.resetButton = resetButton;
         this.nextButton = nextButton;
-        this.cameras = cameras;
+        this.roomCameras = roomCameras;
         this.cameraNum = 0;
+        this.roomNum = 0;
 
         this.prevButton?.addEventListener("click", () => this.prevCamera());
         this.resetButton?.addEventListener("click", () => this.resetCamera());
@@ -32,6 +33,6 @@ export class CameraManager {
     }
 
     getActiveCamera(){
-        return this.cameras[this.cameraNum];
+        return this.roomCameras[this.roomNum][this.cameraNum];
     }
 }
