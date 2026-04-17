@@ -103,7 +103,7 @@ const debug = document.createElement("pre");
 debug.className = "vr-debug";
 document.body.appendChild(debug);
 
-const { walls } = createMap(scene);
+const { walls, floor } = createMap(scene);
 
 const movement = createVRMovement({
   renderer,
@@ -113,6 +113,7 @@ const movement = createVRMovement({
   rightController,
   controllerMarker: controller2Marker,
   walls,
+  floor,
   playerRadius: 0.25,
   onDebug: (text) => {
     debug.textContent = text;
@@ -121,7 +122,7 @@ const movement = createVRMovement({
 
 const hint = document.createElement("div");
 hint.className = "vr-hint";
-hint.textContent = "Desktop: drag to orbit. VR: click Enter VR.";
+hint.textContent = "Desktop: drag to orbit. VR: push the right thumbstick up to aim a teleport arc, then release to move.";
 document.body.appendChild(hint);
 
 const hemiLight = new THREE.HemisphereLight(0xbfd6ff, 0x1c2532, 1.1);
