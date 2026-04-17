@@ -148,7 +148,7 @@ export function createVRMovement({
         }
 
         teleportVelocity.copy(controllerForward).multiplyScalar(teleportLaunchSpeed);
-        teleportVelocity.y = Math.max(teleportVelocity.y, teleportLaunchSpeed * 0.25); // Changes arc angle, more == more angled
+        teleportVelocity.y = Math.max(teleportVelocity.y, teleportLaunchSpeed * 0.1); // Changes arc angle, more == more angled
 
         let pointCount = 0;
         let validTarget = false;
@@ -204,7 +204,7 @@ export function createVRMovement({
     };
 
     const teleportPlayer = () => {
-        console.log("in teleport", teleportTarget.visible);
+        // console.log("in teleport", teleportTarget.visible);
         if (!teleportTarget.visible) {
             return;
         }
