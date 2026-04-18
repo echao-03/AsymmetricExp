@@ -32,7 +32,7 @@ export class CameraManager {
         this.setCameraNum(this.cameraNum + 1);
     }
 
-    getActiveCamera(){
+    getActiveCamera() {
         return this.roomCameras[this.roomNum][this.cameraNum];
     }
 }
