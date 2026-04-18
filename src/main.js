@@ -9,6 +9,7 @@ import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
 import initPopups from "./initPopups";
 import initCameras from "./initCameras";
 import GrabVR from './grabvr/src/client/grabvr.ts';
+import callModels from "./importModels.js";
 
 const container = document.getElementById("app");
 const cameraContainer = document.getElementById("camera-quadrant");
@@ -132,7 +133,7 @@ controllerGrip0.add(controller1Marker);
 
 controllerGrip1.add(controller2Marker);
 
-
+callModels(scene, grabVR);
 
 
 
