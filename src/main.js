@@ -9,6 +9,8 @@ import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
 import initPopups from "./initPopups";
 import initCameras from "./initCameras";
 import { createOverlay } from "./world/overlay";
+import GrabVR from './grabvr/src/client/grabvr.ts';
+import callModels from "./importModels.js";
 
 const container = document.getElementById("app");
 const cameraContainer = document.getElementById("camera-quadrant");
@@ -63,8 +65,25 @@ const rigMarker = new THREE.Mesh(
 rigMarker.position.set(0, 0, -0.5);
 playerRig.add(rigMarker);
 
+const grabVR = new GrabVR();
+
+const box = new THREE.Mesh(
+  new THREE.BoxGeometry(1.0, 1.0, 1.0),
+  new THREE.MeshBasicMaterial({
+    color: 0xff0066,
+    wireframe: true
+  })
+)
+scene.add(box)
+grabVR.grabableObjects().push(box);
+
+
+
 const leftController = renderer.xr.getController(0);
 const rightController = renderer.xr.getController(1);
+const controllerGrip0 = renderer.xr.getControllerGrip(0)
+const controllerGrip1 = renderer.xr.getControllerGrip(1)
+
 
 leftController.addEventListener("connected", (event) => {
   leftController.userData.handedness = event.data.handedness;
@@ -78,27 +97,48 @@ leftController.addEventListener("disconnected", () => {
 rightController.addEventListener("connected", (event) => {
   rightController.userData.handedness = event.data.handedness;
   rightController.userData.gamepad = event.data.gamepad || null;
+
+
 });
 
 rightController.addEventListener("disconnected", () => {
   rightController.userData.gamepad = null;
 });
 
+controllerGrip0.addEventListener("connected", (event) => {
+  controllerGrip0.add(controller1Marker)
+  grabVR.add(0, controllerGrip0, event.data.gamepad)
+})
+
+controllerGrip1.addEventListener("connected", (event) => {
+  controllerGrip1.add(controller2Marker)
+  grabVR.add(1, controllerGrip1, event.data.gamepad)
+})
+
 playerRig.add(leftController);
 playerRig.add(rightController);
+playerRig.add(controllerGrip0);
+playerRig.add(controllerGrip1);
 
 const controller1Marker = new THREE.Mesh(
-  new THREE.BoxGeometry(0.08, 0.08, 0.15),
+  new THREE.BoxGeometry(0.20, 0.08, 0.15),
   new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
 );
 
 const controller2Marker = new THREE.Mesh(
-  new THREE.BoxGeometry(0.08, 0.08, 0.15),
-  new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
+  new THREE.BoxGeometry(0.08, 0.15, 0.08),
+  new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // todo: need to fix rotation of controller model, current marker doesn't accurately reflect hand placement
 );
-leftController.add(controller1Marker);
 
-rightController.add(controller2Marker);
+controllerGrip0.add(controller1Marker);
+
+controllerGrip1.add(controller2Marker);
+
+callModels(scene, grabVR);
+
+
+
+
 
 const debug = document.createElement("pre");
 debug.className = "vr-debug";
@@ -163,6 +203,7 @@ renderer.setAnimationLoop(() => {
   const delta = clock.getDelta();
   movement.update(delta);
   controls.update();
+  grabVR.update(delta);
   multiplayer.updatePose(VRCamera, leftController, rightController, playerRig);
 
   if (renderer.xr.isPresenting) {
