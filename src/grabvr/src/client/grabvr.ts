@@ -20,7 +20,7 @@ export default class GrabVR {
   private _direction = new THREE.Vector3(0, -1, 0);
   private _eventListeners: any[] = new Array();
 
-  private _maxGrabDistance = 0.6; // meters, tune as needed
+  private _maxGrabDistance = 0.3; // meters, tune as needed
 
   constructor() { }
 
@@ -86,7 +86,7 @@ export default class GrabVR {
       const closeEnough = !!hit && hit.distance <= this._maxGrabDistance;
 
       if (closeEnough) {
-        this._line[key].visible = true;
+        this._line[key].visible = false;
 
         if (gamepad.buttons[1].pressed) {
           if (!this._hasAGrabbedObject[key]) {
