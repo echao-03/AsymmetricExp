@@ -24,7 +24,7 @@ export default function initCameras() {
     );
     // mapCamera original Position: (0, 1.2, 0) *Moved position to see maze room*
     mapCamera.position.set(-16, 18, 0);
-    mapCamera.lookAt(-16, 0, 0);   
+    mapCamera.lookAt(-16, 0, 0);
 
     const intersectionCamera = new THREE.PerspectiveCamera(
         75,
@@ -79,7 +79,7 @@ export default function initCameras() {
         100,
     );
     bleftQuadCamera.position.set(-26, 2, 10.5);
-    bleftQuadCamera.lookAt(-24, 0, 6.5);
+    bleftQuadCamera.lookAt(-24, -1.5, 6.5);
 
     const R1Default = new THREE.PerspectiveCamera(
         75,
