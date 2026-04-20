@@ -8,6 +8,7 @@ import "./style.css";
 import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
 import initPopups from "./initPopups";
 import initCameras from "./initCameras";
+import { createOverlay } from "./world/overlay";
 import GrabVR from './grabvr/src/client/grabvr.ts';
 import callModels from "./importModels.js";
 
@@ -144,6 +145,8 @@ debug.className = "vr-debug";
 document.body.appendChild(debug);
 
 const { walls, floor } = createMap(scene);
+
+const { overlay } = createOverlay(scene);
 
 const movement = createVRMovement({
   renderer,

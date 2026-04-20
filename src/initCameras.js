@@ -17,7 +17,7 @@ export default function initCameras() {
     );
 
     const mapCamera = new THREE.PerspectiveCamera(
-        75,
+        80,
         mapContainer.clientWidth / mapContainer.clientHeight,
         0.1,
         100,
@@ -72,6 +72,15 @@ export default function initCameras() {
     uleftQuadCamera.position.set(-25, 2, -7.5);
     uleftQuadCamera.lookAt(-24, 0, -8.5);
 
+    const bleftQuadCamera = new THREE.PerspectiveCamera(
+        75,
+        cameraContainer.clientWidth / cameraContainer.clientHeight,
+        0.1,
+        100,
+    );
+    bleftQuadCamera.position.set(-26, 2, 10.5);
+    bleftQuadCamera.lookAt(-24, -1.5, 6.5);
+
     const R1Default = new THREE.PerspectiveCamera(
         75,
         cameraContainer.clientWidth / cameraContainer.clientHeight,
@@ -90,7 +99,7 @@ export default function initCameras() {
     R2Camera.position.set(-9, 2, 0);
     R2Camera.lookAt(1, 1, 0);
 
-    const cameras = [[intersectionCamera, R1Camera, R2Camera, intersectionCamera], [R1Default, uleftQuadCamera, urightQuadCamera, brightQuadCamera], [R2Camera, intersectionCamera, R1Camera, intersectionCamera]];
+    const cameras = [[intersectionCamera, R1Camera, R2Camera, intersectionCamera], [R1Default, uleftQuadCamera, urightQuadCamera, brightQuadCamera, bleftQuadCamera], [R2Camera, intersectionCamera, R1Camera, intersectionCamera]];
 
     const cameraManager = new CameraManager({
         cameraContainer,
