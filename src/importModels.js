@@ -94,8 +94,8 @@ export default function callModels(sceneInput, grabVR) {
 
     const papers1 = [['Dear J,'], [''], ['I left some things in the '], ['server room. '], ['Can you fetch it for me?'], ['P.S. The security drone is on.'], ['- E']];
     const papers2 = [['Dear E,'], [''], ['It has come to my concern'], ['that the drone targets'], ['everyone.'], [''], ['Use code 814597 to disable.'], ['- J']];
-    const papers3 = [['Dear E,'], [''], ['I did not see your things in'], ['the server room.'], ['Perhaps the __ room has it.'], ['- J']]; // todo: find room name for letter
-    const papers4 = [['Dear J,'], [''], ['I cannot access the ___ room'], ['I think the first 4 numbers'], ['to deactivate the lasers are'], ['1956. The last two numbers are'], ['the amount of cameras in this'], ['maze, and the amount of lasers.'], ['- E']];
+    const papers3 = [['Dear E,'], [''], ['I did not see your things in'], ['the server room.'], ['Perhaps the office room has it.'], ['- J']]; // todo: find room name for letter
+    const papers4 = [['Dear J,'], [''], ['I cannot access the office room'], ['I think the first 4 numbers'], ['to deactivate the lasers are'], ['1956. The last two numbers are'], ['the amount of cameras in this'], ['maze, and the amount of lasers.'], ['- E']];
 
 
     const labelPaper_1 = makeLabelTexture(papers1);
