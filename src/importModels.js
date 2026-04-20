@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ThreeMFLoader } from 'three/examples/jsm/Addons.js';
 
-function makeLabelTexture(text) {
+function makeLabelTexture(lines) {
     const canvas = document.createElement("canvas");
     canvas.width = 500;
     canvas.height = 500;
@@ -14,16 +14,21 @@ function makeLabelTexture(text) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // border
-    ctx.strokeStyle = "#e4e4e4";
-    ctx.lineWidth = 1;
-    ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
 
     // text
     ctx.fillStyle = "#181818";
-    ctx.font = "50px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+    ctx.font = "35px sans-serif";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    const lineHeight = 50;
+    const leftMargin = 15;
+    const startY = 30;
+
+    for (let i = 0; i < lines.length; i++) {
+        ctx.fillText(lines[i], leftMargin, startY + i * lineHeight);
+    }
+
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
@@ -47,7 +52,7 @@ export default function callModels(sceneInput, grabVR) {
         console.error(error);
     });
 
-    // Positioned at Lright room
+    // Positioned at bright room
     loader.load(tableURL.href, function (gltf) {
         const model = gltf.scene;
         model.position.set(-9, 0.6, 4.3);
@@ -56,7 +61,7 @@ export default function callModels(sceneInput, grabVR) {
     }, undefined, function (error) {
         console.error(error);
     });
-    // Positioned at Lright room
+    // Positioned at bright room
     loader.load(tableURL.href, function (gltf) {
         const model = gltf.scene;
         model.position.set(-9, 0.6, 2.1);
@@ -87,9 +92,18 @@ export default function callModels(sceneInput, grabVR) {
 
     // Rendering 'papers' using a canvas to type out message
 
-    const labelPaper_1 = makeLabelTexture("test test test");
+    const papers1 = [['Dear J,'], [''], ['I left some things in the '], ['server room. '], ['Can you fetch it for me?'], ['P.S. The security drone is on.'], ['- E']];
+    const papers2 = [['Dear E,'], [''], ['It has come to my concern'], ['that the drone targets'], ['everyone.'], [''], ['Use code 814597 to disable.'], ['- J']];
+    const papers3 = [['Dear E,'], [''], ['I did not see your things in'], ['the server room.'], ['Perhaps the __ room has it.'], ['- J']]; // todo: find room name for letter
+    const papers4 = [['Dear J,'], [''], ['I cannot access the ___ room'], ['I think the first 4 numbers'], ['to deactivate the lasers are'], ['1956. The last two numbers are'], ['the amount of cameras in this'], ['maze, and the amount of lasers.'], ['- E']];
 
-    const materials = [
+
+    const labelPaper_1 = makeLabelTexture(papers1);
+    const labelPaper_2 = makeLabelTexture(papers2);
+    const labelPaper_3 = makeLabelTexture(papers3);
+    const labelPaper_4 = makeLabelTexture(papers4);
+
+    const materials1 = [
         new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // +X
         new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // -X
         new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // +Y
@@ -98,17 +112,71 @@ export default function callModels(sceneInput, grabVR) {
         new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // -Z
     ]
 
-    const testBox = new THREE.Mesh(
+    const materials2 = [
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // +X
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // -X
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // +Y
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // -Y
+        new THREE.MeshStandardMaterial({ map: labelPaper_2 }), // +Z (front)
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // -Z
+    ]
+
+    const materials3 = [
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // +X
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // -X
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // +Y
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // -Y
+        new THREE.MeshStandardMaterial({ map: labelPaper_3 }), // +Z (front)
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // -Z
+    ]
+
+    const materials4 = [
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // +X
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // -X
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // +Y
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // -Y
+        new THREE.MeshStandardMaterial({ map: labelPaper_4 }), // +Z (front)
+        new THREE.MeshStandardMaterial({ color: 0xFFFFFF }), // -Z
+    ]
+
+    const testBox1 = new THREE.Mesh(
         new THREE.BoxGeometry(0.2, 0.3, 0.01),
-        materials,
+        materials1,
+    )
+    const testBox2 = new THREE.Mesh(
+        new THREE.BoxGeometry(0.2, 0.3, 0.01),
+        materials2,
     )
 
-    testBox.position.set(0, 1, -0.5);
-    testBox.rotateX(-0.8);
+    const testBox3 = new THREE.Mesh(
+        new THREE.BoxGeometry(0.2, 0.3, 0.01),
+        materials3,
+    )
 
-    grabVR.grabableObjects().push(testBox);
+    const testBox4 = new THREE.Mesh(
+        new THREE.BoxGeometry(0.2, 0.3, 0.01),
+        materials4,
+    )
 
-    sceneInput.add(testBox);
+    testBox1.position.set(-9, 0.9, -0.8);
+    testBox1.rotateX(-0.8);
+
+    testBox2.position.set(-9, 0.9, 2.1);
+    testBox2.rotateX(-0.8);
+
+    testBox3.position.set(-9, 0.9, -2.2);
+    testBox3.rotateY(Math.PI);
+    testBox3.rotateX(-0.8);
+
+    testBox4.position.set(-24, 1, -6.7545);
+
+
+    grabVR.grabableObjects().push(testBox1);
+
+    sceneInput.add(testBox1);
+    sceneInput.add(testBox2);
+    sceneInput.add(testBox3);
+    sceneInput.add(testBox4);
 
 
 
