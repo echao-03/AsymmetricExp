@@ -23,8 +23,8 @@ export default function initCameras() {
         100,
     );
     // mapCamera original Position: (0, 1.2, 0) *Moved position to see maze room*
-    mapCamera.position.set(-16, 18, 0);
-    mapCamera.lookAt(-16, 0, 0);
+    mapCamera.position.set(0, 0.6, -6.5);
+    mapCamera.lookAt(-20, 0, -10);
 
     const intersectionCamera = new THREE.PerspectiveCamera(
         75,
