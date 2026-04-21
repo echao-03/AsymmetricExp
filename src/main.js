@@ -10,7 +10,7 @@ import initPopups from "./initPopups";
 import initCameras from "./initCameras";
 import { createOverlay } from "./world/overlay";
 import GrabVR from './grabvr/src/client/grabvr.ts';
-import callModels from "./importModels.js";
+import callModels, { callDrone } from "./importModels.js";
 
 const container = document.getElementById("app");
 const cameraContainer = document.getElementById("camera-quadrant");
@@ -151,6 +151,8 @@ controllerGrip1.add(controller2Marker);
 
 callModels(scene, grabVR);
 
+const drone = await callDrone(scene);
+
 const debug = document.createElement("pre");
 debug.className = "vr-debug";
 document.body.appendChild(debug);
@@ -219,6 +221,18 @@ scene.add(laserBox3);
 laserState.boxes.push(laserBox1, laserBox2, laserBox3);
 setLasersActive(true);
 
+const dronePrevPosition = new THREE.Vector3();
+const droneForwardTarget = new THREE.Vector3();
+dronePrevPosition.copy(drone.position);
+
+// Keep this if your model's "forward" axis needs correction.
+const droneYawOffset = -1;
+
+const moveStart = new THREE.Vector3(-26.5, 1.5, -5);
+const moveEnd = new THREE.Vector3(-26.5, 1.5, 4);
+const moveDuration = 18.0; // seconds
+const moveStartTime = performance.now();
+
 
 
 const hint = document.createElement("div");
@@ -232,6 +246,7 @@ scene.add(hemiLight);
 const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
 dirLight.position.set(2, 4, 1);
 scene.add(dirLight);
+
 
 const multiplayer = createMultiplayer({ scene, username: "Player" });
 
@@ -263,6 +278,25 @@ renderer.setAnimationLoop(() => {
   controls.update();
   grabVR.update(delta);
   multiplayer.updatePose(VRCamera, leftController, rightController, playerRig);
+  const elapsed = (performance.now() - moveStartTime) / 1000;
+  const t = (Math.sin((elapsed / moveDuration) * Math.PI * 2 - Math.PI / 2) + 1) / 2;
+  drone.position.lerpVectors(moveStart, moveEnd, t);
+
+  const movementDelta = new THREE.Vector3().subVectors(drone.position, dronePrevPosition);
+
+  // Only rotate when it actually moved this frame
+  if (movementDelta.lengthSq() > 1e-8) {
+    movementDelta.y = 0; // yaw only, no pitch
+    movementDelta.normalize();
+
+    droneForwardTarget.copy(drone.position).add(movementDelta);
+    drone.lookAt(droneForwardTarget.x, drone.position.y, droneForwardTarget.z);
+
+    // Apply model forward-axis correction if needed
+    drone.rotateY(droneYawOffset);
+  }
+
+  dronePrevPosition.copy(drone.position);
 
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);

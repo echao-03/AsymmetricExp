@@ -1,7 +1,5 @@
-import test from "node:test";
 import * as THREE from "three";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeMFLoader } from 'three/examples/jsm/Addons.js';
 
 function makeLabelTexture(lines) {
     const canvas = document.createElement("canvas");
@@ -36,8 +34,24 @@ function makeLabelTexture(lines) {
     return texture;
 }
 
-export default function callModels(sceneInput, grabVR) {
+export async function callDrone(sceneInput) {
     const loader = new GLTFLoader();
+    const droneURL = new URL("./models/vr_drone.glb", import.meta.url);
+
+    const droneGltf = await loader.loadAsync(droneURL.href);
+    const droneModel = droneGltf.scene;
+    droneModel.position.set(-24, 0.6, -9.2);
+    droneModel.scale.setScalar(0.3);
+    sceneInput.add(droneModel);
+
+    return droneModel;
+
+}
+
+export default function callModels(sceneInput, grabVR) {
+
+    const loader = new GLTFLoader();
+
 
     const tableURL = new URL('./models/Table.glb', import.meta.url);
 
@@ -89,6 +103,7 @@ export default function callModels(sceneInput, grabVR) {
     }, undefined, function (error) {
         console.error(error);
     });
+
 
     // Rendering 'papers' using a canvas to type out message
 
@@ -177,7 +192,6 @@ export default function callModels(sceneInput, grabVR) {
     sceneInput.add(testBox2);
     sceneInput.add(testBox3);
     sceneInput.add(testBox4);
-
 
 
 
