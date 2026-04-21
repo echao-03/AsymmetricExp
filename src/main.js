@@ -26,8 +26,26 @@ const {
 // Audio Loader
 const buttonPush = new Audio("./audio/ButtonPush.wav");
 
+const LASER_DISABLE_CODE = "195653";
+const laserState = {
+  active: true,
+  boxes: [],
+};
+
+const setLasersActive = (isActive) => {
+  laserState.active = isActive;
+  laserState.boxes.forEach((laser) => {
+    laser.visible = isActive;
+  });
+};
+
 // Initialize popups
-initPopups();
+initPopups({
+  requiredCode: LASER_DISABLE_CODE,
+  onCodeAccepted: () => {
+    setLasersActive(false);
+  },
+});
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
@@ -38,13 +56,10 @@ renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.xr.enabled = true;
 container.appendChild(renderer.domElement);
 
-const controls = new OrbitControls(VRCamera, renderer.domElement);
-controls.enableDamping = true;
-controls.target.set(0, 1.2, 0);
+const controls = new OrbitControls(mapCamera, renderer.domElement);
+controls.target.set(-27, 1, -6.5);
 controls.update();
-controls.enableRotate = false;
-controls.enablePan = false;
-controls.enableZoom = false;
+
 
 const vrButton = VRButton.createButton(renderer);
 document.body.appendChild(vrButton);
@@ -136,10 +151,6 @@ controllerGrip1.add(controller2Marker);
 
 callModels(scene, grabVR);
 
-
-
-
-
 const debug = document.createElement("pre");
 debug.className = "vr-debug";
 document.body.appendChild(debug);
@@ -156,12 +167,59 @@ const movement = createVRMovement({
   rightController,
   controllerMarker: controller2Marker,
   walls,
+  laserWalls: laserState.boxes,
+  isLasersActive: () => laserState.active,
   floor,
   playerRadius: 0.25,
   onDebug: (text) => {
     debug.textContent = text;
   },
 });
+
+const laserBox1 = new THREE.Mesh(
+  new THREE.BoxGeometry(0.2, 0.2, 2.8),
+  new THREE.MeshBasicMaterial({
+    color: 'red',
+    opacity: 0.3,
+    transparent: 'true',
+  })
+)
+
+laserBox1.position.set(-27.1, 1, -6.7);
+laserBox1.rotateY(Math.PI / -3.3);
+
+scene.add(laserBox1);
+
+const laserBox2 = new THREE.Mesh(
+  new THREE.BoxGeometry(0.2, 0.2, 2.8),
+  new THREE.MeshBasicMaterial({
+    color: 'red',
+    opacity: 0.3,
+    transparent: 'true',
+  })
+)
+
+laserBox2.position.set(-27.1, 0.5, -6.7);
+laserBox2.rotateY(Math.PI / -3.3);
+scene.add(laserBox2);
+
+const laserBox3 = new THREE.Mesh(
+  new THREE.BoxGeometry(0.2, 0.2, 2.8),
+  new THREE.MeshBasicMaterial({
+    color: 'red',
+    opacity: 0.3,
+    transparent: 'true',
+  })
+)
+
+laserBox3.position.set(-27.1, 1.3, -6.7);
+laserBox3.rotateY(Math.PI / -3.3);
+scene.add(laserBox3);
+
+laserState.boxes.push(laserBox1, laserBox2, laserBox3);
+setLasersActive(true);
+
+
 
 const hint = document.createElement("div");
 hint.className = "vr-hint";

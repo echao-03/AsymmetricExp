@@ -9,6 +9,8 @@ export function createVRMovement({
     controllerMarker,
     onDebug,
     walls = [],
+    laserWalls = [],
+    isLasersActive = () => false,
     floor,
     playerRadius = 0.25,
     speed = 2.0,
@@ -72,8 +74,19 @@ export function createVRMovement({
     const teleportLaunchSpeed = Math.max(5, speed * 3);
     const teleportReleaseLock = { active: false };
 
+    const getBlockingBoxes = () => {
+        const dynamicLaserBoxes = isLasersActive()
+            ? laserWalls.map((wall) => new THREE.Box3().setFromObject(wall))
+            : [];
+
+        if (isLasersActive()) {
+            return wallBoxes.concat(dynamicLaserBoxes);
+        }
+        return wallBoxes;
+    };
+
     const collidesXZ = (x, z) => {
-        for (const box of wallBoxes) {
+        for (const box of getBlockingBoxes()) {
             const minX = box.min.x - playerRadius;
             const maxX = box.max.x + playerRadius;
             const minZ = box.min.z - playerRadius;
@@ -162,7 +175,7 @@ export function createVRMovement({
             teleportVelocity.addScaledVector(teleportGravity, arcStep);
             nextPoint.copy(previousPoint).addScaledVector(teleportVelocity, arcStep);
 
-            const wallHit = wallBoxes.some((box) => segmentIntersectsBox(previousPoint, nextPoint, box));
+            const wallHit = getBlockingBoxes().some((box) => segmentIntersectsBox(previousPoint, nextPoint, box));
 
             if (wallHit) {
                 break;
