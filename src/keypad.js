@@ -1,5 +1,20 @@
-export class Keypad{
-    constructor({keypad, keys, clearButton, display, maxLength = 6, closeButton, acceptButton, popupButton}) {
+export class Keypad {
+    constructor({
+        keypad,
+        keys,
+        clearButton,
+        display,
+        maxLength = 6,
+        closeButton,
+        acceptButton,
+        popupButton,
+        secondaryKeys = [],
+        secondaryClearButton = null,
+        secondaryDisplay = null,
+        secondaryAcceptButton = null,
+        requiredCode = "",
+        onCodeAccepted = null,
+    }) {
         this.keypad = keypad;
         this.keys = keys;
         this.clearButton = clearButton;
@@ -9,6 +24,8 @@ export class Keypad{
         this.closeButton = closeButton;
         this.acceptButton = acceptButton;
         this.popupButton = popupButton;
+        this.requiredCode = requiredCode;
+        this.onCodeAccepted = onCodeAccepted;
     }
 
     init() {
@@ -16,22 +33,52 @@ export class Keypad{
             key.addEventListener("click", () => this.handleKeyPress(key));
         });
 
+
         this.clearButton.addEventListener("click", () => this.reset());
+        if (this.secondaryClearButton) {
+            this.secondaryClearButton.addEventListener("click", () => this.reset());
+        }
         this.closeButton.addEventListener("click", () => this.close());
         this.acceptButton.addEventListener("click", () => this.submit());
+        if (this.secondaryAcceptButton) {
+            this.secondaryAcceptButton.addEventListener("click", () => this.submit());
+        }
         this.popupButton.addEventListener("click", () => this.show());
+        this.updateDisplay();
     }
 
     handleKeyPress(key) {
         if (this.enteredCode.length >= this.maxLength) return;
 
-        if (key.textContent === "Accept") return;
-        this.enteredCode += key.textContent;
+        const keyValue = this.getKeyValue(key);
+        if (!keyValue || keyValue === "Accept" || keyValue === "Clear") return;
+
+        this.enteredCode += keyValue;
         this.updateDisplay();
     }
-    
+
+    getKeyValue(key) {
+        const textValue = (key.textContent || "").trim();
+        if (textValue) {
+            return textValue;
+        }
+
+        const idValue = key.id || "";
+        if (/^\d$/.test(idValue)) {
+            return idValue;
+        }
+
+        if (idValue.includes("accept")) return "Accept";
+        if (idValue.includes("clear")) return "Clear";
+        return "";
+    }
+
     updateDisplay() {
-        this.display.textContent = this.enteredCode || "ENTER CODE";
+        const text = this.enteredCode || "ENTER CODE";
+        this.display.textContent = text;
+        if (this.secondaryDisplay) {
+            this.secondaryDisplay.textContent = text;
+        }
     }
 
     reset() {
@@ -45,11 +92,35 @@ export class Keypad{
 
     close() {
         this.keypad.style.display = "none";
-        this.display.textContent = "ENTER CODE";
+        this.updateDisplay();
     }
 
     submit() {
-        // Placeholder for code submission logic
+        const currCode = this.getCode();
+
+        if (!currCode) {
+            this.updateDisplay();
+            return;
+        }
+
+        if (currCode === this.requiredCode) {
+            this.display.textContent = "ACCESS GRANTED";
+            if (this.secondaryDisplay) {
+                this.secondaryDisplay.textContent = "ACCESS GRANTED";
+            }
+            if (typeof this.onCodeAccepted === "function") {
+                this.onCodeAccepted(currCode);
+            }
+            this.enteredCode = "";
+            return;
+        }
+
+        this.display.textContent = "ACCESS DENIED";
+        if (this.secondaryDisplay) {
+            this.secondaryDisplay.textContent = "ACCESS DENIED";
+        }
+        this.enteredCode = "";
+
     }
 
     show() {
