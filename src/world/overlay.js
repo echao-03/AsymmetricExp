@@ -33,12 +33,12 @@ export function createOverlay(scene) {
   }
 
   // --- Example sections ---
-  drawSection(-14, -3, 5, 5, "rgba(0,255,0,0.1)");
-  drawSection(-19.8, -3, 6.5, 5,"rgba(0, 17, 255, 0.1)");
-  drawSection(-21.5, 2.5, 3, 6,"rgba(255, 123, 0, 0.1)");
-  drawSection(-18.5, 3, 3, 5,"rgba(234, 0, 255, 0.1)");
-  drawSection(-14.25, 3, 5.5, 5,"rgba(0, 225, 255, 0.1)");
-  drawSection(-15.75, 0, 8.5, 1,"rgba(255, 0, 0, 0.1)");
+  drawSection(-12, -6, 10, 9, "rgba(0,255,0,0.1)");
+  drawSection(-23.5, -6, 13, 9,"rgba(0, 17, 255, 0.1)");
+  drawSection(-27, 4.75, 6, 12.5,"rgba(255, 123, 0, 0.1)");
+  drawSection(-19.5, 6, 9, 9,"rgba(234, 0, 255, 0.1)");
+  drawSection(-11, 6, 8, 9,"rgba(0, 225, 255, 0.1)");
+  drawSection(-15.75, 0, 18, 3,"rgba(255, 0, 0, 0.1)");
 
 
 
@@ -56,7 +56,7 @@ export function createOverlay(scene) {
   const overlay = new THREE.Mesh(overlayGeometry, overlayMaterial);
 
   // IMPORTANT: keep it just above the floor
-  overlay.position.set(0, 10, 0);
+  overlay.position.set(200, 0.5, 0);
   overlay.rotation.x = -Math.PI / 2;
 
   scene.add(overlay);
