@@ -18,17 +18,31 @@ const cameraContainer = document.getElementById("camera-quadrant");
 const mapContainer = document.getElementById("map-quadrant");
 
 // Initialize cameras and camera manager
-const {
-  cameraManager,
-  VRCamera,
-  mapCamera
-} = initCameras();
+const { cameraManager, VRCamera, mapCamera } = initCameras();
 
 // Audio Loader
 const buttonPush = new Audio("./audio/ButtonPush.wav");
 
+const LASER_DISABLE_CODE = "195653";
+const laserState = {
+  active: true,
+  boxes: [],
+};
+
+const setLasersActive = (isActive) => {
+  laserState.active = isActive;
+  laserState.boxes.forEach((laser) => {
+    laser.visible = isActive;
+  });
+};
+
 // Initialize popups
-initPopups();
+initPopups({
+  requiredCode: LASER_DISABLE_CODE,
+  onCodeAccepted: () => {
+    setLasersActive(false);
+  },
+});
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
@@ -40,12 +54,8 @@ renderer.xr.enabled = true;
 container.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(VRCamera, renderer.domElement);
-controls.enableDamping = true;
-controls.target.set(0, 1.2, 0);
+controls.target.set(-27, 1, -6.5);
 controls.update();
-controls.enableRotate = false;
-controls.enablePan = false;
-controls.enableZoom = false;
 
 const vrButton = VRButton.createButton(renderer);
 document.body.appendChild(vrButton);
@@ -68,23 +78,10 @@ playerRig.add(rigMarker);
 
 const grabVR = new GrabVR();
 
-const box = new THREE.Mesh(
-  new THREE.BoxGeometry(1.0, 1.0, 1.0),
-  new THREE.MeshBasicMaterial({
-    color: 0xff0066,
-    wireframe: true
-  })
-)
-scene.add(box)
-grabVR.grabableObjects().push(box);
-
-
-
 const leftController = renderer.xr.getController(0);
 const rightController = renderer.xr.getController(1);
-const controllerGrip0 = renderer.xr.getControllerGrip(0)
-const controllerGrip1 = renderer.xr.getControllerGrip(1)
-
+const controllerGrip0 = renderer.xr.getControllerGrip(0);
+const controllerGrip1 = renderer.xr.getControllerGrip(1);
 
 leftController.addEventListener("connected", (event) => {
   leftController.userData.handedness = event.data.handedness;
@@ -98,8 +95,6 @@ leftController.addEventListener("disconnected", () => {
 rightController.addEventListener("connected", (event) => {
   rightController.userData.handedness = event.data.handedness;
   rightController.userData.gamepad = event.data.gamepad || null;
-
-
 });
 
 rightController.addEventListener("disconnected", () => {
@@ -107,14 +102,14 @@ rightController.addEventListener("disconnected", () => {
 });
 
 controllerGrip0.addEventListener("connected", (event) => {
-  controllerGrip0.add(controller1Marker)
-  grabVR.add(0, controllerGrip0, event.data.gamepad)
-})
+  controllerGrip0.add(controller1Marker);
+  grabVR.add(0, controllerGrip0, event.data.gamepad);
+});
 
 controllerGrip1.addEventListener("connected", (event) => {
-  controllerGrip1.add(controller2Marker)
-  grabVR.add(1, controllerGrip1, event.data.gamepad)
-})
+  controllerGrip1.add(controller2Marker);
+  grabVR.add(1, controllerGrip1, event.data.gamepad);
+});
 
 playerRig.add(leftController);
 playerRig.add(rightController);
@@ -122,7 +117,7 @@ playerRig.add(controllerGrip0);
 playerRig.add(controllerGrip1);
 
 const controller1Marker = new THREE.Mesh(
-  new THREE.BoxGeometry(0.20, 0.08, 0.15),
+  new THREE.BoxGeometry(0.2, 0.08, 0.15),
   new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
 );
 
@@ -136,6 +131,8 @@ controllerGrip0.add(controller1Marker);
 controllerGrip1.add(controller2Marker);
 
 callModels(scene, grabVR);
+
+const drone = await callDrone(scene);
 
 const debug = document.createElement("pre");
 debug.className = "vr-debug";
@@ -156,6 +153,8 @@ const movement = createVRMovement({
   rightController,
   controllerMarker: controller2Marker,
   walls,
+  laserWalls: laserState.boxes,
+  isLasersActive: () => laserState.active,
   floor,
   playerRadius: 0.25,
   onDebug: (text) => {
@@ -163,9 +162,65 @@ const movement = createVRMovement({
   },
 });
 
+const laserBox1 = new THREE.Mesh(
+  new THREE.BoxGeometry(0.2, 0.2, 2.8),
+  new THREE.MeshBasicMaterial({
+    color: "red",
+    opacity: 0.3,
+    transparent: "true",
+  }),
+);
+
+laserBox1.position.set(-27.1, 1, -6.7);
+laserBox1.rotateY(Math.PI / -3.3);
+
+scene.add(laserBox1);
+
+const laserBox2 = new THREE.Mesh(
+  new THREE.BoxGeometry(0.2, 0.2, 2.8),
+  new THREE.MeshBasicMaterial({
+    color: "red",
+    opacity: 0.3,
+    transparent: "true",
+  }),
+);
+
+laserBox2.position.set(-27.1, 0.5, -6.7);
+laserBox2.rotateY(Math.PI / -3.3);
+scene.add(laserBox2);
+
+const laserBox3 = new THREE.Mesh(
+  new THREE.BoxGeometry(0.2, 0.2, 2.8),
+  new THREE.MeshBasicMaterial({
+    color: "red",
+    opacity: 0.3,
+    transparent: "true",
+  }),
+);
+
+laserBox3.position.set(-27.1, 1.3, -6.7);
+laserBox3.rotateY(Math.PI / -3.3);
+scene.add(laserBox3);
+
+laserState.boxes.push(laserBox1, laserBox2, laserBox3);
+setLasersActive(true);
+
+const dronePrevPosition = new THREE.Vector3();
+const droneForwardTarget = new THREE.Vector3();
+dronePrevPosition.copy(drone.position);
+
+// Keep this if your model's "forward" axis needs correction.
+const droneYawOffset = -1;
+
+const moveStart = new THREE.Vector3(-26.5, 1.5, -5);
+const moveEnd = new THREE.Vector3(-26.5, 1.5, 4);
+const moveDuration = 18.0; // seconds
+const moveStartTime = performance.now();
+
 const hint = document.createElement("div");
 hint.className = "vr-hint";
-hint.textContent = "Desktop: drag to orbit. VR: push the right thumbstick up to aim a teleport arc, then release to move.";
+hint.textContent =
+  "Desktop: drag to orbit. VR: push the right thumbstick up to aim a teleport arc, then release to move.";
 document.body.appendChild(hint);
 
 const hemiLight = new THREE.HemisphereLight(0xbfd6ff, 0x1c2532, 1.1);
@@ -205,6 +260,29 @@ renderer.setAnimationLoop(() => {
   controls.update();
   grabVR.update(delta);
   multiplayer.updatePose(VRCamera, leftController, rightController, playerRig);
+  const elapsed = (performance.now() - moveStartTime) / 1000;
+  const t =
+    (Math.sin((elapsed / moveDuration) * Math.PI * 2 - Math.PI / 2) + 1) / 2;
+  drone.position.lerpVectors(moveStart, moveEnd, t);
+
+  const movementDelta = new THREE.Vector3().subVectors(
+    drone.position,
+    dronePrevPosition,
+  );
+
+  // Only rotate when it actually moved this frame
+  if (movementDelta.lengthSq() > 1e-8) {
+    movementDelta.y = 0; // yaw only, no pitch
+    movementDelta.normalize();
+
+    droneForwardTarget.copy(drone.position).add(movementDelta);
+    drone.lookAt(droneForwardTarget.x, drone.position.y, droneForwardTarget.z);
+
+    // Apply model forward-axis correction if needed
+    drone.rotateY(droneYawOffset);
+  }
+
+  dronePrevPosition.copy(drone.position);
 
   // Sync the map camera's player clone with the main player rig
   if (playerClone) {
