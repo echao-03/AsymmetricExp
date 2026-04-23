@@ -11,6 +11,7 @@ import initCameras from "./initCameras";
 import { createOverlay } from "./world/overlay";
 import GrabVR from './grabvr/src/client/grabvr.ts';
 import callModels from "./importModels.js";
+import createMapCopy from "./world/mapCopy";
 
 const container = document.getElementById("app");
 const cameraContainer = document.getElementById("camera-quadrant");
@@ -136,15 +137,14 @@ controllerGrip1.add(controller2Marker);
 
 callModels(scene, grabVR);
 
-
-
-
-
 const debug = document.createElement("pre");
 debug.className = "vr-debug";
 document.body.appendChild(debug);
 
 const { walls, floor } = createMap(scene);
+
+// Create a copy of the map for the map camera
+const { wallsCopy, floorCopy, playerClone } = createMapCopy(scene);
 
 const { overlay } = createOverlay(scene);
 
@@ -205,6 +205,14 @@ renderer.setAnimationLoop(() => {
   controls.update();
   grabVR.update(delta);
   multiplayer.updatePose(VRCamera, leftController, rightController, playerRig);
+
+  // Sync the map camera's player clone with the main player rig
+  if (playerClone) {
+    playerClone.position.x = playerRig.position.x + 200;
+    playerClone.position.y = 0.8;
+    playerClone.position.z = playerRig.position.z;
+    playerClone.quaternion.copy(playerRig.quaternion);
+  }
 
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);
