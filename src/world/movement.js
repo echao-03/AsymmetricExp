@@ -225,8 +225,7 @@ export function createVRMovement({
         playerRig.position.x = teleportDestination.x;
         playerRig.position.z = teleportDestination.z;
 
-        playerClone.position.x = playerRig.position.x + 200;
-        playerClone.position.z = playerRig.position.z;
+
     };
 
     const fadePlane = new THREE.Mesh(

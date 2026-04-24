@@ -10,7 +10,7 @@ import initPopups from "./initPopups";
 import initCameras from "./initCameras";
 import { createOverlay } from "./world/overlay";
 import GrabVR from './grabvr/src/client/grabvr.ts';
-import callModels, {callDrone} from "./importModels.js";
+import callModels, { callDrone } from "./importModels.js";
 import createMapCopy from "./world/mapCopy";
 
 const container = document.getElementById("app");
@@ -160,7 +160,6 @@ const movement = createVRMovement({
   onDebug: (text) => {
     debug.textContent = text;
   },
-  playerClone
 });
 
 const laserBox1 = new THREE.Mesh(
@@ -231,7 +230,7 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
 dirLight.position.set(2, 4, 1);
 scene.add(dirLight);
 
-const multiplayer = createMultiplayer({ scene, username: "Player" });
+const multiplayer = createMultiplayer({ scene, username: "Player", playerClone });
 
 window.addEventListener("resize", () => {
   mapCamera.aspect = container.clientWidth / container.clientHeight;
@@ -261,6 +260,7 @@ renderer.setAnimationLoop(() => {
   controls.update();
   grabVR.update(delta);
   multiplayer.updatePose(VRCamera, leftController, rightController, playerRig, playerClone);
+
   const elapsed = (performance.now() - moveStartTime) / 1000;
   const t =
     (Math.sin((elapsed / moveDuration) * Math.PI * 2 - Math.PI / 2) + 1) / 2;

@@ -1,7 +1,7 @@
 import NetworkClient from "../NetworkClient.js";
 import Avatar from "../Avatar.js";
 
-export function createMultiplayer({ scene, username = "Player" }) {
+export function createMultiplayer({ scene, username = "Player", playerClone }) {
     const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
     const network = new NetworkClient(`${wsProtocol}://${window.location.host}/ws`, username);
     const remoteAvatars = new Map();
@@ -38,6 +38,10 @@ export function createMultiplayer({ scene, username = "Player" }) {
                 data.leftControllerMatrix,
                 data.rightControllerMatrix
             );
+
+            playerClone.position.x = data.hmdPosition[0] + 200;
+            playerClone.position.z = data.hmdPosition[2];
+
         }
     });
 
@@ -47,8 +51,8 @@ export function createMultiplayer({ scene, username = "Player" }) {
         }
 
         playerRig.updateMatrixWorld(true);
-        playerClone.updateMatrixWorld(true);
-        network.sendPose(camera, leftController, rightController);
+        network.sendPose(camera, leftController, rightController, playerClone);
+
     }
 
     function dispose() {
