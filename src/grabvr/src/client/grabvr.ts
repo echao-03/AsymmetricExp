@@ -20,7 +20,7 @@ export default class GrabVR {
   private _direction = new THREE.Vector3(0, -1, 0);
   private _eventListeners: any[] = new Array();
 
-  private _maxGrabDistance = 0.3; // meters, tune as needed
+  private _maxGrabDistance = 0.1; // meters, tune as needed
 
   constructor() { }
 

@@ -80,7 +80,7 @@ export default function initCameras() {
         100,
     );
     bleftQuadCamera.position.set(-26, 2, 10.5);
-    bleftQuadCamera.lookAt(-24, 0, 6.5);
+    bleftQuadCamera.lookAt(-24, -1.5, 6.5);
 
     const R1Default = new THREE.PerspectiveCamera(
         75,
