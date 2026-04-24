@@ -285,14 +285,6 @@ renderer.setAnimationLoop(() => {
 
   dronePrevPosition.copy(drone.position);
 
-  // Sync the map camera's player clone with the main player rig
-  if (playerClone) {
-    playerClone.position.x = playerRig.position.x + 200;
-    playerClone.position.y = 0.8;
-    playerClone.position.z = playerRig.position.z;
-    playerClone.quaternion.copy(playerRig.quaternion);
-  }
-
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);
   } else {
