@@ -260,7 +260,7 @@ renderer.setAnimationLoop(() => {
   movement.update(delta);
   controls.update();
   grabVR.update(delta);
-  multiplayer.updatePose(VRCamera, leftController, rightController, playerRig);
+  multiplayer.updatePose(VRCamera, leftController, rightController, playerRig, playerClone);
   const elapsed = (performance.now() - moveStartTime) / 1000;
   const t =
     (Math.sin((elapsed / moveDuration) * Math.PI * 2 - Math.PI / 2) + 1) / 2;

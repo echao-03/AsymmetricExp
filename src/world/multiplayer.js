@@ -41,12 +41,13 @@ export function createMultiplayer({ scene, username = "Player" }) {
         }
     });
 
-    function updatePose(camera, leftController, rightController, playerRig) {
+    function updatePose(camera, leftController, rightController, playerRig, playerClone) {
         if (!network || !network.isConnected) {
             return;
         }
 
         playerRig.updateMatrixWorld(true);
+        playerClone.updateMatrixWorld(true);
         network.sendPose(camera, leftController, rightController);
     }
 
