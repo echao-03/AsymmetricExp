@@ -10,7 +10,7 @@ import initPopups from "./initPopups";
 import initCameras from "./initCameras";
 import { createOverlay } from "./world/overlay";
 import GrabVR from './grabvr/src/client/grabvr.ts';
-import callModels from "./importModels.js";
+import callModels, {callDrone} from "./importModels.js";
 import createMapCopy from "./world/mapCopy";
 
 const container = document.getElementById("app");
