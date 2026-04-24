@@ -161,6 +161,7 @@ const movement = createVRMovement({
   onDebug: (text) => {
     debug.textContent = text;
   },
+  playerClone
 });
 
 const hint = document.createElement("div");

@@ -13,6 +13,7 @@ export function createVRMovement({
     playerRadius = 0.25,
     speed = 2.0,
     deadzone = 0,
+    playerClone
 }) {
     const controllerWorldPosition = new THREE.Vector3();
     // Quaternion is a number system that is applied in 3D space
@@ -210,6 +211,9 @@ export function createVRMovement({
         }
         playerRig.position.x = teleportDestination.x;
         playerRig.position.z = teleportDestination.z;
+
+        playerClone.position.x = playerRig.position.x + 200;
+        playerClone.position.z = playerRig.position.z;
     };
 
     const fadePlane = new THREE.Mesh(
