@@ -187,7 +187,7 @@ class NetworkClient {
      * @param {THREE.Object3D} leftController - Left controller object
      * @param {THREE.Object3D} rightController - Right controller object
      */
-    sendPose(camera, leftController, rightController) {
+    sendPose(camera, leftController, rightController, playerClone) {
         const now = Date.now();
         if (now - this.lastPoseSentTime < this.poseThrottle) {
             return;
@@ -209,6 +209,8 @@ class NetworkClient {
         const hmdPosition = [hmdWorldPos.x, hmdWorldPos.y, hmdWorldPos.z];
         const hmdRotation = [hmdWorldQuat.x, hmdWorldQuat.y, hmdWorldQuat.z, hmdWorldQuat.w];
 
+
+
         // Controllers already sent in world space
         const leftControllerMatrix = this.matrix4ToArray(leftController.matrixWorld);
         const rightControllerMatrix = this.matrix4ToArray(rightController.matrixWorld);
@@ -220,6 +222,8 @@ class NetworkClient {
             leftControllerMatrix,
             rightControllerMatrix,
         });
+
+        return hmdPosition;
     }
 
     /**

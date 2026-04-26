@@ -21,7 +21,7 @@ export default function createMapCopy(scene) {
   const playerClone = new THREE.Mesh(playerCloneGeometry, playerCloneMaterial);
   playerClone.position.set(200, 0.8, 0);
 
-  const radarGeometry = new THREE.RingGeometry(1.9, 2.1, 64);
+  const radarGeometry = new THREE.RingGeometry(2.9, 3.1, 64);
   const radarMaterial = new THREE.MeshBasicMaterial({
     color: 0xffffff,
     transparent: true,
@@ -31,7 +31,7 @@ export default function createMapCopy(scene) {
 
   const radarCircle = new THREE.Mesh(radarGeometry, radarMaterial);
   radarCircle.rotation.x = -Math.PI / 2;
-  radarCircle.position.y = 0.6;
+  radarCircle.position.y = 1;
   playerClone.add(radarCircle);
 
   const wallMaterial = new THREE.MeshStandardMaterial({

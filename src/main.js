@@ -10,7 +10,7 @@ import initPopups from "./initPopups";
 import initCameras from "./initCameras";
 import { createOverlay } from "./world/overlay";
 import GrabVR from './grabvr/src/client/grabvr.ts';
-import callModels from "./importModels.js";
+import callModels, { callDrone } from "./importModels.js";
 import createMapCopy from "./world/mapCopy";
 
 const container = document.getElementById("app");
@@ -230,7 +230,7 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
 dirLight.position.set(2, 4, 1);
 scene.add(dirLight);
 
-const multiplayer = createMultiplayer({ scene, username: "Player" });
+const multiplayer = createMultiplayer({ scene, username: "Player", playerClone });
 
 window.addEventListener("resize", () => {
   mapCamera.aspect = container.clientWidth / container.clientHeight;
@@ -259,7 +259,8 @@ renderer.setAnimationLoop(() => {
   movement.update(delta);
   controls.update();
   grabVR.update(delta);
-  multiplayer.updatePose(VRCamera, leftController, rightController, playerRig);
+  multiplayer.updatePose(VRCamera, leftController, rightController, playerRig, playerClone);
+
   const elapsed = (performance.now() - moveStartTime) / 1000;
   const t =
     (Math.sin((elapsed / moveDuration) * Math.PI * 2 - Math.PI / 2) + 1) / 2;
@@ -283,14 +284,6 @@ renderer.setAnimationLoop(() => {
   }
 
   dronePrevPosition.copy(drone.position);
-
-  // Sync the map camera's player clone with the main player rig
-  if (playerClone) {
-    playerClone.position.x = playerRig.position.x + 200;
-    playerClone.position.y = 0.8;
-    playerClone.position.z = playerRig.position.z;
-    playerClone.quaternion.copy(playerRig.quaternion);
-  }
 
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);
