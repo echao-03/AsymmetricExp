@@ -212,10 +212,36 @@ dronePrevPosition.copy(drone.position);
 // Keep this if your model's "forward" axis needs correction.
 const droneYawOffset = -1;
 
-const moveStart = new THREE.Vector3(-26.5, 1.5, -5);
-const moveEnd = new THREE.Vector3(-26.5, 1.5, 4);
-const moveDuration = 18.0; // seconds
+const dronePoints = [
+  new THREE.Vector3(-26.5, 1.5, 4),
+  new THREE.Vector3(-26.5, 1.5, 0),
+  new THREE.Vector3(-29.5, 1.5, 0),
+  new THREE.Vector3(-29.5, 1.5, -5),
+  new THREE.Vector3(-26.5, 1.5, -5),
+  new THREE.Vector3(-24, 1.5, -6),
+  new THREE.Vector3(-20.5, 1.5, -6),
+  new THREE.Vector3(-20.5, 1.5, -3),
+  new THREE.Vector3(-22, 1.5, -3),
+  new THREE.Vector3(-20.5, 1.5, -3),
+  new THREE.Vector3(-20.5, 1.5, -6),
+  new THREE.Vector3(-24, 1.5, -6),
+  new THREE.Vector3(-26.5, 1.5, -5),
+  new THREE.Vector3(-26.5, 1.5, 4),
+  new THREE.Vector3(-25, 1.5, 4),
+  new THREE.Vector3(-25, 1.5, 6),
+  new THREE.Vector3(-16, 1.5, 6),
+  new THREE.Vector3(-16, 1.5, 7.5),
+  new THREE.Vector3(-20, 1.5, 7.5),
+  new THREE.Vector3(-20, 1.5, 6),
+  new THREE.Vector3(-16, 1.5, 6),
+  new THREE.Vector3(-25, 1.5, 6),
+  new THREE.Vector3(-25, 1.5, 4),
+];
+
+const moveDuration = 3.0; // seconds
 const moveStartTime = performance.now();
+const loopDrone = true;
+const segmentCount = dronePoints.length;
 
 const hint = document.createElement("div");
 hint.className = "vr-hint";
@@ -254,6 +280,7 @@ function renderInContainer(cam, el) {
   renderer.render(scene, cam);
 }
 const clock = new THREE.Clock();
+
 renderer.setAnimationLoop(() => {
   const delta = clock.getDelta();
   movement.update(delta);
@@ -264,7 +291,30 @@ renderer.setAnimationLoop(() => {
   const elapsed = (performance.now() - moveStartTime) / 1000;
   const t =
     (Math.sin((elapsed / moveDuration) * Math.PI * 2 - Math.PI / 2) + 1) / 2;
-  drone.position.lerpVectors(moveStart, moveEnd, t);
+  let frac = moveDuration > 0 ? (elapsed / moveDuration) % 1 : 0; // 0..1 across whole loop
+  if (frac < 0) frac += 1;
+
+  // map global fraction to segment index and per-segment t
+  const totalSegments = Math.max(1, segmentCount);
+  let segmentFloat = frac * totalSegments;
+  let segmentIndex = Math.floor(segmentFloat);
+  let segmentT = segmentFloat - segmentIndex;
+
+  // clamp/wrap indices depending on looping
+  if (!loopDrone) {
+    // if not looping, ensure we don't wrap past last segment
+    const maxSegments = Math.max(1, segmentCount - 1);
+    segmentIndex = Math.min(segmentIndex, maxSegments - 1);
+    const startPoint = dronePoints[segmentIndex];
+    const endPoint = dronePoints[Math.min(segmentIndex + 1, dronePoints.length - 1)];
+    drone.position.lerpVectors(startPoint, endPoint, segmentT);
+  } else {
+    // looping: last segment goes from last point back to first
+    segmentIndex = segmentIndex % totalSegments;
+    const startPoint = dronePoints[segmentIndex];
+    const endPoint = dronePoints[(segmentIndex + 1) % totalSegments];
+    drone.position.lerpVectors(startPoint, endPoint, segmentT);
+  }
 
   const movementDelta = new THREE.Vector3().subVectors(
     drone.position,
