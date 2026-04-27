@@ -227,9 +227,18 @@ const dronePoints = [
   new THREE.Vector3(-24, 1.5, -6),
   new THREE.Vector3(-26.5, 1.5, -5),
   new THREE.Vector3(-26.5, 1.5, 4),
+  new THREE.Vector3(-25, 1.5, 4),
+  new THREE.Vector3(-25, 1.5, 6),
+  new THREE.Vector3(-16, 1.5, 6),
+  new THREE.Vector3(-16, 1.5, 7.5),
+  new THREE.Vector3(-20, 1.5, 7.5),
+  new THREE.Vector3(-20, 1.5, 6),
+  new THREE.Vector3(-16, 1.5, 6),
+  new THREE.Vector3(-25, 1.5, 6),
+  new THREE.Vector3(-25, 1.5, 4),
 ];
 
-const moveDuration = 5.0; // seconds
+const moveDuration = 3.0; // seconds
 const moveStartTime = performance.now();
 const loopDrone = true;
 const segmentCount = dronePoints.length;
