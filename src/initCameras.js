@@ -26,8 +26,8 @@ export default function initCameras() {
     // Moved 200 units to 184
     // mapCamera.position.set(184, 18, 0);
     // mapCamera.lookAt(184, 0, 0);   
-    mapCamera.position.set(-12, 18, 0);
-    mapCamera.lookAt(-12, 0, 0);
+    mapCamera.position.set(2, 18, 0);
+    mapCamera.lookAt(2, 0, 0);
     const intersectionCamera = new THREE.PerspectiveCamera(
         75,
         cameraContainer.clientWidth / cameraContainer.clientHeight,
