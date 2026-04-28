@@ -130,8 +130,6 @@ controllerGrip0.add(controller1Marker);
 
 controllerGrip1.add(controller2Marker);
 
-callModels(scene, grabVR);
-
 const drone = await callDrone(scene);
 
 const debug = document.createElement("pre");
@@ -141,7 +139,9 @@ document.body.appendChild(debug);
 const { walls, floor } = createMap(scene);
 
 // Create a copy of the map for the map camera
-const { wallsCopy, floorCopy, playerClone } = createMapCopy(scene);
+const { wallsCopy, floorCopy, playerClone, radar } = createMapCopy(scene);
+
+callModels(scene, grabVR, radar);
 
 const { overlay } = createOverlay(scene);
 
@@ -259,6 +259,10 @@ renderer.setAnimationLoop(() => {
   movement.update(delta);
   controls.update();
   grabVR.update(delta);
+
+  //Radar animation
+  radar.update(delta)
+
   multiplayer.updatePose(VRCamera, leftController, rightController, playerRig, playerClone);
 
   const elapsed = (performance.now() - moveStartTime) / 1000;
