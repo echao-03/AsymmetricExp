@@ -2,7 +2,7 @@ import makeDraggable from "./draggable";
 import { Keypad } from "./keypad";
 import { Handbook } from "./handbook";
 
-export default function initPopups({ requiredCode = "", onCodeAccepted = null } = {}) {
+export default function initPopups({ requiredCode = "", onCodeAccepted = null, laserState } = {}) {
     // HTML elements for popups
     const keypad = document.getElementById("keypad");
     const handbookButton = document.getElementById("handbook-button");
@@ -35,13 +35,15 @@ export default function initPopups({ requiredCode = "", onCodeAccepted = null } 
         secondaryAcceptButton: acceptButtonSmall,
         requiredCode,
         onCodeAccepted,
+        laserState,
     });
 
     // Init handbook
     const handbookObj = new Handbook({
         handbook: handbook,
         popupButton: handbookButton,
-        closeButton: handbookClose
+        closeButton: handbookClose,
+        laserState,
     });
 
     // Call init() for handbook and keypad for event listeners

@@ -42,6 +42,7 @@ initPopups({
   onCodeAccepted: () => {
     setLasersActive(false);
   },
+  laserState,
 });
 
 const scene = new THREE.Scene();
@@ -171,8 +172,8 @@ const laserBox1 = new THREE.Mesh(
   }),
 );
 
-laserBox1.position.set(-27.1, 1, -6.7);
-laserBox1.rotateY(Math.PI / -3.3);
+laserBox1.position.set(-29.25, 1, -8.7);
+laserBox1.rotateY(Math.PI / 2);
 
 scene.add(laserBox1);
 
@@ -185,8 +186,8 @@ const laserBox2 = new THREE.Mesh(
   }),
 );
 
-laserBox2.position.set(-27.1, 0.5, -6.7);
-laserBox2.rotateY(Math.PI / -3.3);
+laserBox2.position.set(-29.25, 0.5, -8.7);
+laserBox2.rotateY(Math.PI / 2);
 scene.add(laserBox2);
 
 const laserBox3 = new THREE.Mesh(
@@ -198,8 +199,8 @@ const laserBox3 = new THREE.Mesh(
   }),
 );
 
-laserBox3.position.set(-27.1, 1.3, -6.7);
-laserBox3.rotateY(Math.PI / -3.3);
+laserBox3.position.set(-29.25, 1.3, -8.7);
+laserBox3.rotateY(Math.PI / 2);
 scene.add(laserBox3);
 
 laserState.boxes.push(laserBox1, laserBox2, laserBox3);
