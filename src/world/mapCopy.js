@@ -103,11 +103,11 @@ export default function createMapCopy(scene) {
     { geo: "roomShort", x: -24.75, z: -4 },
     { geo: "roomShorter", x: -22.25, z: -4, ry: Math.PI / 2 },
 
-    { geo: "roomShorter", x: -29.25, z: -6, ry: Math.PI / 2 },
+    { geo: "roomShorter", x: -29.25, z: -4, ry: Math.PI / 2 },
 
-    { geo: "roomShort", x: -27.5, z: -2 },
+    { geo: "roomShort", x: -27.5, z: 0 },
 
-    { geo: "roomShorter", x: -29.25, z: 1, ry: Math.PI / 2 },
+    { geo: "roomShorter", x: -29.25, z: 3, ry: Math.PI / 2 },
 
     { geo: "roomLong", x: -28.25, z: 9, ry: Math.PI / 2 },
     { geo: "roomLong", x: -26.25, z: 7 },

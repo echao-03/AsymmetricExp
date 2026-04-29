@@ -14,6 +14,7 @@ export class Keypad {
         secondaryAcceptButton = null,
         requiredCode = "",
         onCodeAccepted = null,
+        laserState,
     }) {
         this.keypad = keypad;
         this.keys = keys;
@@ -26,6 +27,8 @@ export class Keypad {
         this.popupButton = popupButton;
         this.requiredCode = requiredCode;
         this.onCodeAccepted = onCodeAccepted;
+        this.passcodes = new Map();
+        this.laserState = laserState;
     }
 
     init() {
@@ -45,6 +48,8 @@ export class Keypad {
         }
         this.popupButton.addEventListener("click", () => this.show());
         this.updateDisplay();
+
+        this.passcodes.set(this.laserState, "195653");
     }
 
     handleKeyPress(key) {
@@ -103,10 +108,10 @@ export class Keypad {
             return;
         }
 
-        if (currCode === this.requiredCode) {
-            this.display.textContent = "ACCESS GRANTED";
+        if (currCode === this.passcodes.get(this.laserState)) {
+            this.display.textContent = "ACCEPTED";
             if (this.secondaryDisplay) {
-                this.secondaryDisplay.textContent = "ACCESS GRANTED";
+                this.secondaryDisplay.textContent = "ACCEPTED";
             }
             if (typeof this.onCodeAccepted === "function") {
                 this.onCodeAccepted(currCode);
@@ -115,9 +120,9 @@ export class Keypad {
             return;
         }
 
-        this.display.textContent = "ACCESS DENIED";
+        this.display.textContent = "DENIED";
         if (this.secondaryDisplay) {
-            this.secondaryDisplay.textContent = "ACCESS DENIED";
+            this.secondaryDisplay.textContent = "DENIED";
         }
         this.enteredCode = "";
 

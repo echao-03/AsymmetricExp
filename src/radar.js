@@ -6,6 +6,7 @@ export class Radar {
     this.innerRadius = innerRadius;
     this.scanButton = document.getElementById("scan-button");
     this.scanableObjects = scanableObjects;
+    this.scanning = false;
 
     this.idleColor = 0xffffff;
     this.activeColor = 0x00ff00;
@@ -55,6 +56,7 @@ export class Radar {
     console.log("Scanning...");
       this.pulseMesh.material.color.set(this.activeColor);
       this.mesh.material.color.set(this.activeColor);
+      this.scanning = true;
 
     const center = this.mesh.getWorldPosition(new THREE.Vector3());
     const detected = [];
@@ -79,6 +81,7 @@ export class Radar {
     this.resetColorTimeout = setTimeout(() => {
         this.pulseMesh.material.color.set(this.idleColor);
         this.mesh.material.color.set(this.idleColor);
+        this.scanning = false;
         detected.forEach(obj => {
             obj.visible = false;
         });
@@ -86,19 +89,25 @@ export class Radar {
     }, 3000);
   }
 
-    update(deltaTime) {
-    this.pulseScale += this.pulseSpeed * deltaTime;
+  update(deltaTime) {
+    if (this.scanning) {
+      this.pulseScale += this.pulseSpeed * deltaTime;
 
-    if (this.pulseScale > this.pulseResetAt) {
-        this.pulseScale = 0;
+      if (this.pulseScale > this.pulseResetAt) {
+          this.pulseScale = 0;
+      }
+
+      const scale = this.pulseScale;
+
+      this.pulseMesh.scale.set(scale, scale, scale);
+
+      // fade out as it expands
+      const t = 1 - (scale / this.pulseResetAt);
+      this.pulseMesh.material.opacity = t * 0.6;
+    } else {
+      this.pulseScale = 0;
+      this.pulseMesh.scale.set(0, 0, 0);
+      this.pulseMesh.material.opacity = 1 - (this.pulseScale / this.pulseResetAt) * 0.6;
     }
-
-    const scale = this.pulseScale;
-
-    this.pulseMesh.scale.set(scale, scale, scale);
-
-    // fade out as it expands
-    const t = 1 - (scale / this.pulseResetAt);
-    this.pulseMesh.material.opacity = t * 0.6;
-    }
+  }
 }
