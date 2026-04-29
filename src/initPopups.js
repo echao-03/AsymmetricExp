@@ -33,7 +33,6 @@ export default function initPopups({ requiredCode = "", onCodeAccepted = null, l
         acceptButton: acceptButton,
         popupButton: keypadButton,
         secondaryAcceptButton: acceptButtonSmall,
-        requiredCode,
         onCodeAccepted,
         laserState,
     });

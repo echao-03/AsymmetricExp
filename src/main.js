@@ -12,6 +12,7 @@ import { createOverlay } from "./world/overlay";
 import GrabVR from './grabvr/src/client/grabvr.ts';
 import callModels, { callDrone } from "./importModels.js";
 import createMapCopy from "./world/mapCopy";
+import setLasersActive from "./lasers.js";
 
 const container = document.getElementById("app");
 const cameraContainer = document.getElementById("camera-quadrant");
@@ -22,28 +23,6 @@ const { cameraManager, VRCamera, mapCamera } = initCameras();
 
 // Audio Loader
 const buttonPush = new Audio("./audio/ButtonPush.wav");
-
-const LASER_DISABLE_CODE = "195653";
-const laserState = {
-  active: true,
-  boxes: [],
-};
-
-const setLasersActive = (isActive) => {
-  laserState.active = isActive;
-  laserState.boxes.forEach((laser) => {
-    laser.visible = isActive;
-  });
-};
-
-// Initialize popups
-initPopups({
-  requiredCode: LASER_DISABLE_CODE,
-  onCodeAccepted: () => {
-    setLasersActive(false);
-  },
-  laserState,
-});
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070b);
@@ -137,7 +116,8 @@ const debug = document.createElement("pre");
 debug.className = "vr-debug";
 document.body.appendChild(debug);
 
-const { walls, floor } = createMap(scene);
+// Create map that vr user will navigate through
+const { walls, floor, laserState } = createMap(scene);
 
 // Create a copy of the map for the map camera
 const { wallsCopy, floorCopy, playerClone, radar } = createMapCopy(scene);
@@ -163,48 +143,15 @@ const movement = createVRMovement({
   },
 });
 
-const laserBox1 = new THREE.Mesh(
-  new THREE.BoxGeometry(0.2, 0.2, 2.8),
-  new THREE.MeshBasicMaterial({
-    color: "red",
-    opacity: 0.3,
-    transparent: "true",
-  }),
-);
+// Initialize popups
+initPopups({
+  onCodeAccepted: () => {
+    setLasersActive(false, laserState);
+  },
+  laserState,
+});
 
-laserBox1.position.set(-29.25, 1, -8.7);
-laserBox1.rotateY(Math.PI / 2);
-
-scene.add(laserBox1);
-
-const laserBox2 = new THREE.Mesh(
-  new THREE.BoxGeometry(0.2, 0.2, 2.8),
-  new THREE.MeshBasicMaterial({
-    color: "red",
-    opacity: 0.3,
-    transparent: "true",
-  }),
-);
-
-laserBox2.position.set(-29.25, 0.5, -8.7);
-laserBox2.rotateY(Math.PI / 2);
-scene.add(laserBox2);
-
-const laserBox3 = new THREE.Mesh(
-  new THREE.BoxGeometry(0.2, 0.2, 2.8),
-  new THREE.MeshBasicMaterial({
-    color: "red",
-    opacity: 0.3,
-    transparent: "true",
-  }),
-);
-
-laserBox3.position.set(-29.25, 1.3, -8.7);
-laserBox3.rotateY(Math.PI / 2);
-scene.add(laserBox3);
-
-laserState.boxes.push(laserBox1, laserBox2, laserBox3);
-setLasersActive(true);
+setLasersActive(true, laserState);
 
 const dronePrevPosition = new THREE.Vector3();
 const droneForwardTarget = new THREE.Vector3();
