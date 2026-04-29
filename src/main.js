@@ -111,10 +111,6 @@ controllerGrip0.add(controller1Marker);
 
 controllerGrip1.add(controller2Marker);
 
-callModels(scene, grabVR);
-
-const drone = await callDrone(scene);
-
 const debug = document.createElement("pre");
 debug.className = "vr-debug";
 document.body.appendChild(debug);
@@ -124,8 +120,8 @@ const { walls, floor, laserState } = createMap(scene);
 
 // Create a copy of the map for the map camera
 const { wallsCopy, floorCopy, playerClone, radar } = createMapCopy(scene);
-
 callModels(scene, grabVR, radar);
+
 
 const { overlay } = createOverlay(scene);
 
