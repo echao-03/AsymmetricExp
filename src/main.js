@@ -13,6 +13,7 @@ import GrabVR from './grabvr/src/client/grabvr.ts';
 import callModels, { callDrone } from "./importModels.js";
 import createMapCopy from "./world/mapCopy";
 import setLasersActive from "./lasers.js";
+import droneInit, { droneUpdate } from "./droneLogic.js";
 
 const container = document.getElementById("app");
 const cameraContainer = document.getElementById("camera-quadrant");
@@ -110,6 +111,8 @@ controllerGrip0.add(controller1Marker);
 
 controllerGrip1.add(controller2Marker);
 
+callModels(scene, grabVR);
+
 const drone = await callDrone(scene);
 
 const debug = document.createElement("pre");
@@ -153,17 +156,10 @@ initPopups({
 
 setLasersActive(true, laserState);
 
-const dronePrevPosition = new THREE.Vector3();
-const droneForwardTarget = new THREE.Vector3();
-dronePrevPosition.copy(drone.position);
+const drone = await callDrone(scene);
 
-// Keep this if your model's "forward" axis needs correction.
-const droneYawOffset = -1;
+const { dronePoints, dronePrevPosition, droneForwardTarget, } = droneInit(drone);
 
-const moveStart = new THREE.Vector3(-26.5, 1.5, -5);
-const moveEnd = new THREE.Vector3(-26.5, 1.5, 4);
-const moveDuration = 18.0; // seconds
-const moveStartTime = performance.now();
 
 const hint = document.createElement("div");
 hint.className = "vr-hint";
@@ -202,6 +198,10 @@ function renderInContainer(cam, el) {
   renderer.render(scene, cam);
 }
 const clock = new THREE.Clock();
+
+// Need this const to track when movement of drone started
+const moveStartTime = performance.now();
+
 renderer.setAnimationLoop(() => {
   const delta = clock.getDelta();
   movement.update(delta);
@@ -214,29 +214,17 @@ renderer.setAnimationLoop(() => {
   multiplayer.updatePose(VRCamera, leftController, rightController, playerRig, playerClone);
 
   const elapsed = (performance.now() - moveStartTime) / 1000;
-  const t =
-    (Math.sin((elapsed / moveDuration) * Math.PI * 2 - Math.PI / 2) + 1) / 2;
-  drone.position.lerpVectors(moveStart, moveEnd, t);
 
-  const movementDelta = new THREE.Vector3().subVectors(
-    drone.position,
+  // 2 is the total speed of the drone
+  // true bool for whether drone will loop 
+  droneUpdate(drone,
+    dronePoints,
     dronePrevPosition,
-  );
-
-  // Only rotate when it actually moved this frame
-  if (movementDelta.lengthSq() > 1e-8) {
-    movementDelta.y = 0; // yaw only, no pitch
-    movementDelta.normalize();
-
-    droneForwardTarget.copy(drone.position).add(movementDelta);
-    drone.lookAt(droneForwardTarget.x, drone.position.y, droneForwardTarget.z);
-
-    // Apply model forward-axis correction if needed
-    drone.rotateY(droneYawOffset);
-  }
-
-  dronePrevPosition.copy(drone.position);
-
+    droneForwardTarget,
+    elapsed,
+    2,
+    true,
+    -1);
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);
   } else {
