@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { Radar } from "../radar.js";
 
 export default function createMapCopy(scene) {
   const floorGeometry = new THREE.BoxGeometry(100, 0.5, 30);
@@ -21,18 +22,7 @@ export default function createMapCopy(scene) {
   const playerClone = new THREE.Mesh(playerCloneGeometry, playerCloneMaterial);
   playerClone.position.set(200, 0.8, 0);
 
-  const radarGeometry = new THREE.RingGeometry(2.9, 3.1, 64);
-  const radarMaterial = new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.35,
-    side: THREE.DoubleSide,
-  });
-
-  const radarCircle = new THREE.Mesh(radarGeometry, radarMaterial);
-  radarCircle.rotation.x = -Math.PI / 2;
-  radarCircle.position.y = 1;
-  playerClone.add(radarCircle);
+  const radar = new Radar(playerClone, 2.9, 3.1);
 
   const wallMaterial = new THREE.MeshStandardMaterial({
     color: "rgb(64, 64, 64)",
@@ -113,11 +103,11 @@ export default function createMapCopy(scene) {
     { geo: "roomShort", x: -24.75, z: -4 },
     { geo: "roomShorter", x: -22.25, z: -4, ry: Math.PI / 2 },
 
-    { geo: "roomShorter", x: -29.25, z: -6, ry: Math.PI / 2 },
+    { geo: "roomShorter", x: -29.25, z: -4, ry: Math.PI / 2 },
 
-    { geo: "roomShort", x: -27.5, z: -2 },
+    { geo: "roomShort", x: -27.5, z: 0 },
 
-    { geo: "roomShorter", x: -29.25, z: 1, ry: Math.PI / 2 },
+    { geo: "roomShorter", x: -29.25, z: 3, ry: Math.PI / 2 },
 
     { geo: "roomLong", x: -28.25, z: 9, ry: Math.PI / 2 },
     { geo: "roomLong", x: -26.25, z: 7 },
@@ -160,5 +150,6 @@ export default function createMapCopy(scene) {
     floorCopy,
     wallsCopy,
     playerClone,
+    radar,
   };
 }

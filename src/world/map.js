@@ -27,6 +27,52 @@ export function createMap(scene) {
     mazeRoomLS2: new THREE.BoxGeometry(0.5, 2, 22),
   };
 
+  const laserState = {
+    active: true,
+    boxes: [],
+  };
+
+
+  const laserBox1 = new THREE.Mesh(
+    new THREE.BoxGeometry(0.2, 0.2, 2.8),
+    new THREE.MeshBasicMaterial({
+      color: "red",
+      opacity: 0.3,
+      transparent: "true",
+    }),
+  );
+  
+  laserBox1.position.set(-29.25, 1, -8.7);
+  laserBox1.rotateY(Math.PI / 2);
+  
+  scene.add(laserBox1);
+  
+  const laserBox2 = new THREE.Mesh(
+    new THREE.BoxGeometry(0.2, 0.2, 2.8),
+    new THREE.MeshBasicMaterial({
+      color: "red",
+      opacity: 0.3,
+      transparent: "true",
+    }),
+  );
+  
+  laserBox2.position.set(-29.25, 0.5, -8.7);
+  laserBox2.rotateY(Math.PI / 2);
+  scene.add(laserBox2);
+  
+  const laserBox3 = new THREE.Mesh(
+    new THREE.BoxGeometry(0.2, 0.2, 2.8),
+    new THREE.MeshBasicMaterial({
+      color: "red",
+      opacity: 0.3,
+      transparent: "true",
+    }),
+  );
+  
+  laserBox3.position.set(-29.25, 1.3, -8.7);
+  laserBox3.rotateY(Math.PI / 2);
+  scene.add(laserBox3);
+
   const wallSpecs = [
     { geo: "long", x: -1.5, z: 6 },
     { geo: "long", x: 1.5, z: 6 },
@@ -93,11 +139,11 @@ export function createMap(scene) {
     { geo: "roomShort", x: -24.75, z: -4 },
     { geo: "roomShorter", x: -22.25, z: -4, ry: Math.PI / 2 },
 
-    { geo: "roomShorter", x: -29.25, z: -6, ry: Math.PI / 2 },
+    { geo: "roomShorter", x: -29.25, z: -4, ry: Math.PI / 2 },
 
-    { geo: "roomShort", x: -27.5, z: -2 },
+    { geo: "roomShort", x: -27.5, z: 0 },
 
-    { geo: "roomShorter", x: -29.25, z: 1, ry: Math.PI / 2 },
+    { geo: "roomShorter", x: -29.25, z: 3, ry: Math.PI / 2 },
 
     { geo: "roomLong", x: -28.25, z: 9, ry: Math.PI / 2 },
     { geo: "roomLong", x: -26.25, z: 7 },
@@ -134,9 +180,12 @@ export function createMap(scene) {
   });
 
   scene.add(floor);
+  
+  laserState.boxes.push(laserBox1, laserBox2, laserBox3);
 
   return {
     floor,
     walls,
+    laserState,
   };
 }

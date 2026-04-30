@@ -44,11 +44,21 @@ export async function callDrone(sceneInput) {
     droneModel.scale.setScalar(0.3);
     sceneInput.add(droneModel);
 
+    const light = new THREE.SpotLight(0xff0000, 5, 5, Math.PI / 4, 0.3, 1);
+    light.position.set(0, 0.2, 0.5);
+
+    const target = new THREE.Object3D();
+    target.position.set(1, 0, 1);
+    
+    droneModel.add(light);
+    droneModel.add(target);
+    light.target = target;
+
     return droneModel;
 
 }
 
-export default function callModels(sceneInput, grabVR) {
+export default function callModels(sceneInput, grabVR, radar) {
 
     const loader = new GLTFLoader();
 
@@ -104,6 +114,64 @@ export default function callModels(sceneInput, grabVR) {
         console.error(error);
     });
 
+    // Loading models for map camera, positioned in the copy of the maze
+    // Positioned at beginning of maze
+    loader.load(tableURL.href, function (gltf) {
+        const model = gltf.scene;
+        model.position.set(191, 0.6, -0.8);
+        model.scale.setScalar(0.7);
+        sceneInput.add(model);
+        radar.scanableObjects.push(model);
+        model.visible = false;
+    }, undefined, function (error) {
+        console.error(error);
+    });
+
+    // Positioned at bright room
+    loader.load(tableURL.href, function (gltf) {
+        const model = gltf.scene;
+        model.position.set(191, 0.6, 4.3);
+        model.scale.setScalar(0.7);
+        sceneInput.add(model);
+        radar.scanableObjects.push(model);
+        model.visible = false;
+    }, undefined, function (error) {
+        console.error(error);
+    });
+    // Positioned at bright room
+    loader.load(tableURL.href, function (gltf) {
+        const model = gltf.scene;
+        model.position.set(191, 0.6, 2.1);
+        model.scale.setScalar(0.7);
+        sceneInput.add(model);
+        radar.scanableObjects.push(model);
+        model.visible = false;
+    }, undefined, function (error) {
+        console.error(error);
+    });
+    // Positioned at Tright room
+    loader.load(tableURL.href, function (gltf) {
+        const model = gltf.scene;
+        model.position.set(191, 0.6, -2.2);
+        model.scale.setScalar(0.7);
+        sceneInput.add(model);
+        radar.scanableObjects.push(model);
+        model.visible = false;
+    }, undefined, function (error) {
+        console.error(error);
+    });
+    // Position at Tleft room
+    loader.load(tableURL.href, function (gltf) {
+        const model = gltf.scene;
+        model.position.set(176, 0.6, -9.2);
+        model.rotateY(Math.PI / 2);
+        model.scale.setScalar(0.7);
+        sceneInput.add(model);
+        radar.scanableObjects.push(model);
+        model.visible = false;
+    }, undefined, function (error) {
+        console.error(error);
+    });
 
     // Rendering 'papers' using a canvas to type out message
 
