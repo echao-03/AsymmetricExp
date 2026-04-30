@@ -123,12 +123,7 @@ const { wallsCopy, floorCopy, playerClone, radar } = createMapCopy(scene);
 callModels(scene, grabVR, radar);
 
 const { overlay } = createOverlay(scene);
-playerRig.position.set(11, 1, 0);
 
-let testCol1 = new THREE.Box3().setFromObject(playerRig);
-let testCol2 = new THREE.Box3().setFromObject(tile1);
-console.log(testCol1, testCol2);
-var collision = testCol1.intersectsBox(testCol2);
 console.log(collision);
 
 const movement = createVRMovement({
