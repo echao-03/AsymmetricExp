@@ -148,6 +148,7 @@ initPopups({
     setLasersActive(false, laserState);
   },
   laserState,
+  radar,
 });
 
 setLasersActive(true, laserState);

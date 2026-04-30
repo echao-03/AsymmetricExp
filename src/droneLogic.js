@@ -10,10 +10,11 @@ export default function droneInit(drone) {
     const droneYawOffset = -1;
     const dronePoints = [
         new THREE.Vector3(-26.5, 1.5, 4),
-        new THREE.Vector3(-26.5, 1.5, 0),
-        new THREE.Vector3(-29.5, 1.5, 0),
-        new THREE.Vector3(-29.5, 1.5, -5),
-        new THREE.Vector3(-26.5, 1.5, -5),
+        new THREE.Vector3(-26.5, 1.5, -3),
+        new THREE.Vector3(-28.5, 1.5, -3),
+        new THREE.Vector3(-28.5, 1.5, 2),
+        new THREE.Vector3(-26, 1.5, 2),
+        new THREE.Vector3(-26, 1.5, -5),
         new THREE.Vector3(-24, 1.5, -6),
         new THREE.Vector3(-20.5, 1.5, -6),
         new THREE.Vector3(-20.5, 1.5, -3),
