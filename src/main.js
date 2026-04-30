@@ -9,7 +9,7 @@ import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
 import initPopups from "./initPopups";
 import initCameras from "./initCameras";
 import { createOverlay } from "./world/overlay";
-import GrabVR from './grabvr/src/client/grabvr.ts';
+import GrabVR from "./grabvr/src/client/grabvr.ts";
 import callModels, { callDrone } from "./importModels.js";
 import createMapCopy from "./world/mapCopy";
 import setLasersActive from "./lasers.js";
@@ -116,14 +116,20 @@ debug.className = "vr-debug";
 document.body.appendChild(debug);
 
 // Create map that vr user will navigate through
-const { walls, floor, laserState } = createMap(scene);
+const { walls, floor, laserState, tile1 } = createMap(scene);
 
 // Create a copy of the map for the map camera
 const { wallsCopy, floorCopy, playerClone, radar } = createMapCopy(scene);
 callModels(scene, grabVR, radar);
 
-
 const { overlay } = createOverlay(scene);
+playerRig.position.set(11, 1, 0);
+
+let testCol1 = new THREE.Box3().setFromObject(playerRig);
+let testCol2 = new THREE.Box3().setFromObject(tile1);
+console.log(testCol1, testCol2);
+var collision = testCol1.intersectsBox(testCol2);
+console.log(collision);
 
 const movement = createVRMovement({
   renderer,
@@ -154,8 +160,7 @@ setLasersActive(true, laserState);
 
 const drone = await callDrone(scene);
 
-const { dronePoints, dronePrevPosition, droneForwardTarget, } = droneInit(drone);
-
+const { dronePoints, dronePrevPosition, droneForwardTarget } = droneInit(drone);
 
 const hint = document.createElement("div");
 hint.className = "vr-hint";
@@ -170,7 +175,11 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
 dirLight.position.set(2, 4, 1);
 scene.add(dirLight);
 
-const multiplayer = createMultiplayer({ scene, username: "Player", playerClone });
+const multiplayer = createMultiplayer({
+  scene,
+  username: "Player",
+  playerClone,
+});
 
 window.addEventListener("resize", () => {
   mapCamera.aspect = container.clientWidth / container.clientHeight;
@@ -205,22 +214,30 @@ renderer.setAnimationLoop(() => {
   grabVR.update(delta);
 
   //Radar animation
-  radar.update(delta)
+  radar.update(delta);
 
-  multiplayer.updatePose(VRCamera, leftController, rightController, playerRig, playerClone);
+  multiplayer.updatePose(
+    VRCamera,
+    leftController,
+    rightController,
+    playerRig,
+    playerClone,
+  );
 
   const elapsed = (performance.now() - moveStartTime) / 1000;
 
   // 2 is the total speed of the drone
-  // true bool for whether drone will loop 
-  droneUpdate(drone,
+  // true bool for whether drone will loop
+  droneUpdate(
+    drone,
     dronePoints,
     dronePrevPosition,
     droneForwardTarget,
     elapsed,
     2,
     true,
-    -1);
+    -1,
+  );
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);
   } else {

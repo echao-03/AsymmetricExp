@@ -32,7 +32,6 @@ export function createMap(scene) {
     boxes: [],
   };
 
-
   const laserBox1 = new THREE.Mesh(
     new THREE.BoxGeometry(0.2, 0.2, 2.8),
     new THREE.MeshBasicMaterial({
@@ -173,13 +172,30 @@ export function createMap(scene) {
 
   const tile1 = new THREE.Mesh(
     new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: '' }),
+    new THREE.MeshBasicMaterial({ color: "" }),
   );
 
-  tile1.position.set(10.5, 1, 0);
+  const tile2 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
 
-  scene.add(tile1);
+  const tile3 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
 
+  const tile4 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+
+  tile1.position.set(10, 0, 0);
+  tile2.position.set(12, 0, -3);
+  tile3.position.set(12, 0, 3);
+  tile4.position.set(14, 0, 0);
+
+  scene.add(tile1, tile2, tile3, tile4);
 
   const walls = wallSpecs.map(({ geo, x, y = 1, z, ry = 0 }) => {
     const mesh = new THREE.Mesh(wallGeometries[geo], wallMaterial);
@@ -197,5 +213,6 @@ export function createMap(scene) {
     floor,
     walls,
     laserState,
+    tile1,
   };
 }
