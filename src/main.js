@@ -124,8 +124,6 @@ callModels(scene, grabVR, radar);
 
 const { overlay } = createOverlay(scene);
 
-console.log(collision);
-
 const movement = createVRMovement({
   renderer,
   camera: VRCamera,
