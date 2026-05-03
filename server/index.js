@@ -22,6 +22,8 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 const clientManager = new ClientManager();
 
+let laserActive = true;
+
 /**
  * Handle new WebSocket connections
  */
@@ -72,6 +74,11 @@ wss.on('connection', (ws) => {
             case 'pose-update':
                 handlePoseUpdate(clientId, message);
                 break;
+
+            case 'laser-state':
+                handleLaserState(clientId, message);
+                break;
+
 
             default:
                 console.warn(`[WARN] Unknown message type: ${type}`);
@@ -128,6 +135,11 @@ function handleUserJoin(ws, message) {
         color,
     });
 
+    ws.send(JSON.stringify({
+        type: 'laser-state',
+        active: laserActive,
+    }));
+
     return clientId;
 }
 
@@ -157,6 +169,22 @@ function handlePoseUpdate(clientId, message) {
         hmdRotation,
         leftControllerMatrix,
         rightControllerMatrix,
+    });
+}
+
+
+// Handle changing laserstate for all users
+function handleLaserState(clientId, message) {
+    const { active } = message;
+    // validate boolean
+    laserActive = !!active;
+
+    // Broadcast to everyone (including sender)
+    // Note: using broadcasting since we only have two users, if more than two, then there is a problem
+    clientManager.broadcastToAll({
+        type: 'laser-state',
+        active: laserActive,
+        updatedBy: clientId,
     });
 }
 

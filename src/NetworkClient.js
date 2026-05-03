@@ -156,6 +156,10 @@ class NetworkClient {
                 });
                 break;
 
+            case 'laser-state':
+                this.emit('laser-state', { active: !!message.active, updatedBy: message.updatedBy });
+                break;
+
             case 'error':
                 console.error('[NetworkClient] Server error:', message.message);
                 this.emit('error', message);
