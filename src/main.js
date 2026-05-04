@@ -116,7 +116,10 @@ debug.className = "vr-debug";
 document.body.appendChild(debug);
 
 // Create map that vr user will navigate through
-const { walls, floor, laserState, tile1 } = createMap(scene);
+const { walls, floor, laserState, tiles } = createMap(scene);
+
+const tilesOrder = [tiles[2], tiles[1], tiles[3], tiles[0]];
+const tilesPlayer = [];
 
 // Create a copy of the map for the map camera
 const { wallsCopy, floorCopy, playerClone, radar } = createMapCopy(scene);
@@ -199,6 +202,7 @@ const clock = new THREE.Clock();
 
 // Need this const to track when movement of drone started
 const moveStartTime = performance.now();
+playerRig.position.set(14, 1, 0);
 
 renderer.setAnimationLoop(() => {
   const delta = clock.getDelta();
@@ -231,6 +235,28 @@ renderer.setAnimationLoop(() => {
     true,
     -1,
   );
+
+  for (let i = 0; i < tiles.length; i++) {
+    let collisionRig = new THREE.Box3().setFromObject(playerRig);
+    let collisionTile = new THREE.Box3().setFromObject(tiles[i]);
+
+    let collision = collisionRig.intersectsBox(collisionTile);
+
+    if (collision) {
+      if (tilesPlayer.includes(tiles[i])) {
+        continue;
+      } else {
+        tilesPlayer.push(tiles[i]);
+        let checkOrdering = tilesPlayer.every(
+          (val, index) => val === tilesOrder[index],
+        );
+        if (!checkOrdering) {
+          tilesPlayer.length = 0;
+        }
+      }
+    }
+  }
+
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);
   } else {

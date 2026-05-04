@@ -209,10 +209,12 @@ export function createMap(scene) {
 
   laserState.boxes.push(laserBox1, laserBox2, laserBox3);
 
+  const tiles = [tile1, tile2, tile3, tile4];
+
   return {
     floor,
     walls,
     laserState,
-    tile1,
+    tiles,
   };
 }
