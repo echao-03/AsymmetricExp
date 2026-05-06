@@ -47,6 +47,7 @@ export function droneUpdate(
     speed,
     loopDrone,
     droneYawOffset = -1,
+    playerRig,
 ) {
 
     const segmentCount = dronePoints.length;
@@ -117,4 +118,11 @@ export function droneUpdate(
     }
 
     dronePrevPosition.copy(drone.position);
+
+    const playerPosition = playerRig.getWorldPosition(new THREE.Vector3());
+    const distanceToPlayer = drone.position.distanceTo(playerPosition);
+    if (distanceToPlayer < 1) {
+        console.log("Player caught by drone!");
+        playerRig.position.set(0, 0, 0);
+    }
 }

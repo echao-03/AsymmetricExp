@@ -54,6 +54,8 @@ const rigMarker = new THREE.Mesh(
   new THREE.BoxGeometry(0.2, 0.2, 0.2),
   new THREE.MeshBasicMaterial({ color: 0xff00ff, wireframe: true }),
 );
+
+//Rig marker position for reference
 rigMarker.position.set(0, 0, -0.5);
 playerRig.add(rigMarker);
 
@@ -221,7 +223,8 @@ renderer.setAnimationLoop(() => {
     elapsed,
     2,
     true,
-    -1);
+    -1,
+    playerRig);
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);
   } else {
