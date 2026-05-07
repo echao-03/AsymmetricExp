@@ -200,12 +200,52 @@ function renderInContainer(cam, el) {
 }
 const clock = new THREE.Clock();
 
+// Arrow key movement
+const keyState = {
+  ArrowUp: false,
+  ArrowDown: false,
+  ArrowLeft: false,
+  ArrowRight: false,
+};
+const movementSpeed = 3; // units per second
+
+window.addEventListener("keydown", (e) => {
+  if (e.key in keyState) {
+    keyState[e.key] = true;
+  }
+});
+
+window.addEventListener("keyup", (e) => {
+  if (e.key in keyState) {
+    keyState[e.key] = false;
+  }
+});
+
 // Need this const to track when movement of drone started
 const moveStartTime = performance.now();
-playerRig.position.set(14, 1, 0);
+playerRig.position.set(12, 1, 0);
+console.log(playerRig);
+playerRig.scale.set(0.5, 0.5, 0.5);
 
+let isColliding = false;
 renderer.setAnimationLoop(() => {
   const delta = clock.getDelta();
+
+  // Handle arrow key movement
+  const moveDistance = movementSpeed * delta;
+  if (keyState.ArrowUp) {
+    playerRig.position.z -= moveDistance;
+  }
+  if (keyState.ArrowDown) {
+    playerRig.position.z += moveDistance;
+  }
+  if (keyState.ArrowLeft) {
+    playerRig.position.x -= moveDistance;
+  }
+  if (keyState.ArrowRight) {
+    playerRig.position.x += moveDistance;
+  }
+
   movement.update(delta);
   controls.update();
   grabVR.update(delta);
@@ -242,16 +282,27 @@ renderer.setAnimationLoop(() => {
 
     let collision = collisionRig.intersectsBox(collisionTile);
 
+    if (!collision && isColliding) {
+      isColliding = false;
+    }
+
     if (collision) {
       if (tilesPlayer.includes(tiles[i])) {
         continue;
+      } else if (isColliding) {
+        continue;
       } else {
         tilesPlayer.push(tiles[i]);
+        tiles[i].material.color.set("green");
         let checkOrdering = tilesPlayer.every(
           (val, index) => val === tilesOrder[index],
         );
-        if (!checkOrdering) {
+        if (!checkOrdering && tilesPlayer.length > 1) {
+          for (let j = 0; j < tilesPlayer.length; j++) {
+            tilesPlayer[j].material.color.set("white");
+          }
           tilesPlayer.length = 0;
+          isColliding = true;
         }
       }
     }
