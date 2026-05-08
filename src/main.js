@@ -220,7 +220,9 @@ renderer.setAnimationLoop(() => {
     2,
     true,
     -1,
-    radar);
+    radar,
+    playerRig,
+  );
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);
   } else {
