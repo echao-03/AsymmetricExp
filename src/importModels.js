@@ -42,11 +42,15 @@ export async function callDrone(sceneInput) {
   droneModel.scale.setScalar(0.3);
   sceneInput.add(droneModel);
 
-  const light = new THREE.SpotLight(0xff0000, 5, 5, Math.PI / 4, 0.3, 1);
-  light.position.set(0, 0.2, 0.5);
+    const light = new THREE.SpotLight(0xff0000, 3, 2, Math.PI, 0.3, 1);
+    light.position.set(0, -0.1, 0);
 
-  const target = new THREE.Object3D();
-  target.position.set(1, 0, 1);
+    const target = new THREE.Object3D();
+    target.position.set(0, -1, 0);
+    
+    droneModel.add(light);
+    droneModel.add(target);
+    light.target = target;
 
   droneModel.add(light);
   droneModel.add(target);

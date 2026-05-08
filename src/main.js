@@ -54,6 +54,8 @@ const rigMarker = new THREE.Mesh(
   new THREE.BoxGeometry(0.2, 0.2, 0.2),
   new THREE.MeshBasicMaterial({ color: 0xff00ff, wireframe: true }),
 );
+
+//Rig marker position for reference
 rigMarker.position.set(0, 0, -0.5);
 playerRig.add(rigMarker);
 
@@ -144,15 +146,25 @@ const movement = createVRMovement({
   },
 });
 
-// Initialize popups
-initPopups({
-  onCodeAccepted: () => {
-    setLasersActive(false, laserState);
-  },
-  laserState,
+const multiplayer = createMultiplayer({ scene, username: "Player", playerClone });
+
+multiplayer.network.on('laser-state', (msg) => {
+  setLasersActive(!!msg.active, laserState);
 });
 
-setLasersActive(true, laserState);
+// Initialize popups
+initPopups({
+  // onCodeAccepted: () => {
+  //   // inform server to broadcast to everyone (safe to send even if not connected)
+  //   if (multiplayer && multiplayer.network && multiplayer.network.isConnected) {
+  //     multiplayer.network.send({ type: 'laser-state', active: false });
+  //   }
+  // },
+  laserState,
+  radar,
+  multiplayer
+});
+
 
 const drone = await callDrone(scene);
 

@@ -10,10 +10,11 @@ export default function droneInit(drone) {
     const droneYawOffset = -1;
     const dronePoints = [
         new THREE.Vector3(-26.5, 1.5, 4),
-        new THREE.Vector3(-26.5, 1.5, 0),
-        new THREE.Vector3(-29.5, 1.5, 0),
-        new THREE.Vector3(-29.5, 1.5, -5),
-        new THREE.Vector3(-26.5, 1.5, -5),
+        new THREE.Vector3(-26.5, 1.5, -3),
+        new THREE.Vector3(-28.5, 1.5, -3),
+        new THREE.Vector3(-28.5, 1.5, 2),
+        new THREE.Vector3(-26, 1.5, 2),
+        new THREE.Vector3(-26, 1.5, -5),
         new THREE.Vector3(-24, 1.5, -6),
         new THREE.Vector3(-20.5, 1.5, -6),
         new THREE.Vector3(-20.5, 1.5, -3),
@@ -46,6 +47,8 @@ export function droneUpdate(
     speed,
     loopDrone,
     droneYawOffset = -1,
+    radar,
+    playerRig,
 ) {
 
     const segmentCount = dronePoints.length;
@@ -116,4 +119,15 @@ export function droneUpdate(
     }
 
     dronePrevPosition.copy(drone.position);
+
+    const playerPosition = playerRig.getWorldPosition(new THREE.Vector3());
+    // playerPosition.x = playerPosition.x - 200; / / adjust for radar offset
+    // console.log("Player position:", playerPosition);
+    const distanceToPlayer = drone.position.distanceTo(playerPosition);
+    // console.log(distanceToPlayer);
+
+    if (distanceToPlayer < 2) {
+        console.log("Player caught by drone!");
+        playerRig.position.set(0, 0, 0);
+    }
 }
