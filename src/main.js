@@ -146,6 +146,12 @@ const movement = createVRMovement({
 
 // Initialize popups
 initPopups({
+  onCodeAccepted: () => {
+    // inform server to broadcast to everyone (safe to send even if not connected)
+    if (multiplayer && multiplayer.network && multiplayer.network.isConnected) {
+      multiplayer.network.send({ type: 'laser-state', active: false });
+    }
+  },
   laserState,
   radar,
 });
@@ -170,6 +176,10 @@ dirLight.position.set(2, 4, 1);
 scene.add(dirLight);
 
 const multiplayer = createMultiplayer({ scene, username: "Player", playerClone });
+
+multiplayer.network.on('laser-state', (msg) => {
+  setLasersActive(!!msg.active, laserState);
+});
 
 window.addEventListener("resize", () => {
   mapCamera.aspect = container.clientWidth / container.clientHeight;

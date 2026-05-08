@@ -39,6 +39,9 @@ class ClientManager {
                 leftControllerMatrix: new Array(16).fill(0),
                 rightControllerMatrix: new Array(16).fill(0),
             },
+
+            // todo: need to add states for lasers and rightroom's tile states 
+
         });
 
         return { clientId, color };

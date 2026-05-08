@@ -18,6 +18,7 @@ export function createMap(scene) {
 
   const wallGeometries = {
     long: new THREE.BoxGeometry(0.5, 2, 10),
+    longer: new THREE.BoxGeometry(0.5, 2, 12),
     short: new THREE.BoxGeometry(0.5, 2, 5),
     roomShort: new THREE.BoxGeometry(0.5, 2, 3),
     roomShorter: new THREE.BoxGeometry(0.5, 2, 2),
@@ -88,9 +89,13 @@ export function createMap(scene) {
 
     { geo: "roomLong", x: 6.5, z: -3 },
     { geo: "roomLong", x: 6.5, z: 3 },
-    { geo: "roomShort", x: 8, z: 5, ry: Math.PI / 2 },
-    { geo: "roomShort", x: 8, z: -5, ry: Math.PI / 2 },
-    { geo: "long", x: 9.5, z: 0 },
+    { geo: "longer", x: 12, z: 5, ry: Math.PI / 2 },
+    { geo: "longer", x: 12, z: -5, ry: Math.PI / 2 },
+    { geo: "roomLong", x: 18, z: -3 },
+    { geo: "roomLong", x: 18, z: 3 },
+    { geo: "roomLong", x: 20, z: -1.25, ry: Math.PI / 2 },
+    { geo: "roomLong", x: 20, z: 1.25, ry: Math.PI / 2 },
+    { geo: "roomShorter", x: 22, z: 0 },
 
     // Room frame for Maze Room
     { geo: "long", x: -6.5, z: -6 },
