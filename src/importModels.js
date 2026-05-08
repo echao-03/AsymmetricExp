@@ -42,15 +42,15 @@ export async function callDrone(sceneInput) {
   droneModel.scale.setScalar(0.3);
   sceneInput.add(droneModel);
 
-    const light = new THREE.SpotLight(0xff0000, 3, 2, Math.PI, 0.3, 1);
-    light.position.set(0, -0.1, 0);
+  const light = new THREE.SpotLight(0xff0000, 3, 2, Math.PI, 0.3, 1);
+  light.position.set(0, -0.1, 0);
 
-    const target = new THREE.Object3D();
-    target.position.set(0, -1, 0);
-    
-    droneModel.add(light);
-    droneModel.add(target);
-    light.target = target;
+  const target = new THREE.Object3D();
+  target.position.set(0, -1, 0);
+
+  droneModel.add(light);
+  droneModel.add(target);
+  light.target = target;
 
   droneModel.add(light);
   droneModel.add(target);
@@ -63,6 +63,7 @@ export default function callModels(sceneInput, grabVR, radar) {
   const loader = new GLTFLoader();
 
   const tableURL = new URL("./models/Table.glb", import.meta.url);
+  const computerURL = new URL("./models/Simple_computer.glb", import.meta.url);
 
   // Loading all table models into environments
   // Positioned at beginning of maze
@@ -108,6 +109,38 @@ export default function callModels(sceneInput, grabVR, radar) {
       console.error(error);
     },
   );
+
+  // Position at bleft room
+  loader.load(
+    tableURL.href,
+    function (gltf) {
+      const model = gltf.scene;
+      model.position.set(-24.5, 0.6, 8);
+      model.scale.setScalar(0.7);
+      sceneInput.add(model);
+    },
+    undefined,
+    function (error) {
+      console.error(error);
+    },
+  );
+
+  loader.load(
+    computerURL.href,
+    function (gltf) {
+      const model = gltf.scene;
+      model.position.set(-24.5, 0.74, 8.2);
+      model.rotateY(Math.PI);
+      model.rotateZ(-0.1);
+      model.scale.setScalar(1);
+      sceneInput.add(model);
+    },
+    undefined,
+    function (error) {
+      console.error(error);
+    },
+  );
+
   // Positioned at Tright room
   loader.load(
     tableURL.href,

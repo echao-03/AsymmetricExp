@@ -55,11 +55,11 @@ export function createMap(scene) {
       transparent: "true",
     }),
   );
-  
+
   laserBox2.position.set(-7.5, 0.5, -7.3);
   laserBox2.rotateY(Math.PI / 2);
   scene.add(laserBox2);
-  
+
   // const laserBox3 = new THREE.Mesh(
   //   new THREE.BoxGeometry(0.2, 0.2, 2.8),
   //   new THREE.MeshBasicMaterial({
@@ -68,7 +68,7 @@ export function createMap(scene) {
   //     transparent: "true",
   //   }),
   // );
-  
+
   // laserBox3.position.set(-29.25, 1.3, -8.7);
   // laserBox3.rotateY(Math.PI / 2);
   // scene.add(laserBox3);
@@ -148,7 +148,7 @@ export function createMap(scene) {
     { geo: "roomLong", x: -28.25, z: 9, ry: Math.PI / 2 },
     { geo: "roomLong", x: -26.25, z: 7 },
     { geo: "roomLong", x: -24.25, z: 7, ry: Math.PI / 2 },
-    { geo: "roomShort", x: -24.25, z: 8.5 },
+    { geo: "roomShort", x: -23.25, z: 8.5 },
 
     { geo: "roomShorter", x: -24.25, z: 4 },
 
@@ -217,7 +217,7 @@ export function createMap(scene) {
   });
 
   scene.add(floor);
-  
+
   laserState.boxes.push(laserBox1);
   laserState.boxes.push(laserBox2);
 
