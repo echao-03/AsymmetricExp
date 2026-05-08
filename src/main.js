@@ -118,7 +118,7 @@ document.body.appendChild(debug);
 // Create map that vr user will navigate through
 const { walls, floor, laserState, tiles } = createMap(scene);
 
-const tilesOrder = [tiles[2], tiles[1], tiles[3], tiles[0]];
+const tilesOrder = [tiles[2], tiles[1], tiles[3], tiles[0], tiles[5], tiles[4]];
 const tilesPlayer = [];
 
 // Create a copy of the map for the map camera
