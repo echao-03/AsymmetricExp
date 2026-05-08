@@ -55,6 +55,7 @@ export class Keypad {
         this.updateDisplay();
 
         this.passcodes.set(this.laserState.boxes[0], "195653");
+        this.passcodes.set(this.laserState.boxes[1], "105326");
     }
 
     handleKeyPress(key) {
@@ -129,7 +130,7 @@ export class Keypad {
                 this.secondaryDisplay.textContent = "ACCEPTED";
             }
             if (typeof this.onCodeAccepted === "function") {
-                this.onCodeAccepted(currCode);
+                this.onCodeAccepted(currCode, inRange[0]);
             }
             this.enteredCode = "";
             return;

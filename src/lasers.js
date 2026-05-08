@@ -1,6 +1,3 @@
-export default function setLasersActive(isActive, laserState) {
-    laserState.active = isActive;
-    laserState.boxes.forEach((laser) => {
+export default function setLasersActive(isActive, laser) {
     laser.visible = isActive;
-  });
 }

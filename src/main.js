@@ -146,14 +146,10 @@ const movement = createVRMovement({
 
 // Initialize popups
 initPopups({
-  onCodeAccepted: () => {
-    setLasersActive(false, laserState);
-  },
   laserState,
   radar,
 });
 
-setLasersActive(true, laserState);
 
 const drone = await callDrone(scene);
 
