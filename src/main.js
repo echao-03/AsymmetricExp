@@ -12,7 +12,6 @@ import { createOverlay } from "./world/overlay";
 import GrabVR from './grabvr/src/client/grabvr.ts';
 import callModels, { callDrone } from "./importModels.js";
 import createMapCopy from "./world/mapCopy";
-import setLasersActive from "./lasers.js";
 import droneInit, { droneUpdate } from "./droneLogic.js";
 
 const container = document.getElementById("app");
@@ -135,8 +134,7 @@ const movement = createVRMovement({
   rightController,
   controllerMarker: controller2Marker,
   walls,
-  laserWalls: laserState.boxes,
-  isLasersActive: () => laserState.active,
+  laserWalls: laserState.lasers,
   floor,
   playerRadius: 0.25,
   onDebug: (text) => {
@@ -147,7 +145,10 @@ const movement = createVRMovement({
 const multiplayer = createMultiplayer({ scene, username: "Player", playerClone });
 
 multiplayer.network.on('laser-state', (msg) => {
-  setLasersActive(!!msg.active, laserState);
+  const laser = laserState.lasers.find(l => l.name === msg.laserName);
+  if (laser) {
+    laser.setLasersActive(msg.active);
+  }
 });
 
 // Initialize popups

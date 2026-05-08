@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import setLasersActive from "../lasers.js";
+import { Laser } from "../lasers";
 
 export function createMap(scene) {
   const floorGeometry = new THREE.BoxGeometry(100, 0.5, 30);
@@ -29,36 +29,24 @@ export function createMap(scene) {
   };
 
   const laserState = {
-    active: true,
-    boxes: [],
+    lasers: [],
   };
 
-  const laserBox1 = new THREE.Mesh(
-    new THREE.BoxGeometry(0.2, 2, 2.8),
-    new THREE.MeshBasicMaterial({
-      color: "red",
-      opacity: 0.3,
-      transparent: "true",
-    }),
-  );
   
-  laserBox1.position.set(-29.25, 1, -8.7);
-  laserBox1.rotateY(Math.PI / 2);
+  // const laserBox1 = new THREE.Mesh(
+  //   new THREE.BoxGeometry(0.2, 2, 2.8),
+  //   new THREE.MeshBasicMaterial({
+  //     color: "red",
+  //     opacity: 0.3,s
+  //     transparent: "true",
+  //   }),
+  // );
   
-  scene.add(laserBox1);
-  
-  const laserBox2 = new THREE.Mesh(
-    new THREE.BoxGeometry(0.2, 2, 1.5),
-    new THREE.MeshBasicMaterial({
-      color: "red",
-      opacity: 0.3,
-      transparent: "true",
-    }),
-  );
-  
-  laserBox2.position.set(-7.5, 0.5, -7.3);
-  laserBox2.rotateY(Math.PI / 2);
-  scene.add(laserBox2);
+  // laserBox1.position.set(-29.25, 1, -8.7);
+  // laserBox1.rotateY(Math.PI / 2);
+
+  const laser1 = new Laser(scene, "Laser1", 0.2, 2, 2.8, -29.25, 1, -8.7, true);
+  const laser2 = new Laser(scene, "Laser2", 0.2, 2, 1.5, -7.5, 0.5, -7.3, true);
   
   // const laserBox3 = new THREE.Mesh(
   //   new THREE.BoxGeometry(0.2, 0.2, 2.8),
@@ -181,12 +169,8 @@ export function createMap(scene) {
 
   scene.add(floor);
   
-  laserState.boxes.push(laserBox1);
-  laserState.boxes.push(laserBox2);
-
-  laserState.boxes.forEach(element => {
-    setLasersActive(true, element);
-  });
+  laserState.lasers.push(laser1);
+  laserState.lasers.push(laser2);
 
   return {
     floor,
