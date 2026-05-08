@@ -19,6 +19,7 @@ export class Keypad {
         onCodeAccepted = null,
         laserState,
         radar,
+        multiplayer,
     }) {
         this.keypad = keypad;
         this.keys = keys;
@@ -35,6 +36,7 @@ export class Keypad {
         this.laserState = laserState;
         this.disableObjects = [laserState.boxes[0]];
         this.radar = radar;
+        this.multiplayer = multiplayer;
     }
 
     init() {
@@ -132,6 +134,11 @@ export class Keypad {
             }
             setLasersActive(false, inRange[0]);
             this.enteredCode = "";
+            
+            if (this.multiplayer && this.multiplayer.network && this.multiplayer.network.isConnected) {
+                this.multiplayer.network.send({ type: 'laser-state', active: false });
+            }
+
             return;
         }
 
