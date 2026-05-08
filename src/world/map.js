@@ -41,12 +41,12 @@ export function createMap(scene) {
       transparent: "true",
     }),
   );
-  
+
   laserBox1.position.set(-29.25, 1, -8.7);
   laserBox1.rotateY(Math.PI / 2);
-  
+
   scene.add(laserBox1);
-  
+
   const laserBox2 = new THREE.Mesh(
     new THREE.BoxGeometry(0.2, 2, 1.5),
     new THREE.MeshBasicMaterial({
@@ -171,6 +171,43 @@ export function createMap(scene) {
     { geo: "roomShort", x: -9.5, z: 6.5 },
   ];
 
+  const tile1 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+
+  const tile2 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+
+  const tile3 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+
+  const tile4 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+  const tile5 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+  const tile6 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+
+  tile1.position.set(11, 0, -1);
+  tile2.position.set(11, 0, 1);
+  tile3.position.set(13, 0, -2);
+  tile4.position.set(13, 0, 2);
+  tile5.position.set(15, 0, -1);
+  tile6.position.set(15, 0, 1);
+
+  scene.add(tile1, tile2, tile3, tile4, tile5, tile6);
+
   const walls = wallSpecs.map(({ geo, x, y = 1, z, ry = 0 }) => {
     const mesh = new THREE.Mesh(wallGeometries[geo], wallMaterial);
     mesh.position.set(x, y, z);
@@ -188,9 +225,12 @@ export function createMap(scene) {
     setLasersActive(true, element);
   });
 
+  const tiles = [tile1, tile2, tile3, tile4, tile5, tile6];
+
   return {
     floor,
     walls,
     laserState,
+    tiles,
   };
 }
