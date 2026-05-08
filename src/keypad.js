@@ -1,3 +1,6 @@
+import * as THREE from "three";
+import setLasersActive from "./lasers";
+
 export class Keypad {
     constructor({
         keypad,
@@ -15,6 +18,7 @@ export class Keypad {
         requiredCode = "",
         onCodeAccepted = null,
         laserState,
+        radar,
     }) {
         this.keypad = keypad;
         this.keys = keys;
@@ -29,6 +33,8 @@ export class Keypad {
         this.onCodeAccepted = onCodeAccepted;
         this.passcodes = new Map();
         this.laserState = laserState;
+        this.disableObjects = [laserState.boxes[0]];
+        this.radar = radar;
     }
 
     init() {
@@ -49,7 +55,8 @@ export class Keypad {
         this.popupButton.addEventListener("click", () => this.show());
         this.updateDisplay();
 
-        this.passcodes.set(this.laserState, "195653");
+        this.passcodes.set(this.laserState.boxes[0], "195653");
+        this.passcodes.set(this.laserState.boxes[1], "105326");
     }
 
     handleKeyPress(key) {
@@ -108,14 +115,22 @@ export class Keypad {
             return;
         }
 
-        if (currCode === this.passcodes.get(this.laserState)) {
+        const playerPos = this.radar.mesh.getWorldPosition(new THREE.Vector3());
+        playerPos.x = playerPos.x - 200;
+        const inRange = [];
+        this.disableObjects.forEach(obj => {
+            const objPos = obj.getWorldPosition(new THREE.Vector3());
+            if (playerPos.distanceTo(objPos) < 3) {
+                inRange.push(obj);
+            }
+        });
+
+        if (currCode === this.passcodes.get(inRange[0])) {
             this.display.textContent = "ACCEPTED";
             if (this.secondaryDisplay) {
                 this.secondaryDisplay.textContent = "ACCEPTED";
             }
-            if (typeof this.onCodeAccepted === "function") {
-                this.onCodeAccepted(currCode);
-            }
+            setLasersActive(false, inRange[0]);
             this.enteredCode = "";
             return;
         }
