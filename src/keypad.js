@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import setLasersActive from "./lasers";
 
 export class Keypad {
     constructor({
@@ -115,11 +116,11 @@ export class Keypad {
         }
 
         const playerPos = this.radar.mesh.getWorldPosition(new THREE.Vector3());
+        playerPos.x = playerPos.x - 200;
         const inRange = [];
         this.disableObjects.forEach(obj => {
             const objPos = obj.getWorldPosition(new THREE.Vector3());
             if (playerPos.distanceTo(objPos) < 3) {
-                obj.visible = false;
                 inRange.push(obj);
             }
         });
@@ -129,9 +130,7 @@ export class Keypad {
             if (this.secondaryDisplay) {
                 this.secondaryDisplay.textContent = "ACCEPTED";
             }
-            if (typeof this.onCodeAccepted === "function") {
-                this.onCodeAccepted(currCode, inRange[0]);
-            }
+            setLasersActive(false, inRange[0]);
             this.enteredCode = "";
             return;
         }
