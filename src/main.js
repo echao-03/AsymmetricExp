@@ -183,12 +183,6 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
 dirLight.position.set(2, 4, 1);
 scene.add(dirLight);
 
-const multiplayer = createMultiplayer({
-  scene,
-  username: "Player",
-  playerClone,
-});
-
 window.addEventListener("resize", () => {
   mapCamera.aspect = container.clientWidth / container.clientHeight;
   mapCamera.updateProjectionMatrix();
@@ -286,6 +280,8 @@ renderer.setAnimationLoop(() => {
     2,
     true,
     -1,
+    radar,
+    playerRig,
   );
 
   for (let i = 0; i < tiles.length; i++) {
