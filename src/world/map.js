@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import setLasersActive from "../lasers.js";
+import { Laser } from "../lasers";
 
 export function createMap(scene) {
   const floorGeometry = new THREE.BoxGeometry(100, 0.5, 30);
@@ -28,37 +28,62 @@ export function createMap(scene) {
     mazeRoomLS2: new THREE.BoxGeometry(0.5, 2, 22),
   };
 
+    const tile1 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+
+  const tile2 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+
+  const tile3 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+
+  const tile4 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+  const tile5 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+  const tile6 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+
+  tile1.position.set(11, 0, -1);
+  tile2.position.set(11, 0, 1);
+  tile3.position.set(13, 0, -2);
+  tile4.position.set(13, 0, 2);
+  tile5.position.set(15, 0, -1);
+  tile6.position.set(15, 0, 1);
+
+  scene.add(tile1, tile2, tile3, tile4, tile5, tile6);
+
   const laserState = {
-    active: true,
-    boxes: [],
+    lasers: [],
   };
 
-  const laserBox1 = new THREE.Mesh(
-    new THREE.BoxGeometry(0.2, 2, 2.8),
-    new THREE.MeshBasicMaterial({
-      color: "red",
-      opacity: 0.3,
-      transparent: "true",
-    }),
-  );
-
-  laserBox1.position.set(-29.25, 1, -8.7);
-  laserBox1.rotateY(Math.PI / 2);
-
-  scene.add(laserBox1);
-
-  const laserBox2 = new THREE.Mesh(
-    new THREE.BoxGeometry(0.2, 2, 1.5),
-    new THREE.MeshBasicMaterial({
-      color: "red",
-      opacity: 0.3,
-      transparent: "true",
-    }),
-  );
   
-  laserBox2.position.set(-7.5, 0.5, -7.3);
-  laserBox2.rotateY(Math.PI / 2);
-  scene.add(laserBox2);
+  // const laserBox1 = new THREE.Mesh(
+  //   new THREE.BoxGeometry(0.2, 2, 2.8),
+  //   new THREE.MeshBasicMaterial({
+  //     color: "red",
+  //     opacity: 0.3,s
+  //     transparent: "true",
+  //   }),
+  // );
+  
+  // laserBox1.position.set(-29.25, 1, -8.7);
+  // laserBox1.rotateY(Math.PI / 2);
+
+  const laser1 = new Laser(scene, "Laser1", 0.2, 2, 2.8, -29.25, 1, -8.7, true);
+  const laser2 = new Laser(scene, "Laser2", 0.2, 2, 2.5, -22.5, 0.5, 9.5, true);
   
   // const laserBox3 = new THREE.Mesh(
   //   new THREE.BoxGeometry(0.2, 0.2, 2.8),
@@ -148,7 +173,7 @@ export function createMap(scene) {
     { geo: "roomLong", x: -28.25, z: 9, ry: Math.PI / 2 },
     { geo: "roomLong", x: -26.25, z: 7 },
     { geo: "roomLong", x: -24.25, z: 7, ry: Math.PI / 2 },
-    { geo: "roomShort", x: -24.25, z: 8.5 },
+    { geo: "roomShorter", x: -23.25, z: 8 },
 
     { geo: "roomShorter", x: -24.25, z: 4 },
 
@@ -218,12 +243,8 @@ export function createMap(scene) {
 
   scene.add(floor);
   
-  laserState.boxes.push(laserBox1);
-  laserState.boxes.push(laserBox2);
-
-  laserState.boxes.forEach(element => {
-    setLasersActive(true, element);
-  });
+  laserState.lasers.push(laser1);
+  laserState.lasers.push(laser2);
 
   const tiles = [tile1, tile2, tile3, tile4, tile5, tile6];
 
