@@ -28,43 +28,6 @@ export function createMap(scene) {
     mazeRoomLS2: new THREE.BoxGeometry(0.5, 2, 22),
   };
 
-    const tile1 = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: "" }),
-  );
-
-  const tile2 = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: "" }),
-  );
-
-  const tile3 = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: "" }),
-  );
-
-  const tile4 = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: "" }),
-  );
-  const tile5 = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: "" }),
-  );
-  const tile6 = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: "" }),
-  );
-
-  tile1.position.set(11, 0, -1);
-  tile2.position.set(11, 0, 1);
-  tile3.position.set(13, 0, -2);
-  tile4.position.set(13, 0, 2);
-  tile5.position.set(15, 0, -1);
-  tile6.position.set(15, 0, 1);
-
-  scene.add(tile1, tile2, tile3, tile4, tile5, tile6);
-
   const laserState = {
     lasers: [],
   };
@@ -83,7 +46,7 @@ export function createMap(scene) {
   // laserBox1.rotateY(Math.PI / 2);
 
   const laser1 = new Laser(scene, "Laser1", 0.2, 2, 2.8, -29.25, 1, -8.7, true);
-  const laser2 = new Laser(scene, "Laser2", 0.2, 2, 2.5, -22.5, 0.5, 9.5, true);
+  const laser2 = new Laser(scene, "Laser2", 0.2, 2, 2.6, -22.2, 0.5, 9, true);
   
   // const laserBox3 = new THREE.Mesh(
   //   new THREE.BoxGeometry(0.2, 0.2, 2.8),
