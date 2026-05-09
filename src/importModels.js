@@ -59,6 +59,40 @@ export async function callDrone(sceneInput) {
   return droneModel;
 }
 
+function makeTornPaperGeometry(
+  width,
+  height,
+  depth = 0.01,
+  teeth = 20,
+  jagged = 0.02,
+) {
+  const shape = new THREE.Shape();
+  const halfW = width / 2;
+  const halfH = height / 4;
+
+  shape.moveTo(-halfW, -halfH);
+  shape.lineTo(halfW, -halfH);
+
+  for (let i = 0; i <= teeth; i++) {
+    const t = i / teeth;
+    const y = -halfH + t * height;
+    const x =
+      halfW + (i === 0 || i === teeth ? 0 : i % 2 === 0 ? jagged : -jagged);
+    shape.lineTo(x, y);
+  }
+
+  shape.lineTo(-halfW, halfH);
+  shape.closePath();
+
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth,
+    bevelEnabled: false,
+  });
+
+  geometry.center();
+  return geometry;
+}
+
 export default function callModels(sceneInput, grabVR, radar) {
   const loader = new GLTFLoader();
 
@@ -441,6 +475,18 @@ export default function callModels(sceneInput, grabVR, radar) {
   paperArray[6].position.set(-28, 0.8, 8);
   paperArray[6].rotateY(Math.PI);
   paperArray[6].rotateX(-0.8);
+
+  const paperMaterial = new THREE.MeshStandardMaterial({
+    map: mazePapers[0],
+    side: THREE.DoubleSide,
+  });
+
+  const testJagged = new THREE.Mesh(
+    makeTornPaperGeometry(0.2, 0.3, 0.01, 4, 0.02),
+    paperMaterial,
+  );
+  testJagged.position.set(0, 1, 2.5);
+  sceneInput.add(testJagged);
 
   grabVR.grabableObjects().push(paperArray[0]);
 }
