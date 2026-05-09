@@ -110,12 +110,42 @@ export default function callModels(sceneInput, grabVR, radar) {
     },
   );
 
+  // Positioned at bright room
+  loader.load(
+    tableURL.href,
+    function (gltf) {
+      const model = gltf.scene;
+      model.position.set(-13.9, 0.6, 6.25);
+      model.scale.setScalar(0.7);
+      sceneInput.add(model);
+    },
+    undefined,
+    function (error) {
+      console.error(error);
+    },
+  );
+
   // Position at bleft room
   loader.load(
     tableURL.href,
     function (gltf) {
       const model = gltf.scene;
       model.position.set(-24.5, 0.6, 8);
+      model.scale.setScalar(0.7);
+      sceneInput.add(model);
+    },
+    undefined,
+    function (error) {
+      console.error(error);
+    },
+  );
+
+  // Position at bleft room
+  loader.load(
+    tableURL.href,
+    function (gltf) {
+      const model = gltf.scene;
+      model.position.set(-28, 0.6, 8);
       model.scale.setScalar(0.7);
       sceneInput.add(model);
     },
@@ -161,6 +191,22 @@ export default function callModels(sceneInput, grabVR, radar) {
     function (gltf) {
       const model = gltf.scene;
       model.position.set(-24, 0.6, -9.2);
+      model.rotateY(Math.PI / 2);
+      model.scale.setScalar(0.7);
+      sceneInput.add(model);
+    },
+    undefined,
+    function (error) {
+      console.error(error);
+    },
+  );
+
+  // Positioned at Tleft room
+  loader.load(
+    tableURL.href,
+    function (gltf) {
+      const model = gltf.scene;
+      model.position.set(-18, 0.6, -8);
       model.rotateY(Math.PI / 2);
       model.scale.setScalar(0.7);
       sceneInput.add(model);
@@ -274,8 +320,7 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["everyone."],
     [""],
     ["There should be a computer"],
-    ["somewhere to disable it."]
-    ["- J"],
+    ["somewhere to disable it."]["- J"],
   ];
   const papers3 = [
     ["Dear E,"],
@@ -301,8 +346,8 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["I don't understand why the"],
     ["fourth number of the code is"],
     ["6. Can it be like 2 or 4?"],
-    ["Please email me back, thanks."]
-    ["- K"]
+    ["Please email me back, thanks."],
+    ["- K"],
   ];
 
   const papers6 = [
@@ -311,8 +356,7 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["number of the code is the number"],
     ["of cameras in the room."],
     ["I hope anybody intruding wouldn't"],
-    ["know. :)"]
-    ["- E"]
+    ["know. :)"]["- E"],
   ];
 
   const papers7 = [
@@ -322,7 +366,7 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["the number of days in a week?"],
     ["We need to talk to IT about"],
     ["beefing up our security."],
-    ["- I"]
+    ["- I"],
   ];
 
   const papersRroom = [
@@ -340,80 +384,54 @@ export default function callModels(sceneInput, grabVR, radar) {
   const labelPaper_2 = makeLabelTexture(papers2);
   const labelPaper_3 = makeLabelTexture(papers3);
   const labelPaper_4 = makeLabelTexture(papers4);
+  const labelPaper_5 = makeLabelTexture(papers5);
+  const labelPaper_6 = makeLabelTexture(papers6);
+  const labelPaper_7 = makeLabelTexture(papers7);
+
+  const mazePapers = [
+    labelPaper_1,
+    labelPaper_2,
+    labelPaper_3,
+    labelPaper_4,
+    labelPaper_5,
+    labelPaper_6,
+    labelPaper_7,
+  ];
 
   const RroomPaper_1 = makeLabelTexture(papersRroom);
+  const paperArray = [];
+  for (let i = 0; i < mazePapers.length; i++) {
+    const materials = [
+      new THREE.MeshStandardMaterial({ color: 0xffffff }), // +X
+      new THREE.MeshStandardMaterial({ color: 0xffffff }), // -X
+      new THREE.MeshStandardMaterial({ color: 0xffffff }), // +Y
+      new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Y
+      new THREE.MeshStandardMaterial({ map: mazePapers[i] }), // +Z (front)
+      new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Z
+    ];
+    const renderPaper = new THREE.Mesh(
+      new THREE.BoxGeometry(0.2, 0.3, 0.01),
+      materials,
+    );
+    sceneInput.add(renderPaper);
+    paperArray.push(renderPaper);
+  }
 
-  const materials1 = [
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // +X
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -X
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // +Y
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Y
-    new THREE.MeshStandardMaterial({ map: labelPaper_1 }), // +Z (front)
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Z
-  ];
+  paperArray[0].position.set(-9, 0.9, -0.8);
+  paperArray[0].rotateX(-0.8);
 
-  const materials2 = [
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // +X
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -X
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // +Y
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Y
-    new THREE.MeshStandardMaterial({ map: labelPaper_2 }), // +Z (front)
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Z
-  ];
+  paperArray[1].position.set(-9, 0.9, 2.1);
+  paperArray[1].rotateX(-0.8);
 
-  const materials3 = [
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // +X
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -X
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // +Y
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Y
-    new THREE.MeshStandardMaterial({ map: labelPaper_3 }), // +Z (front)
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Z
-  ];
+  paperArray[2].position.set(-9, 0.9, -2.2);
+  paperArray[2].rotateY(Math.PI);
+  paperArray[2].rotateX(-0.8);
 
-  const materials4 = [
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // +X
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -X
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // +Y
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Y
-    new THREE.MeshStandardMaterial({ map: labelPaper_4 }), // +Z (front)
-    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Z
-  ];
+  paperArray[3].position.set(-24, 1, -6.7545);
 
-  const testBox1 = new THREE.Mesh(
-    new THREE.BoxGeometry(0.2, 0.3, 0.01),
-    materials1,
-  );
-  const testBox2 = new THREE.Mesh(
-    new THREE.BoxGeometry(0.2, 0.3, 0.01),
-    materials2,
-  );
+  paperArray[4].position.set(-18.2, 0.8, -8);
+  paperArray[4].rotateY(-Math.PI / 2);
+  paperArray[4].rotateX(-0.8);
 
-  const testBox3 = new THREE.Mesh(
-    new THREE.BoxGeometry(0.2, 0.3, 0.01),
-    materials3,
-  );
-
-  const testBox4 = new THREE.Mesh(
-    new THREE.BoxGeometry(0.2, 0.3, 0.01),
-    materials4,
-  );
-
-  testBox1.position.set(-9, 0.9, -0.8);
-  testBox1.rotateX(-0.8);
-
-  testBox2.position.set(-9, 0.9, 2.1);
-  testBox2.rotateX(-0.8);
-
-  testBox3.position.set(-9, 0.9, -2.2);
-  testBox3.rotateY(Math.PI);
-  testBox3.rotateX(-0.8);
-
-  testBox4.position.set(-24, 1, -6.7545);
-
-  grabVR.grabableObjects().push(testBox1);
-
-  sceneInput.add(testBox1);
-  sceneInput.add(testBox2);
-  sceneInput.add(testBox3);
-  sceneInput.add(testBox4);
+  grabVR.grabableObjects().push(paperArray[0]);
 }
