@@ -104,7 +104,17 @@ export default function initCameras() {
   R2Camera.position.set(-9, 2, 0);
   R2Camera.lookAt(1, 1, 0);
 
-  const cameras = [[intersectionCamera, R1Camera, R2Camera, intersectionCamera], [R1Default, uleftQuadCamera, urightQuadCamera, brightQuadCamera, bleftQuadCamera], [R2Camera, intersectionCamera, R1Camera, intersectionCamera]];
+  const cameras = [
+    [intersectionCamera, R1Camera, R2Camera, intersectionCamera],
+    [
+      R1Default,
+      uleftQuadCamera,
+      urightQuadCamera,
+      brightQuadCamera,
+      bleftQuadCamera,
+    ],
+    [R2Camera, intersectionCamera, R1Camera, intersectionCamera],
+  ];
 
   const cameraManager = new CameraManager({
     cameraContainer,

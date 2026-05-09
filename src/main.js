@@ -9,7 +9,7 @@ import { ThreeMFLoader } from "three/examples/jsm/Addons.js";
 import initPopups from "./initPopups";
 import initCameras from "./initCameras";
 import { createOverlay } from "./world/overlay";
-import GrabVR from './grabvr/src/client/grabvr.ts';
+import GrabVR from "./grabvr/src/client/grabvr.ts";
 import callModels, { callDrone } from "./importModels.js";
 import createMapCopy from "./world/mapCopy";
 import droneInit, { droneUpdate } from "./droneLogic.js";
@@ -117,12 +117,14 @@ debug.className = "vr-debug";
 document.body.appendChild(debug);
 
 // Create map that vr user will navigate through
-const { walls, floor, laserState } = createMap(scene);
+const { walls, floor, laserState, tiles } = createMap(scene);
+
+const tilesOrder = [tiles[2], tiles[1], tiles[3], tiles[0], tiles[5], tiles[4]];
+const tilesPlayer = [];
 
 // Create a copy of the map for the map camera
 const { wallsCopy, floorCopy, playerClone, radar } = createMapCopy(scene);
 callModels(scene, grabVR, radar);
-
 
 const { overlay } = createOverlay(scene);
 
@@ -167,8 +169,7 @@ initPopups({
 
 const drone = await callDrone(scene);
 
-const { dronePoints, dronePrevPosition, droneForwardTarget, } = droneInit(drone);
-
+const { dronePoints, dronePrevPosition, droneForwardTarget } = droneInit(drone);
 
 const hint = document.createElement("div");
 hint.className = "vr-hint";
@@ -206,25 +207,73 @@ function renderInContainer(cam, el) {
 }
 const clock = new THREE.Clock();
 
+// Arrow key movement
+const keyState = {
+  ArrowUp: false,
+  ArrowDown: false,
+  ArrowLeft: false,
+  ArrowRight: false,
+};
+const movementSpeed = 3; // units per second
+
+window.addEventListener("keydown", (e) => {
+  if (e.key in keyState) {
+    keyState[e.key] = true;
+  }
+});
+
+window.addEventListener("keyup", (e) => {
+  if (e.key in keyState) {
+    keyState[e.key] = false;
+  }
+});
+
 // Need this const to track when movement of drone started
 const moveStartTime = performance.now();
+playerRig.position.set(12, 1, 0);
+console.log(playerRig);
+playerRig.scale.set(0.5, 0.5, 0.5);
 
+let isColliding = false;
 renderer.setAnimationLoop(() => {
   const delta = clock.getDelta();
+
+  // Handle arrow key movement
+  const moveDistance = movementSpeed * delta;
+  if (keyState.ArrowUp) {
+    playerRig.position.z -= moveDistance;
+  }
+  if (keyState.ArrowDown) {
+    playerRig.position.z += moveDistance;
+  }
+  if (keyState.ArrowLeft) {
+    playerRig.position.x -= moveDistance;
+  }
+  if (keyState.ArrowRight) {
+    playerRig.position.x += moveDistance;
+  }
+
   movement.update(delta);
   controls.update();
   grabVR.update(delta);
 
   //Radar animation
-  radar.update(delta)
+  radar.update(delta);
 
-  multiplayer.updatePose(VRCamera, leftController, rightController, playerRig, playerClone);
+  multiplayer.updatePose(
+    VRCamera,
+    leftController,
+    rightController,
+    playerRig,
+    playerClone,
+  );
 
   const elapsed = (performance.now() - moveStartTime) / 1000;
 
   // 2 is the total speed of the drone
-  // true bool for whether drone will loop 
-  droneUpdate(drone,
+  // true bool for whether drone will loop
+  droneUpdate(
+    drone,
     dronePoints,
     dronePrevPosition,
     droneForwardTarget,
@@ -235,6 +284,39 @@ renderer.setAnimationLoop(() => {
     radar,
     playerRig,
   );
+
+  for (let i = 0; i < tiles.length; i++) {
+    let collisionRig = new THREE.Box3().setFromObject(playerRig);
+    let collisionTile = new THREE.Box3().setFromObject(tiles[i]);
+
+    let collision = collisionRig.intersectsBox(collisionTile);
+
+    if (!collision && isColliding) {
+      isColliding = false;
+    }
+
+    if (collision) {
+      if (tilesPlayer.includes(tiles[i])) {
+        continue;
+      } else if (isColliding) {
+        continue;
+      } else {
+        tilesPlayer.push(tiles[i]);
+        tiles[i].material.color.set("green");
+        let checkOrdering = tilesPlayer.every(
+          (val, index) => val === tilesOrder[index],
+        );
+        if (!checkOrdering && tilesPlayer.length > 1) {
+          for (let j = 0; j < tilesPlayer.length; j++) {
+            tilesPlayer[j].material.color.set("white");
+          }
+          tilesPlayer.length = 0;
+          isColliding = true;
+        }
+      }
+    }
+  }
+
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);
   } else {
