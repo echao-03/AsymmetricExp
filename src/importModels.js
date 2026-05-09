@@ -290,11 +290,39 @@ export default function callModels(sceneInput, grabVR, radar) {
     [""],
     ["I cannot access the office room"],
     ["I think the first 3 numbers"],
-    ["to deactivate the lasers are"],
-    ["195. The last two numbers are"],
-    ["the amount of cameras in this"],
-    ["maze, and the amount of lasers."],
+    ["to deactivate these lasers are"],
+    ["195. I think if you look around,"],
+    ["you might find the other numbers"],
     ["- E"],
+  ];
+
+  const papers5 = [
+    ["Dear I,"],
+    ["I don't understand why the"],
+    ["fourth number of the code is"],
+    ["6. Can it be like 2 or 4?"],
+    ["Please email me back, thanks."]
+    ["- K"]
+  ];
+
+  const papers6 = [
+    ["Dear K,"],
+    ["It's quite silly that the fifth"],
+    ["number of the code is the number"],
+    ["of cameras in the room."],
+    ["I hope anybody intruding wouldn't"],
+    ["know. :)"]
+    ["- E"]
+  ];
+
+  const papers7 = [
+    ["Dear E,"],
+    ["Can you tell me why the sixth"],
+    ["number of the code pertains to"],
+    ["the number of days in a week?"],
+    ["We need to talk to IT about"],
+    ["beefing up our security."],
+    ["- I"]
   ];
 
   const papersRroom = [

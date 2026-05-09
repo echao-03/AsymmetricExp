@@ -17,19 +17,19 @@ export default function initCameras() {
   );
   VRCamera.position.set(5, 0, 0);
 
-    const mapCamera = new THREE.PerspectiveCamera(
-        80,
-        mapContainer.clientWidth / mapContainer.clientHeight,
-        0.1,
-        100,
-    );
-    // mapCamera original Position: (0, 1.2, 0) *Moved position to see maze room*
-    // Moved 200 units to 184
-    // mapCamera.position.set(184, 18, 0);
-    // mapCamera.lookAt(184, 0, 0);
+  const mapCamera = new THREE.PerspectiveCamera(
+    80,
+    mapContainer.clientWidth / mapContainer.clientHeight,
+    0.1,
+    100,
+  );
+  // mapCamera original Position: (0, 1.2, 0) *Moved position to see maze room*
+  // Moved 200 units to 184
+  // mapCamera.position.set(184, 18, 0);
+  // mapCamera.lookAt(184, 0, 0);
 
-    mapCamera.position.set(-16, 18, 0);
-    mapCamera.lookAt(-16, 0, 0);  
+  mapCamera.position.set(-21, 15, 7);
+  mapCamera.lookAt(-21, 0, 7);
 
   const intersectionCamera = new THREE.PerspectiveCamera(
     75,
