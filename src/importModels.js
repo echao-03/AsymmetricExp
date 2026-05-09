@@ -129,9 +129,9 @@ export default function callModels(sceneInput, grabVR, radar) {
     computerURL.href,
     function (gltf) {
       const model = gltf.scene;
+      model.rotation.set(0, Math.PI, -0.05);
+
       model.position.set(-24.5, 0.74, 8.2);
-      model.rotateY(Math.PI);
-      model.rotateZ(-0.1);
       model.scale.setScalar(1);
       sceneInput.add(model);
     },
@@ -263,7 +263,7 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["I left some things in the "],
     ["server room. "],
     ["Can you fetch it for me?"],
-    ["P.S. The security drone is on."],
+    ["P.S. The security drone is on,"],
     ["- E"],
   ];
   const papers2 = [
@@ -273,7 +273,8 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["that the drone targets"],
     ["everyone."],
     [""],
-    ["Use code 814597 to disable."],
+    ["There should be a computer"],
+    ["somewhere to disable it."]
     ["- J"],
   ];
   const papers3 = [
@@ -288,9 +289,9 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["Dear J,"],
     [""],
     ["I cannot access the office room"],
-    ["I think the first 4 numbers"],
+    ["I think the first 3 numbers"],
     ["to deactivate the lasers are"],
-    ["1956. The last two numbers are"],
+    ["195. The last two numbers are"],
     ["the amount of cameras in this"],
     ["maze, and the amount of lasers."],
     ["- E"],
