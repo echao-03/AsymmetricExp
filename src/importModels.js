@@ -356,7 +356,8 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["number of the code is the number"],
     ["of cameras in the room."],
     ["I hope anybody intruding wouldn't"],
-    ["know. :)"]["- E"],
+    ["know. :)"],
+    ["- E"],
   ];
 
   const papers7 = [
@@ -432,6 +433,14 @@ export default function callModels(sceneInput, grabVR, radar) {
   paperArray[4].position.set(-18.2, 0.8, -8);
   paperArray[4].rotateY(-Math.PI / 2);
   paperArray[4].rotateX(-0.8);
+
+  paperArray[5].position.set(-13.9, 0.8, 6.25);
+  paperArray[5].rotateY(Math.PI);
+  paperArray[5].rotateX(-0.8);
+
+  paperArray[6].position.set(-28, 0.8, 8);
+  paperArray[6].rotateY(Math.PI);
+  paperArray[6].rotateX(-0.8);
 
   grabVR.grabableObjects().push(paperArray[0]);
 }
