@@ -10,7 +10,6 @@ export function createVRMovement({
     onDebug,
     walls = [],
     laserWalls = [],
-    isLasersActive = () => false,
     floor,
     playerRadius = 0.25,
     speed = 2.0,
@@ -76,14 +75,11 @@ export function createVRMovement({
     const teleportReleaseLock = { active: false };
 
     const getBlockingBoxes = () => {
-        const dynamicLaserBoxes = isLasersActive()
-            ? laserWalls.map((wall) => new THREE.Box3().setFromObject(wall))
-            : [];
+        const dynamicLaserBoxes = laserState.lasers
+            .filter(laser => laser.mesh.visible)
+            .map(laser => new THREE.Box3().setFromObject(laser.mesh));
 
-        if (isLasersActive()) {
-            return wallBoxes.concat(dynamicLaserBoxes);
-        }
-        return wallBoxes;
+        return wallBoxes.concat(dynamicLaserBoxes);
     };
 
     const collidesXZ = (x, z) => {

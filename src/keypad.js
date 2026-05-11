@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import setLasersActive from "./lasers";
-
+import { Laser } from "../src/lasers.js";
 export class Keypad {
     constructor({
         keypad,
@@ -34,7 +33,7 @@ export class Keypad {
         this.onCodeAccepted = onCodeAccepted;
         this.passcodes = new Map();
         this.laserState = laserState;
-        this.disableObjects = [laserState.boxes[0]];
+        this.disableObjects = [laserState.lasers[0], laserState.lasers[1]];
         this.radar = radar;
         this.multiplayer = multiplayer;
     }
@@ -121,7 +120,7 @@ export class Keypad {
         playerPos.x = playerPos.x - 200;
         const inRange = [];
         this.disableObjects.forEach(obj => {
-            const objPos = obj.getWorldPosition(new THREE.Vector3());
+            const objPos = obj.mesh.getWorldPosition(new THREE.Vector3());
             if (playerPos.distanceTo(objPos) < 3) {
                 inRange.push(obj);
             }
@@ -132,11 +131,11 @@ export class Keypad {
             if (this.secondaryDisplay) {
                 this.secondaryDisplay.textContent = "ACCEPTED";
             }
-            setLasersActive(false, inRange[0]);
+            inRange[0].setLasersActive(false);
             this.enteredCode = "";
 
             if (this.multiplayer && this.multiplayer.network && this.multiplayer.network.isConnected) {
-                this.multiplayer.network.send({ type: 'laser-state', active: false });
+                this.multiplayer.network.send({ type: 'laser-state', laserName: inRange[0].name, active: false });
             }
 
             return;
