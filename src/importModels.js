@@ -350,7 +350,6 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["                                           025"],
     ["DO NOT LET IT BE SEEN."],
     ["- E"],
-
   ];
 
   const papers1 = [
@@ -503,8 +502,10 @@ export default function callModels(sceneInput, grabVR, radar) {
     makeJaggedPaperGeometry(0.2, 0.3, 12, 0.01),
     paperMaterial,
   );
-  testJagged.position.set(0, 1, 2.5);
-  testJagged.rotateY(Math.PI);
+  testJagged.position.set(-24.2, 0.8, -9.2);
+  testJagged.rotateY(-Math.PI / 2);
+  testJagged.rotateX(-0.8);
+
   sceneInput.add(testJagged);
 
   grabVR.grabableObjects().push(paperArray[0]);
