@@ -56,8 +56,8 @@ export class Keypad {
         this.popupButton.addEventListener("click", () => this.show());
         this.updateDisplay();
 
-        this.passcodes.set(this.laserState.lasers[0], "195653");
-        this.passcodes.set(this.laserState.lasers[1], "105326");
+        this.passcodes.set(this.laserState.boxes[0], "195657");
+        this.passcodes.set(this.laserState.boxes[1], "105326");
     }
 
     handleKeyPress(key) {
@@ -133,7 +133,7 @@ export class Keypad {
             }
             inRange[0].setLasersActive(false);
             this.enteredCode = "";
-            ``
+
             if (this.multiplayer && this.multiplayer.network && this.multiplayer.network.isConnected) {
                 this.multiplayer.network.send({ type: 'laser-state', laserName: inRange[0].name, active: false });
             }

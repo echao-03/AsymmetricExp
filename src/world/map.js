@@ -56,7 +56,7 @@ export function createMap(scene) {
   //     transparent: "true",
   //   }),
   // );
-  
+
   // laserBox3.position.set(-29.25, 1.3, -8.7);
   // laserBox3.rotateY(Math.PI / 2);
   // scene.add(laserBox3);
@@ -147,7 +147,8 @@ export function createMap(scene) {
     { geo: "roomShorter", x: -18, z: 10 },
 
     { geo: "roomLong", x: -15, z: 7 },
-    { geo: "roomShort", x: -13.5, z: 9, ry: Math.PI / 2 },
+    { geo: "roomShorter", x: -14, z: 9, ry: Math.PI / 2 },
+    { geo: "roomShorter", x: -14, z: 7, ry: Math.PI / 2 },
 
     { geo: "roomLong", x: -13, z: 5 },
     { geo: "roomShort", x: -14.25, z: 3, ry: Math.PI / 2 },
