@@ -59,16 +59,10 @@ export async function callDrone(sceneInput) {
   return droneModel;
 }
 
-function makeTornPaperGeometry(
-  width,
-  height,
-  depth = 0.01,
-  teeth = 20,
-  jagged = 0.02,
-) {
+function makeJaggedPaperGeometry(width, height, teeth = 15, jagged = 0.04) {
   const shape = new THREE.Shape();
   const halfW = width / 2;
-  const halfH = height / 4;
+  const halfH = height / 2;
 
   shape.moveTo(-halfW, -halfH);
   shape.lineTo(halfW, -halfH);
@@ -84,12 +78,23 @@ function makeTornPaperGeometry(
   shape.lineTo(-halfW, halfH);
   shape.closePath();
 
-  const geometry = new THREE.ExtrudeGeometry(shape, {
-    depth,
-    bevelEnabled: false,
-  });
+  const geometry = new THREE.ShapeGeometry(shape);
 
-  geometry.center();
+  geometry.computeBoundingBox();
+  const box = geometry.boundingBox;
+  const size = new THREE.Vector2(box.max.x - box.min.x, box.max.y - box.min.y);
+
+  const pos = geometry.attributes.position;
+  const uv = new Float32Array(pos.count * 2);
+
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i);
+    const y = pos.getY(i);
+    uv[i * 2 + 0] = (x - box.min.x) / size.x;
+    uv[i * 2 + 1] = (y - box.min.y) / size.y;
+  }
+
+  geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
   return geometry;
 }
 
@@ -337,6 +342,17 @@ export default function callModels(sceneInput, grabVR, radar) {
 
   // Rendering 'papers' using a canvas to type out message
 
+  const masterPaper1 = [
+    ["Dear J,"],
+    ["Do not share this with anyone, f"],
+    ["including the others workers that are"],
+    ["The code for the master lock is"],
+    ["                                           025"],
+    ["DO NOT LET IT BE SEEN."],
+    ["- E"],
+
+  ];
+
   const papers1 = [
     ["Dear J,"],
     [""],
@@ -423,6 +439,8 @@ export default function callModels(sceneInput, grabVR, radar) {
   const labelPaper_6 = makeLabelTexture(papers6);
   const labelPaper_7 = makeLabelTexture(papers7);
 
+  const labelMaster_1 = makeLabelTexture(masterPaper1);
+
   const mazePapers = [
     labelPaper_1,
     labelPaper_2,
@@ -476,16 +494,17 @@ export default function callModels(sceneInput, grabVR, radar) {
   paperArray[6].rotateY(Math.PI);
   paperArray[6].rotateX(-0.8);
 
-  const paperMaterial = new THREE.MeshStandardMaterial({
-    map: mazePapers[0],
+  const paperMaterial = new THREE.MeshBasicMaterial({
+    map: labelMaster_1,
     side: THREE.DoubleSide,
   });
 
   const testJagged = new THREE.Mesh(
-    makeTornPaperGeometry(0.2, 0.3, 0.01, 4, 0.02),
+    makeJaggedPaperGeometry(0.2, 0.3, 12, 0.01),
     paperMaterial,
   );
   testJagged.position.set(0, 1, 2.5);
+  testJagged.rotateY(Math.PI);
   sceneInput.add(testJagged);
 
   grabVR.grabableObjects().push(paperArray[0]);
