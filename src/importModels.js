@@ -98,6 +98,46 @@ function makeJaggedPaperGeometry(width, height, teeth = 15, jagged = 0.04) {
   return geometry;
 }
 
+function makeJaggedPaperGeometryFlip(width, height, teeth = 15, jagged = 0.04) {
+  const shape = new THREE.Shape();
+  const halfW = width / 2;
+  const halfH = height / 2;
+
+  shape.moveTo(-halfW, -halfH);
+  shape.lineTo(halfW, -halfH);
+
+  shape.lineTo(halfW, halfH);
+
+  for (let i = 0; i <= teeth; i++) {
+    const t = i / teeth;
+    const y = halfH - t * height;
+    const x =
+      -halfW + (i === 0 || i === teeth ? 0 : i % 2 === 0 ? jagged : -jagged);
+    shape.lineTo(x, y);
+  }
+
+  shape.closePath();
+
+  const geometry = new THREE.ShapeGeometry(shape);
+
+  geometry.computeBoundingBox();
+  const box = geometry.boundingBox;
+  const size = new THREE.Vector2(box.max.x - box.min.x, box.max.y - box.min.y);
+
+  const pos = geometry.attributes.position;
+  const uv = new Float32Array(pos.count * 2);
+
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i);
+    const y = pos.getY(i);
+    uv[i * 2 + 0] = (x - box.min.x) / size.x;
+    uv[i * 2 + 1] = (y - box.min.y) / size.y;
+  }
+
+  geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+  return geometry;
+}
+
 export default function callModels(sceneInput, grabVR, radar) {
   const loader = new GLTFLoader();
 
@@ -256,6 +296,22 @@ export default function callModels(sceneInput, grabVR, radar) {
     },
   );
 
+  // Positioned at right room
+  loader.load(
+    tableURL.href,
+    function (gltf) {
+      const model = gltf.scene;
+      model.position.set(21, 0.6, 0);
+      model.rotateY(Math.PI / 2);
+      model.scale.setScalar(0.7);
+      sceneInput.add(model);
+    },
+    undefined,
+    function (error) {
+      console.error(error);
+    },
+  );
+
   // Loading models for map camera, positioned in the copy of the maze
   // Positioned at beginning of maze
   loader.load(
@@ -352,6 +408,16 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["- E"],
   ];
 
+  const masterPaper2 = [
+    [""],
+    [""],
+    [""],
+    [""],
+    [" 5928"],
+    [""],
+    ["P.S. Do not LOSE this "],
+  ];
+
   const papers1 = [
     ["Dear J,"],
     [""],
@@ -439,6 +505,7 @@ export default function callModels(sceneInput, grabVR, radar) {
   const labelPaper_7 = makeLabelTexture(papers7);
 
   const labelMaster_1 = makeLabelTexture(masterPaper1);
+  const labelMaster_2 = makeLabelTexture(masterPaper2);
 
   const mazePapers = [
     labelPaper_1,
@@ -493,20 +560,33 @@ export default function callModels(sceneInput, grabVR, radar) {
   paperArray[6].rotateY(Math.PI);
   paperArray[6].rotateX(-0.8);
 
-  const paperMaterial = new THREE.MeshBasicMaterial({
+  const masterMaterial_1 = new THREE.MeshBasicMaterial({
     map: labelMaster_1,
     side: THREE.DoubleSide,
   });
 
-  const testJagged = new THREE.Mesh(
+  const master1 = new THREE.Mesh(
     makeJaggedPaperGeometry(0.2, 0.3, 12, 0.01),
-    paperMaterial,
+    masterMaterial_1,
   );
-  testJagged.position.set(-24.2, 0.8, -9.2);
-  testJagged.rotateY(-Math.PI / 2);
-  testJagged.rotateX(-0.8);
+  master1.position.set(-24.2, 0.8, -9.2);
+  master1.rotateY(-Math.PI / 2);
+  master1.rotateX(-0.8);
 
-  sceneInput.add(testJagged);
+  const masterMaterial_2 = new THREE.MeshBasicMaterial({
+    map: labelMaster_2,
+    side: THREE.DoubleSide,
+  });
 
+  const master2 = new THREE.Mesh(
+    makeJaggedPaperGeometryFlip(0.2, 0.3, 12, 0.01),
+    masterMaterial_2,
+  );
+
+  master2.position.set(21, 0.8, 0);
+  master2.rotateY(-Math.PI / 2);
+  master2.rotateX(-0.8);
+  sceneInput.add(master1);
+  sceneInput.add(master2);
   grabVR.grabableObjects().push(paperArray[0]);
 }
