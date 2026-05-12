@@ -316,6 +316,20 @@ export default function callModels(sceneInput, grabVR, radar) {
     },
   );
 
+  loader.load(
+    tableURL.href,
+    function (gltf) {
+      const model = gltf.scene;
+      model.position.set(8.5, 0.6, 2);
+      model.scale.setScalar(0.7);
+      sceneInput.add(model);
+    },
+    undefined,
+    function (error) {
+      console.error(error);
+    },
+  );
+
   // Loading models for map camera, positioned in the copy of the maze
   // Positioned at beginning of maze
   loader.load(
@@ -400,6 +414,8 @@ export default function callModels(sceneInput, grabVR, radar) {
     },
 
   );
+
+
 
 
 
@@ -503,7 +519,7 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["- E"],
   ];
 
-  const testPaper = [
+  const crypicPaper = [
     ["𝙹リᒷ"],
     ["ℸ∴𝙹"],
     ["ℸ⍑∷"],
@@ -512,30 +528,6 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["╎⍊ᒷ"],
   ];
 
-  const fontLoader = new FontLoader();
-  const fontURL = new URL('./fonts/StandardGalacticAlphabet_Regular.json', import.meta.url);
-
-  fontLoader.load(fontURL.href, function (font) {
-    const testPaper1 = makeLabelTexture(testPaper);
-    const materials = [
-      new THREE.MeshStandardMaterial({ color: 0xffffff }), // +X
-      new THREE.MeshStandardMaterial({ color: 0xffffff }), // -X
-      new THREE.MeshStandardMaterial({ color: 0xffffff }), // +Y
-      new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Y
-      new THREE.MeshStandardMaterial({ map: testPaper1 }), // +Z (front)
-      new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Z
-    ];
-    const renderPaper = new THREE.Mesh(
-      new THREE.BoxGeometry(0.2, 0.3, 0.01),
-      materials,
-    );
-    renderPaper.position.set(0, 1, 0);
-    sceneInput.add(renderPaper);
-  }
-
-
-
-  );
 
   const labelPaper_1 = makeLabelTexture(papers1);
   const labelPaper_2 = makeLabelTexture(papers2);
@@ -623,6 +615,22 @@ export default function callModels(sceneInput, grabVR, radar) {
     makeJaggedPaperGeometryFlip(0.2, 0.3, 12, 0.01),
     masterMaterial_2,
   );
+
+  const cryptic = makeLabelTexture(crypicPaper);
+  const materials = [
+    new THREE.MeshStandardMaterial({ color: 0xffffff }), // +X
+    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -X
+    new THREE.MeshStandardMaterial({ color: 0xffffff }), // +Y
+    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Y
+    new THREE.MeshStandardMaterial({ map: cryptic }), // +Z (front)
+    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Z
+  ];
+  const renderPaper = new THREE.Mesh(
+    new THREE.BoxGeometry(0.2, 0.3, 0.01),
+    materials,
+  );
+  renderPaper.position.set(0, 1, 0);
+  sceneInput.add(renderPaper);
 
   master2.position.set(21, 0.8, 0);
   master2.rotateY(-Math.PI / 2);

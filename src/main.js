@@ -41,6 +41,9 @@ const vrButton = VRButton.createButton(renderer);
 document.body.appendChild(vrButton);
 
 const playerRig = new THREE.Group();
+const rigBox = new THREE.Box3().setFromObject(playerRig);
+const rigBoxHelper = new THREE.Box3Helper(rigBox, 0x00ff00); // green wireframe
+scene.add(rigBoxHelper);
 playerRig.add(VRCamera);
 playerRig.children[0].rotateY(20);
 scene.add(playerRig);
@@ -232,7 +235,7 @@ window.addEventListener("keyup", (e) => {
 const moveStartTime = performance.now();
 playerRig.position.set(12, 1, 0);
 console.log(playerRig);
-playerRig.scale.set(0.5, 0.5, 0.5);
+playerRig.scale.set(0.1, 0.5, 0.5);
 
 let isColliding = false;
 renderer.setAnimationLoop(() => {
@@ -284,6 +287,8 @@ renderer.setAnimationLoop(() => {
     radar,
     playerRig,
   );
+
+  rigBox.setFromObject(playerRig);
 
   for (let i = 0; i < tiles.length; i++) {
     let collisionRig = new THREE.Box3().setFromObject(playerRig);
