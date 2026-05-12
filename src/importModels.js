@@ -519,7 +519,7 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["- E"],
   ];
 
-  const crypicPaper = [
+  const crypicLines = [
     ["𝙹リᒷ"],
     ["ℸ∴𝙹"],
     ["ℸ⍑∷"],
@@ -616,8 +616,27 @@ export default function callModels(sceneInput, grabVR, radar) {
     masterMaterial_2,
   );
 
-  const cryptic = makeLabelTexture(crypicPaper);
-  const materials = [
+  const rightPaper1 = makeLabelTexture(papersRroom);
+  const rightPaperMaterial = [
+    new THREE.MeshStandardMaterial({ color: 0xffffff }), // +X
+    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -X
+    new THREE.MeshStandardMaterial({ color: 0xffffff }), // +Y
+    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Y
+    new THREE.MeshStandardMaterial({ map: rightPaper1 }), // +Z (front)
+    new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Z
+  ];
+  const rightPaper = new THREE.Mesh(
+    new THREE.BoxGeometry(0.2, 0.3, 0.01),
+    rightPaperMaterial,
+  );
+
+  rightPaper.position.set(8.2, 0.8, 2);
+  rightPaper.rotateY(-Math.PI);
+  rightPaper.rotateX(-0.8);
+  sceneInput.add(rightPaper);
+
+  const cryptic = makeLabelTexture(crypicLines);
+  const crypticMaterial = [
     new THREE.MeshStandardMaterial({ color: 0xffffff }), // +X
     new THREE.MeshStandardMaterial({ color: 0xffffff }), // -X
     new THREE.MeshStandardMaterial({ color: 0xffffff }), // +Y
@@ -625,12 +644,15 @@ export default function callModels(sceneInput, grabVR, radar) {
     new THREE.MeshStandardMaterial({ map: cryptic }), // +Z (front)
     new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Z
   ];
-  const renderPaper = new THREE.Mesh(
+  const crypicPaper = new THREE.Mesh(
     new THREE.BoxGeometry(0.2, 0.3, 0.01),
-    materials,
+    crypticMaterial,
   );
-  renderPaper.position.set(0, 1, 0);
-  sceneInput.add(renderPaper);
+  crypicPaper.position.set(8.8, 0.8, 2);
+  crypicPaper.rotateY(-Math.PI);
+  crypicPaper.rotateX(-0.8);
+  sceneInput.add(crypicPaper);
+
 
   master2.position.set(21, 0.8, 0);
   master2.rotateY(-Math.PI / 2);
