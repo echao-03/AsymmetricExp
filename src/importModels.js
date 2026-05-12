@@ -1,7 +1,9 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { FontLoader, TextGeometry } from "three/examples/jsm/Addons.js";
 
 function makeLabelTexture(lines) {
+
   const canvas = document.createElement("canvas");
   canvas.width = 500;
   canvas.height = 500;
@@ -137,6 +139,8 @@ function makeJaggedPaperGeometryFlip(width, height, teeth = 15, jagged = 0.04) {
   geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
   return geometry;
 }
+
+
 
 export default function callModels(sceneInput, grabVR, radar) {
   const loader = new GLTFLoader();
@@ -394,7 +398,10 @@ export default function callModels(sceneInput, grabVR, radar) {
     function (error) {
       console.error(error);
     },
+
   );
+
+
 
   // Rendering 'papers' using a canvas to type out message
 
@@ -495,6 +502,40 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["anything about this."],
     ["- E"],
   ];
+
+  const testPaper = [
+    ["𝙹リᒷ"],
+    ["ℸ∴𝙹"],
+    ["ℸ⍑∷"],
+    ["ᒷᒷ ⎓"],
+    ["𝙹⚍∷ ⎓"],
+    ["╎⍊ᒷ"],
+  ];
+
+  const fontLoader = new FontLoader();
+  const fontURL = new URL('./fonts/StandardGalacticAlphabet_Regular.json', import.meta.url);
+
+  fontLoader.load(fontURL.href, function (font) {
+    const testPaper1 = makeLabelTexture(testPaper);
+    const materials = [
+      new THREE.MeshStandardMaterial({ color: 0xffffff }), // +X
+      new THREE.MeshStandardMaterial({ color: 0xffffff }), // -X
+      new THREE.MeshStandardMaterial({ color: 0xffffff }), // +Y
+      new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Y
+      new THREE.MeshStandardMaterial({ map: testPaper1 }), // +Z (front)
+      new THREE.MeshStandardMaterial({ color: 0xffffff }), // -Z
+    ];
+    const renderPaper = new THREE.Mesh(
+      new THREE.BoxGeometry(0.2, 0.3, 0.01),
+      materials,
+    );
+    renderPaper.position.set(0, 1, 0);
+    sceneInput.add(renderPaper);
+  }
+
+
+
+  );
 
   const labelPaper_1 = makeLabelTexture(papers1);
   const labelPaper_2 = makeLabelTexture(papers2);
