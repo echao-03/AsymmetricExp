@@ -153,23 +153,20 @@ multiplayer.network.on('laser-state', (msg) => {
   }
 });
 
+
+
+
+const  drone = await callDrone(scene);
+
+const { dronePoints, dronePrevPosition, droneForwardTarget, droneRef } = droneInit(drone);
+
 // Initialize popups
 initPopups({
-  // onCodeAccepted: () => {
-  //   // inform server to broadcast to everyone (safe to send even if not connected)
-  //   if (multiplayer && multiplayer.network && multiplayer.network.isConnected) {
-  //     multiplayer.network.send({ type: 'laser-state', active: false });
-  //   }
-  // },
   laserState,
   radar,
-  multiplayer
+  multiplayer,
+  droneRef,
 });
-
-
-const drone = await callDrone(scene);
-
-const { dronePoints, dronePrevPosition, droneForwardTarget } = droneInit(drone);
 
 const hint = document.createElement("div");
 hint.className = "vr-hint";
@@ -283,6 +280,7 @@ renderer.setAnimationLoop(() => {
     -1,
     radar,
     playerRig,
+    droneRef,
   );
 
   for (let i = 0; i < tiles.length; i++) {

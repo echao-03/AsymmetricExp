@@ -1,8 +1,9 @@
 import makeDraggable from "./draggable";
 import { Keypad } from "./keypad";
 import { Handbook } from "./handbook";
+import { HackingManger } from "./hackingManager";
 
-export default function initPopups({ requiredCode = "", onCodeAccepted = null, laserState, radar, multiplayer } = {}) {
+export default function initPopups({ requiredCode = "", onCodeAccepted = null, laserState, radar, multiplayer, droneRef } = {}) {
     // HTML elements for popups
     const keypad = document.getElementById("keypad");
     const handbookButton = document.getElementById("handbook-button");
@@ -47,9 +48,13 @@ export default function initPopups({ requiredCode = "", onCodeAccepted = null, l
         radar,
     });
 
+    // Init hacking manager
+    const hackingManager = new HackingManger(droneRef);
+
     // Call init() for handbook and keypad for event listeners
     keypadObj.init();
     handbookObj.init();
+    hackingManager.init();
 
     // Allow popups to be dragged
     makeDraggable(keypadObj.keypad, ".key");
