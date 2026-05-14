@@ -151,11 +151,23 @@ body {
 
 .handbook-top {
     display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #f3f595;
+    border-radius: 10px;
+    pointer-events: auto;
+    overflow-y: auto;
+    max-height: 175px;
+}
+
+.section-container {
+    display: flex;
     flex-direction: row;
     gap: 10px;
     background-color: #f3f595;
     border-radius: 10px;
-
+    pointer-events: auto;
+    overflow-y: auto;
 }
 
 .hint-container {
@@ -184,7 +196,7 @@ body {
 
 .handbook-text {
     color: #04070b;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     line-height: 1.5;
     margin: .5rem .5rem .5rem .5rem;
     text-align: left;
@@ -424,18 +436,62 @@ body {
     pointer-events: auto;
 }
 
+.status-text {
+    color: #e5ecff;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 .5rem 0;
+    pointer-events: auto;
+    justify-content: center;
+}
+
+.status-label {
+    width: 150px;
+    height: 90px;
+    display: flex;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: #58B276;
+    color: #e5ecff;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+    text-align: center;
+}
+
 .description-container {
     position: absolute;
     top: 4.5rem;
     left: 4.5rem;
     right: 4.5rem;
-    bottom: 4.5rem;
-    padding: 1rem;
+    bottom: calc(50% + 0.5rem);
+    padding: 0.5rem;
     border-radius: 0.75rem;
     background: rgba(12, 16, 24, 0.85);
     border: 1px solid rgba(255, 255, 255, 0.18);
     overflow-y: auto;
     pointer-events: auto;
+}
+
+.laser-status-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: calc(50% + 0.5rem);
+    left: 4.5rem;
+    right: 4.5rem;
+    bottom: 4.5rem;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    background: rgba(12, 16, 24, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    overflow-y: auto;
+    pointer-events: auto;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 /* All Quad Hover Effects */

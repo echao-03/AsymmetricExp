@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { Drone } from "./Drone.js";
 import { FontLoader, TextGeometry } from "three/examples/jsm/Addons.js";
 
 function makeLabelTexture(lines) {
