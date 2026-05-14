@@ -44,9 +44,9 @@ export default function tileUpdate(
   }
 }
 
-export function isCorrect(tilesPlayer, tilesOrder, laser) {
-  if (tilesPlayer == tilesOrder) {
-    console.log("in here");
-    laser.visible = false;
+export function isCorrect(tilesPlayer, tilesOrder, laserState) {
+  if (tilesPlayer.length == 6) {
+    laserState.lasers[2].setLasersActive(false)
+    tilesPlayer.length = 0;
   }
 }

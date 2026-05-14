@@ -296,7 +296,7 @@ renderer.setAnimationLoop(() => {
   rigBox.setFromObject(playerRig);
 
   tileUpdate(tiles, tilesOrder, tilesPlayer, playerRig, isColliding);
-  isCorrect(tilesPlayer, tilesOrder, laserState.lasers[2]);
+  isCorrect(tilesPlayer, tilesOrder, laserState);
 
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);

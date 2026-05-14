@@ -209,7 +209,7 @@ export function createMap(scene) {
 
   laserState.lasers.push(laser1);
   laserState.lasers.push(laser2);
-  laserState.lasers.push(laserState);
+  laserState.lasers.push(laserTiles);
 
   const tiles = [tile1, tile2, tile3, tile4, tile5, tile6];
 
