@@ -151,11 +151,23 @@ body {
 
 .handbook-top {
     display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #f3f595;
+    border-radius: 10px;
+    pointer-events: auto;
+    overflow-y: auto;
+    max-height: 175px;
+}
+
+.section-container {
+    display: flex;
     flex-direction: row;
     gap: 10px;
     background-color: #f3f595;
     border-radius: 10px;
-
+    pointer-events: auto;
+    overflow-y: auto;
 }
 
 .hint-container {
@@ -184,7 +196,7 @@ body {
 
 .handbook-text {
     color: #04070b;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     line-height: 1.5;
     margin: .5rem .5rem .5rem .5rem;
     text-align: left;

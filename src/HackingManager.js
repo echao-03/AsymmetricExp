@@ -4,8 +4,6 @@ export class HackingManger {
     constructor(droneRef) {
         this.hackingButton = document.getElementById("hack-button");
         this.statusLabel = document.getElementById("laser-status");
-        this.hackDuration = 5000; // Duration of the hack in milliseconds
-        this.hackStartTime = null;
         this.droneRef = droneRef;
     }
 
