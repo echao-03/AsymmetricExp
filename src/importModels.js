@@ -3,7 +3,6 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { FontLoader, TextGeometry } from "three/examples/jsm/Addons.js";
 
 function makeLabelTexture(lines) {
-
   const canvas = document.createElement("canvas");
   canvas.width = 500;
   canvas.height = 500;
@@ -139,8 +138,6 @@ function makeJaggedPaperGeometryFlip(width, height, teeth = 15, jagged = 0.04) {
   geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
   return geometry;
 }
-
-
 
 export default function callModels(sceneInput, grabVR, radar) {
   const loader = new GLTFLoader();
@@ -412,12 +409,55 @@ export default function callModels(sceneInput, grabVR, radar) {
     function (error) {
       console.error(error);
     },
-
   );
 
+  // Position at Tleft room
+  loader.load(
+    tableURL.href,
+    function (gltf) {
+      const model = gltf.scene;
+      model.position.set(176, 0.6, -9.2);
+      model.rotateY(Math.PI / 2);
+      model.scale.setScalar(0.7);
+      sceneInput.add(model);
+    },
+    undefined,
+    function (error) {
+      console.error(error);
+    },
+  );
 
+  // Positioned at Tleft room
+  loader.load(
+    tableURL.href,
+    function (gltf) {
+      const model = gltf.scene;
+      model.position.set(182, 0.6, -8);
+      model.rotateY(Math.PI / 2);
+      model.scale.setScalar(0.7);
+      sceneInput.add(model);
+    },
+    undefined,
+    function (error) {
+      console.error(error);
+    },
+  );
 
-
+  // Positioned at right room
+  loader.load(
+    tableURL.href,
+    function (gltf) {
+      const model = gltf.scene;
+      model.position.set(221, 0.6, 0);
+      model.rotateY(Math.PI / 2);
+      model.scale.setScalar(0.7);
+      sceneInput.add(model);
+    },
+    undefined,
+    function (error) {
+      console.error(error);
+    },
+  );
 
   // Rendering 'papers' using a canvas to type out message
 
@@ -527,7 +567,6 @@ export default function callModels(sceneInput, grabVR, radar) {
     ["𝙹⚍∷ ⎓"],
     ["╎⍊ᒷ"],
   ];
-
 
   const labelPaper_1 = makeLabelTexture(papers1);
   const labelPaper_2 = makeLabelTexture(papers2);
@@ -652,7 +691,6 @@ export default function callModels(sceneInput, grabVR, radar) {
   crypicPaper.rotateY(-Math.PI);
   crypicPaper.rotateX(-0.8);
   sceneInput.add(crypicPaper);
-
 
   master2.position.set(21, 0.8, 0);
   master2.rotateY(-Math.PI / 2);

@@ -32,7 +32,6 @@ export function createMap(scene) {
     lasers: [],
   };
 
-  
   // const laserBox1 = new THREE.Mesh(
   //   new THREE.BoxGeometry(0.2, 2, 2.8),
   //   new THREE.MeshBasicMaterial({
@@ -41,13 +40,14 @@ export function createMap(scene) {
   //     transparent: "true",
   //   }),
   // );
-  
+
   // laserBox1.position.set(-29.25, 1, -8.7);
   // laserBox1.rotateY(Math.PI / 2);
 
   const laser1 = new Laser(scene, "Laser1", 0.2, 2, 2.8, -29.25, 1, -8.7, true);
   const laser2 = new Laser(scene, "Laser2", 0.2, 2, 2.6, -22.2, 0.5, 9, true);
-  
+  const laserTiles = new Laser(scene, "laserTiles", 2, 2, 2.6, 19, 0, 0, true);
+
   // const laserBox3 = new THREE.Mesh(
   //   new THREE.BoxGeometry(0.2, 0.2, 2.8),
   //   new THREE.MeshBasicMaterial({
@@ -206,9 +206,10 @@ export function createMap(scene) {
   });
 
   scene.add(floor);
-  
+
   laserState.lasers.push(laser1);
   laserState.lasers.push(laser2);
+  laserState.lasers.push(laserTiles);
 
   const tiles = [tile1, tile2, tile3, tile4, tile5, tile6];
 

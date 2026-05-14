@@ -22,7 +22,7 @@ export class Laser {
         scene.add(this.mesh);
     }
 
-    setLasersActive(isActive){
+    setLasersActive(isActive) {
         this.mesh.visible = isActive;
     }
 
