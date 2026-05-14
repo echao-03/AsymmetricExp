@@ -13,6 +13,7 @@ import GrabVR from "./grabvr/src/client/grabvr.ts";
 import callModels, { callDrone } from "./importModels.js";
 import createMapCopy from "./world/mapCopy";
 import droneInit, { droneUpdate } from "./droneLogic.js";
+import tileUpdate, { isCorrect } from "./world/tiles.js";
 
 const container = document.getElementById("app");
 const cameraContainer = document.getElementById("camera-quadrant");
@@ -41,6 +42,9 @@ const vrButton = VRButton.createButton(renderer);
 document.body.appendChild(vrButton);
 
 const playerRig = new THREE.Group();
+const rigBox = new THREE.Box3().setFromObject(playerRig);
+const rigBoxHelper = new THREE.Box3Helper(rigBox, 0x00ff00); // green wireframe
+scene.add(rigBoxHelper);
 playerRig.add(VRCamera);
 playerRig.children[0].rotateY(20);
 scene.add(playerRig);
@@ -144,10 +148,14 @@ const movement = createVRMovement({
   },
 });
 
-const multiplayer = createMultiplayer({ scene, username: "Player", playerClone });
+const multiplayer = createMultiplayer({
+  scene,
+  username: "Player",
+  playerClone,
+});
 
-multiplayer.network.on('laser-state', (msg) => {
-  const laser = laserState.lasers.find(l => l.name === msg.laserName);
+multiplayer.network.on("laser-state", (msg) => {
+  const laser = laserState.lasers.find((l) => l.name === msg.laserName);
   if (laser) {
     laser.setLasersActive(msg.active);
   }
@@ -227,9 +235,10 @@ window.addEventListener("keyup", (e) => {
 
 // Need this const to track when movement of drone started
 const moveStartTime = performance.now();
-playerRig.position.set(12, 1, 0);
+// playerRig Y position must be < 1 to collide with tiles
+playerRig.position.set(15, 0.8, 0);
 console.log(playerRig);
-playerRig.scale.set(0.5, 0.5, 0.5);
+playerRig.scale.set(0.1, 0.4, 0.2);
 
 let isColliding = false;
 renderer.setAnimationLoop(() => {
@@ -283,37 +292,10 @@ renderer.setAnimationLoop(() => {
     droneRef,
   );
 
-  for (let i = 0; i < tiles.length; i++) {
-    let collisionRig = new THREE.Box3().setFromObject(playerRig);
-    let collisionTile = new THREE.Box3().setFromObject(tiles[i]);
+  rigBox.setFromObject(playerRig);
 
-    let collision = collisionRig.intersectsBox(collisionTile);
-
-    if (!collision && isColliding) {
-      isColliding = false;
-    }
-
-    if (collision) {
-      if (tilesPlayer.includes(tiles[i])) {
-        continue;
-      } else if (isColliding) {
-        continue;
-      } else {
-        tilesPlayer.push(tiles[i]);
-        tiles[i].material.color.set("green");
-        let checkOrdering = tilesPlayer.every(
-          (val, index) => val === tilesOrder[index],
-        );
-        if (!checkOrdering && tilesPlayer.length > 1) {
-          for (let j = 0; j < tilesPlayer.length; j++) {
-            tilesPlayer[j].material.color.set("white");
-          }
-          tilesPlayer.length = 0;
-          isColliding = true;
-        }
-      }
-    }
-  }
+  tileUpdate(tiles, tilesOrder, tilesPlayer, playerRig, isColliding);
+  isCorrect(tilesPlayer, tilesOrder, laserState);
 
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);
