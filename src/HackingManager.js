@@ -19,8 +19,7 @@ export class HackingManger {
             this.statusLabel.style.display = "none";
             if (this.statusLabel.style.display === "none") {
                 this.statusLabel.style.display = "block";
-                this.statusLabel.style.backgroundColor = "#CE5353";
-                this.statusLabel.style.color = "#04070b";
+                this.statusLabel.style.color = "#CE5353";
                 this.statusLabel.textContent = "INACTIVE";
             }
         }

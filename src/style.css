@@ -447,17 +447,17 @@ body {
 
 .status-label {
     width: 150px;
-    height: 90px;
+    height: 50px;
     display: flex;
     padding: 1rem;
     border-radius: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background: #58B276;
-    color: #e5ecff;
+    background: rgba(12, 16, 24, 0.85);
+    color: #58B276;
     justify-content: center;
     align-items: center;
     pointer-events: auto;
     text-align: center;
+    font-size: large;
 }
 
 .description-container {
