@@ -164,7 +164,7 @@ multiplayer.network.on("laser-state", (msg) => {
 
 
 
-const  drone = await callDrone(scene);
+const drone = await callDrone(scene);
 
 const { dronePoints, dronePrevPosition, droneForwardTarget, droneRef } = droneInit(drone);
 
@@ -236,7 +236,7 @@ window.addEventListener("keyup", (e) => {
 // Need this const to track when movement of drone started
 const moveStartTime = performance.now();
 // playerRig Y position must be < 1 to collide with tiles
-playerRig.position.set(15, 0.8, 0);
+playerRig.position.set(0, 0.8, -1);
 console.log(playerRig);
 playerRig.scale.set(0.1, 0.4, 0.2);
 
