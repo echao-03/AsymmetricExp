@@ -421,6 +421,9 @@ export default function callModels(sceneInput, grabVR, radar) {
       model.rotateY(Math.PI / 2);
       model.scale.setScalar(0.7);
       sceneInput.add(model);
+      radar.scanableObjects.push(model);
+      model.visible = false;
+
     },
     undefined,
     function (error) {
@@ -437,6 +440,9 @@ export default function callModels(sceneInput, grabVR, radar) {
       model.rotateY(Math.PI / 2);
       model.scale.setScalar(0.7);
       sceneInput.add(model);
+      radar.scanableObjects.push(model);
+      model.visible = false;
+
     },
     undefined,
     function (error) {
@@ -453,6 +459,9 @@ export default function callModels(sceneInput, grabVR, radar) {
       model.rotateY(Math.PI / 2);
       model.scale.setScalar(0.7);
       sceneInput.add(model);
+      radar.scanableObjects.push(model);
+      model.visible = false;
+
     },
     undefined,
     function (error) {
