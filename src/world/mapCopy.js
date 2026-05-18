@@ -117,7 +117,7 @@ export default function createMapCopy(scene) {
     { geo: "roomLong", x: -28.25, z: 9, ry: Math.PI / 2 },
     { geo: "roomLong", x: -26.25, z: 7 },
     { geo: "roomLong", x: -24.25, z: 7, ry: Math.PI / 2 },
-    { geo: "roomShort", x: -24.25, z: 8.5 },
+    { geo: "roomShorter", x: -23.25, z: 8 },
 
     { geo: "roomShorter", x: -24.25, z: 4 },
 
@@ -128,7 +128,8 @@ export default function createMapCopy(scene) {
     { geo: "roomShorter", x: -18, z: 10 },
 
     { geo: "roomLong", x: -15, z: 7 },
-    { geo: "roomShort", x: -13.5, z: 9, ry: Math.PI / 2 },
+    { geo: "roomShorter", x: -14, z: 9, ry: Math.PI / 2 },
+    { geo: "roomShorter", x: -14, z: 7, ry: Math.PI / 2 },
 
     { geo: "roomLong", x: -13, z: 5 },
     { geo: "roomShort", x: -14.25, z: 3, ry: Math.PI / 2 },
@@ -139,6 +140,7 @@ export default function createMapCopy(scene) {
     { geo: "roomShort", x: -9.5, z: 5, ry: Math.PI / 2 },
     { geo: "roomShort", x: -9.5, z: 6.5 },
   ];
+
 
   const wallsCopy = wallSpecs.map(({ geo, x, y = 1, z, ry = 0 }) => {
     const mesh = new THREE.Mesh(wallGeometries[geo], wallMaterial);
