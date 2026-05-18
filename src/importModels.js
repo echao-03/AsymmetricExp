@@ -570,12 +570,12 @@ export default function callModels(sceneInput, grabVR, radar) {
   ];
 
   const crypicLines = [
-    ["𝙹リᒷ"],
-    ["ℸ∴𝙹"],
-    ["ℸ⍑∷"],
-    ["ᒷᒷ ⎓"],
-    ["𝙹⚍∷ ⎓"],
-    ["╎⍊ᒷ"],
+    ["1. 𝙹リᒷ"],
+    ["2. ℸ∴𝙹"],
+    ["3. ℸ⍑∷"],
+    ["4. ᒷᒷ ⎓"],
+    ["5. 𝙹⚍∷ ⎓"],
+    ["6. ╎⍊ᒷ"],
   ];
 
   const labelPaper_1 = makeLabelTexture(papers1);
@@ -708,4 +708,45 @@ export default function callModels(sceneInput, grabVR, radar) {
   sceneInput.add(master1);
   sceneInput.add(master2);
   grabVR.grabableObjects().push(paperArray[0]);
+
+  const fontLoader = new FontLoader();
+
+  const addNumberText = (value, position) => {
+    fontLoader.load("/fonts/NotoSansEthiopic.json", (font) => {
+      const geometry = new TextGeometry(value, {
+        font,
+        size: 0.9,
+        depth: 0.08,
+        curveSegments: 8,
+        bevelEnabled: false,
+      });
+
+      geometry.computeBoundingBox();
+      geometry.center();
+
+      const textMesh = new THREE.Mesh(
+        geometry,
+        new THREE.MeshStandardMaterial({ color: 0xffffff }),
+      );
+
+      textMesh.position.set(...position);
+      textMesh.rotation.x = -Math.PI / 2;
+      sceneInput.add(textMesh);
+    });
+  };
+
+  const numberPlacements = [
+    ["5", [211, 1, -1]],
+    ["4", [211, 1, 1]],
+    ["6", [213, 1, -2]],
+    ["3", [213, 1, 2]],
+    ["1", [215, 1, -1]],
+    ["2", [215, 1, 1]],
+  ];
+
+  numberPlacements.forEach(([value, position]) => {
+    addNumberText(value, position);
+  });
+
+
 }
