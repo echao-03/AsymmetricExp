@@ -28,8 +28,8 @@ export default function initCameras() {
   // mapCamera.position.set(184, 18, 0);
   // mapCamera.lookAt(184, 0, 0);
 
-  mapCamera.position.set(0, 2, 0);
-  mapCamera.lookAt(0, 0, -5);
+  mapCamera.position.set(-10, 17, 0);
+  mapCamera.lookAt(-10, 0, 0);
 
   const intersectionCamera = new THREE.PerspectiveCamera(
     75,

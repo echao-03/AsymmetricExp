@@ -33,7 +33,7 @@ export class Keypad {
     this.onCodeAccepted = onCodeAccepted;
     this.passcodes = new Map();
     this.laserState = laserState;
-    this.disableObjects = [laserState.lasers[0], laserState.lasers[1]];
+    this.disableObjects = [laserState.lasers[0], laserState.lasers[1], laserState.lasers[3]];
     this.radar = radar;
     this.multiplayer = multiplayer;
   }
@@ -57,6 +57,7 @@ export class Keypad {
 
     this.passcodes.set(this.laserState.lasers[0], "195657");
     this.passcodes.set(this.laserState.lasers[1], "105326");
+    this.passcodes.set(this.laserState.lasers[3], "025598");
   }
 
   handleKeyPress(key) {
@@ -147,7 +148,6 @@ export class Keypad {
 
       return;
     }
-
     this.display.textContent = "DENIED";
     if (this.secondaryDisplay) {
       this.secondaryDisplay.textContent = "DENIED";
