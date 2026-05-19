@@ -48,6 +48,8 @@ scene.add(rigBoxHelper);
 playerRig.add(VRCamera);
 playerRig.children[0].rotateY(20);
 scene.add(playerRig);
+playerRig.add(rigBoxHelper);
+playerRig.position.set(-20, 0.8, 8);
 
 // Righelper helps find rig position, if reset, camera resets to righelper position
 const rigHelper = new THREE.AxesHelper(1);
@@ -164,7 +166,7 @@ multiplayer.network.on("laser-state", (msg) => {
 
 
 
-const  drone = await callDrone(scene);
+const drone = await callDrone(scene);
 
 const { dronePoints, dronePrevPosition, droneForwardTarget, droneRef } = droneInit(drone);
 
@@ -189,6 +191,8 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
 dirLight.position.set(2, 4, 1);
 scene.add(dirLight);
 
+console.log(laserState);
+
 window.addEventListener("resize", () => {
   mapCamera.aspect = container.clientWidth / container.clientHeight;
   mapCamera.updateProjectionMatrix();
@@ -212,52 +216,14 @@ function renderInContainer(cam, el) {
 }
 const clock = new THREE.Clock();
 
-// Arrow key movement
-const keyState = {
-  ArrowUp: false,
-  ArrowDown: false,
-  ArrowLeft: false,
-  ArrowRight: false,
-};
-const movementSpeed = 3; // units per second
-
-window.addEventListener("keydown", (e) => {
-  if (e.key in keyState) {
-    keyState[e.key] = true;
-  }
-});
-
-window.addEventListener("keyup", (e) => {
-  if (e.key in keyState) {
-    keyState[e.key] = false;
-  }
-});
-
 // Need this const to track when movement of drone started
 const moveStartTime = performance.now();
 // playerRig Y position must be < 1 to collide with tiles
-playerRig.position.set(15, 0.8, 0);
-console.log(playerRig);
-playerRig.scale.set(0.1, 0.4, 0.2);
 
 let isColliding = false;
 renderer.setAnimationLoop(() => {
   const delta = clock.getDelta();
 
-  // Handle arrow key movement
-  const moveDistance = movementSpeed * delta;
-  if (keyState.ArrowUp) {
-    playerRig.position.z -= moveDistance;
-  }
-  if (keyState.ArrowDown) {
-    playerRig.position.z += moveDistance;
-  }
-  if (keyState.ArrowLeft) {
-    playerRig.position.x -= moveDistance;
-  }
-  if (keyState.ArrowRight) {
-    playerRig.position.x += moveDistance;
-  }
 
   movement.update(delta);
   controls.update();
@@ -292,7 +258,6 @@ renderer.setAnimationLoop(() => {
     droneRef,
   );
 
-  rigBox.setFromObject(playerRig);
 
   tileUpdate(tiles, tilesOrder, tilesPlayer, playerRig, isColliding);
   isCorrect(tilesPlayer, tilesOrder, laserState);

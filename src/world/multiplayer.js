@@ -1,5 +1,6 @@
 import NetworkClient from "../NetworkClient.js";
 import Avatar from "../Avatar.js";
+import { Laser } from "../lasers.js";
 
 export function createMultiplayer({ scene, username = "Player", playerClone }) {
     const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
@@ -43,6 +44,13 @@ export function createMultiplayer({ scene, username = "Player", playerClone }) {
             playerClone.position.z = data.hmdPosition[2];
 
         }
+    });
+
+    network.on("laser-state", (data) => {
+
+        console.log(data);
+        data.curLaser.mesh.visible = data.active;
+
     });
 
     function updatePose(camera, leftController, rightController, playerRig, playerClone) {
