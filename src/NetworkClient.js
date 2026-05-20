@@ -158,7 +158,7 @@ class NetworkClient {
 
             case 'laser-state':
                 console.log(message);
-                this.emit('laser-state', { active: !!message.active, updatedBy: message.updatedBy, curLaser: message.laser, });
+                this.emit('laser-state', { active: !!message.active, updatedBy: message.updatedBy, laserId: message.laserId, });
                 break;
 
             case 'error':

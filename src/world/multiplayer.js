@@ -2,7 +2,7 @@ import NetworkClient from "../NetworkClient.js";
 import Avatar from "../Avatar.js";
 import { Laser } from "../lasers.js";
 
-export function createMultiplayer({ scene, username = "Player", playerClone }) {
+export function createMultiplayer({ scene, username = "Player", playerClone, laserState }) {
     const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
     const network = new NetworkClient(`${wsProtocol}://${window.location.host}/ws`, username);
     const remoteAvatars = new Map();
@@ -47,9 +47,15 @@ export function createMultiplayer({ scene, username = "Player", playerClone }) {
     });
 
     network.on("laser-state", (data) => {
-
+        const laser = laserState.lasers.find(
+            laser => laser.name === data.laserId
+        );
         console.log(data);
-        data.curLaser.mesh.visible = data.active;
+
+        if (laser){
+            laser.setLasersActive(data.active);
+        }
+        
 
     });
 

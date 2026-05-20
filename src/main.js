@@ -154,6 +154,7 @@ const multiplayer = createMultiplayer({
   scene,
   username: "Player",
   playerClone,
+  laserState,
 });
 
 multiplayer.network.on("laser-state", (msg) => {
