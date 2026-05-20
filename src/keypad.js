@@ -139,9 +139,10 @@ export class Keypad {
         this.multiplayer.network &&
         this.multiplayer.network.isConnected
       ) {
+        console.log(inRange[0]);
         this.multiplayer.network.send({
           type: "laser-state",
-          laserName: inRange[0].name,
+          laserId: inRange[0].laserId,
           active: false,
         });
       }

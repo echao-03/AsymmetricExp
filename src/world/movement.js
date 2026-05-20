@@ -75,7 +75,7 @@ export function createVRMovement({
     const teleportReleaseLock = { active: false };
 
     const getBlockingBoxes = () => {
-        const dynamicLaserBoxes = laserState.lasers
+        const dynamicLaserBoxes = laserWalls
             .filter(laser => laser.mesh.visible)
             .map(laser => new THREE.Box3().setFromObject(laser.mesh));
 
@@ -220,6 +220,7 @@ export function createVRMovement({
         }
         playerRig.position.x = teleportDestination.x;
         playerRig.position.z = teleportDestination.z;
+        console.log(playerRig.position.x, playerRig.position.z);
 
 
     };

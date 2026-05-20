@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 export class Laser {
     constructor(scene, name, width, height, depth, x, y, z, active) {
-        this.name = name;
+        this.laserId = name;
         this.x = x;
         this.y = y;
         this.z = z;

@@ -134,10 +134,11 @@ function handleUserJoin(ws, message) {
         username,
         color,
     });
-
     ws.send(JSON.stringify({
         type: 'laser-state',
         active: laserActive,
+
+
     }));
 
     return clientId;
@@ -178,13 +179,14 @@ function handleLaserState(clientId, message) {
     const { active } = message;
     // validate boolean
     laserActive = !!active;
-
+    console.log(message);
     // Broadcast to everyone (including sender)
     // Note: using broadcasting since we only have two users, if more than two, then there is a problem
     clientManager.broadcastToAll({
         type: 'laser-state',
         active: laserActive,
         updatedBy: clientId,
+        laserId: message.laserId,
     });
 }
 
