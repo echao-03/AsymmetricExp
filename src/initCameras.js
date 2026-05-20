@@ -25,11 +25,11 @@ export default function initCameras() {
   );
   // mapCamera original Position: (0, 1.2, 0) *Moved position to see maze room*
   // Moved 200 units to 184
-  // mapCamera.position.set(184, 18, 0);
-  // mapCamera.lookAt(184, 0, 0);
+  mapCamera.position.set(200, 18, 0);
+  mapCamera.lookAt(200, 0, 0);
 
-  mapCamera.position.set(-10, 15, 0);
-  mapCamera.lookAt(-10, 0, 0);
+  // mapCamera.position.set(-10, 17, 0);
+  // mapCamera.lookAt(-10, 0, 0);
 
   const intersectionCamera = new THREE.PerspectiveCamera(
     75,
