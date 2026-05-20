@@ -48,10 +48,10 @@ export function createMultiplayer({ scene, username = "Player", playerClone, las
 
     network.on("laser-state", (data) => {
         const laser = laserState.lasers.find(
-            laser => laser.name === data.laserId
+            laser => laser.laserId === data.laserId
         );
         console.log(data);
-
+        console.log(laser);
         if (laser) {
             laser.setLasersActive(data.active);
         }

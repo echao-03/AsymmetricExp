@@ -49,7 +49,7 @@ playerRig.add(VRCamera);
 playerRig.children[0].rotateY(20);
 scene.add(playerRig);
 playerRig.add(rigBoxHelper);
-playerRig.position.set(-20, 0.8, 8);
+playerRig.position.set(-20, 0, 8);
 
 // Righelper helps find rig position, if reset, camera resets to righelper position
 const rigHelper = new THREE.AxesHelper(1);
