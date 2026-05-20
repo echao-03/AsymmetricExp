@@ -157,12 +157,13 @@ const multiplayer = createMultiplayer({
   laserState,
 });
 
-multiplayer.network.on("laser-state", (msg) => {
-  const laser = laserState.lasers.find((l) => l.name === msg.laserName);
-  if (laser) {
-    laser.setLasersActive(msg.active);
-  }
-});
+// multiplayer.network.on("laser-state", (msg) => {
+//   const laser = laserState.lasers.find((l) => l.name === msg.laserName);
+//   if (laser) {
+//     laser.setLasersActive(msg.active);
+//   }
+// });
+
 
 
 

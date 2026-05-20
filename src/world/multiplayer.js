@@ -52,10 +52,10 @@ export function createMultiplayer({ scene, username = "Player", playerClone, las
         );
         console.log(data);
 
-        if (laser){
+        if (laser) {
             laser.setLasersActive(data.active);
         }
-        
+
 
     });
 
