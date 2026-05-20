@@ -215,6 +215,14 @@ export function createMap(scene) {
 
   const tiles = [tile1, tile2, tile3, tile4, tile5, tile6];
 
+  const winTile = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: "" }),
+  );
+
+  scene.add(winTile);
+  winTile.position.set(0, 0, -9);
+
   return {
     floor,
     walls,
