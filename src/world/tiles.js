@@ -4,7 +4,7 @@ export default function tileUpdate(
   tiles,
   tilesOrder,
   tilesPlayer,
-  playerRig,
+  collisionBox,
   isColliding,
 ) {
   // Correct answer to the tile order
@@ -13,14 +13,13 @@ export default function tileUpdate(
   // tile should change color if correct order
 
   for (let i = 0; i < tiles.length; i++) {
-    let collisionRig = new THREE.Box3().setFromObject(playerRig);
+    let collisionRig = new THREE.Box3().setFromObject(collisionBox);
     let collisionTile = new THREE.Box3().setFromObject(tiles[i]);
     let collision = collisionRig.intersectsBox(collisionTile);
 
     if (!collision && isColliding) {
       isColliding = false;
     }
-
     if (collision) {
       if (tilesPlayer.includes(tiles[i])) {
         continue;

@@ -42,14 +42,19 @@ const vrButton = VRButton.createButton(renderer);
 document.body.appendChild(vrButton);
 
 const playerRig = new THREE.Group();
-const rigBox = new THREE.Box3().setFromObject(playerRig);
-const rigBoxHelper = new THREE.Box3Helper(rigBox, 0x00ff00); // green wireframe
-scene.add(rigBoxHelper);
+// const rigBox = new THREE.Box3().setFromObject(playerRig);
+// const rigBoxHelper = new THREE.Box3Helper(rigBox, 0x00ff00); // green wireframe
+// scene.add(rigBoxHelper);
+const collisionBox = new THREE.Mesh(
+  new THREE.BoxGeometry(0.2, 0.2, 0.2),
+  new THREE.MeshBasicMaterial({ color: "blue" }),
+);
 playerRig.add(VRCamera);
+playerRig.add(collisionBox);
 playerRig.children[0].rotateY(20);
 scene.add(playerRig);
-playerRig.add(rigBoxHelper);
-playerRig.position.set(-20, 0, 8);
+// playerRig.add(rigBoxHelper);
+playerRig.position.set(6, 0, 0);
 
 // Righelper helps find rig position, if reset, camera resets to righelper position
 const rigHelper = new THREE.AxesHelper(1);
@@ -103,6 +108,9 @@ playerRig.add(leftController);
 playerRig.add(rightController);
 playerRig.add(controllerGrip0);
 playerRig.add(controllerGrip1);
+
+
+
 
 const controller1Marker = new THREE.Mesh(
   new THREE.BoxGeometry(0.2, 0.08, 0.15),
@@ -193,8 +201,6 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
 dirLight.position.set(2, 4, 1);
 scene.add(dirLight);
 
-console.log(laserState);
-
 window.addEventListener("resize", () => {
   mapCamera.aspect = container.clientWidth / container.clientHeight;
   mapCamera.updateProjectionMatrix();
@@ -261,7 +267,7 @@ renderer.setAnimationLoop(() => {
   );
 
 
-  tileUpdate(tiles, tilesOrder, tilesPlayer, playerRig, isColliding);
+  tileUpdate(tiles, tilesOrder, tilesPlayer, collisionBox, isColliding);
   isCorrect(tilesPlayer, tilesOrder, laserState);
 
   if (renderer.xr.isPresenting) {

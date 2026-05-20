@@ -306,7 +306,6 @@ export function createVRMovement({
 
         if (teleportReleaseLock.active) {
             if (teleportTarget.visible) {
-                console.log("in main", teleportTarget.visible);
                 startTeleportFade(() => {
                     teleportTarget.visible = true; // I think when changing the target to be visible initially, it changes to false when entering startTeleportFade
                     teleportPlayer();
