@@ -55,7 +55,7 @@ export function createMultiplayer({ scene, username = "Player", playerClone, las
                 mapCamera.lookAt(184, 0, 0);
             }
             else {
-                camaeraManager.changeRoom(0);
+                cameraManager.changeRoom(0);
                 mapCamera.position.set(200, 6, 0);
                 mapCamera.lookAt(200, 0, 0);
             }
