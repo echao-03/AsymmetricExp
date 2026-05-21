@@ -47,7 +47,7 @@ const playerRig = new THREE.Group();
 // scene.add(rigBoxHelper);
 const collisionBox = new THREE.Mesh(
   new THREE.BoxGeometry(0.2, 0.2, 0.2),
-  new THREE.MeshBasicMaterial({ color: "blue" }),
+  new THREE.MeshBasicMaterial({ color: "" }),
 );
 playerRig.add(VRCamera);
 playerRig.add(collisionBox);
@@ -131,7 +131,7 @@ debug.className = "vr-debug";
 document.body.appendChild(debug);
 
 // Create map that vr user will navigate through
-const { walls, floor, laserState, tiles } = createMap(scene);
+const { walls, floor, laserState, tiles, winTile } = createMap(scene);
 
 const tilesOrder = [tiles[2], tiles[1], tiles[3], tiles[0], tiles[5], tiles[4]];
 const tilesPlayer = [];

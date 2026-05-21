@@ -572,9 +572,9 @@ export default function callModels(sceneInput, grabVR, radar) {
   const crypicLines = [
     ["1. 𝙹リᒷ"],
     ["2. ℸ∴𝙹"],
-    ["3. ℸ⍑∷"],
+    ["3. ⍑∷"],
     ["4. ᒷᒷ ⎓"],
-    ["5. 𝙹⚍∷ ⎓"],
+    ["5. ⚍∷ ⎓"],
     ["6. ╎⍊ᒷ"],
   ];
 

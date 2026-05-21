@@ -49,3 +49,14 @@ export function isCorrect(tilesPlayer, tilesOrder, laserState) {
     tilesPlayer.length = 0;
   }
 }
+
+// export function isWin(winTile) {
+//   let collisionRig = new THREE.Box3().setFromObject(collisionBox);
+//   let collisionTile = new THREE.Box3().setFromObject(winTile);
+//   let collision = collisionRig.intersectsBox(collisionTile);
+
+//   if (collision) {
+
+//   } 
+
+// }

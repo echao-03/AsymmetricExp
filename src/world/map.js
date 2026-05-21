@@ -228,5 +228,6 @@ export function createMap(scene) {
     walls,
     laserState,
     tiles,
+    winTile,
   };
 }
