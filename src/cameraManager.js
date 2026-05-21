@@ -37,6 +37,7 @@ export class CameraManager {
     }
 
     changeRoom(newRoom) {
+        this.setCameraNum(0);
         this.roomNum = newRoom;
     }
 }
