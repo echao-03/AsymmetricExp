@@ -43,19 +43,20 @@ export function createMultiplayer({ scene, username = "Player", playerClone, las
             playerClone.position.x = data.hmdPosition[0] + 200;
             playerClone.position.z = data.hmdPosition[2];
 
-            if(playerClone.position.x > 207){
+            if(playerClone.position.x > 207 && cameraManager.roomNum !== 2) {
                 cameraManager.changeRoom(2);
                 mapCamera.position.set(211, 10, 0)
                 mapCamera.lookAt(211, 0, 0)
 
+
             }
-            else if (playerClone.position.x < 193) {
+            else if (playerClone.position.x < 193 && cameraManager.roomNum !== 1) {
                 cameraManager.changeRoom(1);
                 mapCamera.position.set(184, 18, 0);
                 mapCamera.lookAt(184, 0, 0);
             }
-            else {
-                cameraManager.changeRoom(0);
+            else if (playerClone.position.x < 207 && playerClone.position.x > 193 && cameraManager.roomNum !== 0) {
+                cameraManager.changeRoom();
                 mapCamera.position.set(200, 6, 0);
                 mapCamera.lookAt(200, 0, 0);
             }
