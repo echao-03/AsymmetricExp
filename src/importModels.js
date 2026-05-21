@@ -155,6 +155,7 @@ export default function callModels(sceneInput, grabVR, radar, hackingManager) {
       model.position.set(-9, 0.6, -0.8);
       model.scale.setScalar(0.7);
       sceneInput.add(model);
+      radar.scanableObjects.push(model);
     },
     undefined,
     function (error) {
@@ -170,6 +171,7 @@ export default function callModels(sceneInput, grabVR, radar, hackingManager) {
       model.position.set(-9, 0.6, 4.3);
       model.scale.setScalar(0.7);
       sceneInput.add(model);
+      radar.scanableObjects.push(model);
     },
     undefined,
     function (error) {
@@ -184,6 +186,7 @@ export default function callModels(sceneInput, grabVR, radar, hackingManager) {
       model.position.set(-9, 0.6, 2.1);
       model.scale.setScalar(0.7);
       sceneInput.add(model);
+      radar.scanableObjects.push(model);
     },
     undefined,
     function (error) {
@@ -199,6 +202,7 @@ export default function callModels(sceneInput, grabVR, radar, hackingManager) {
       model.position.set(-13.9, 0.6, 6.25);
       model.scale.setScalar(0.7);
       sceneInput.add(model);
+      radar.scanableObjects.push(model);
     },
     undefined,
     function (error) {
@@ -214,6 +218,7 @@ export default function callModels(sceneInput, grabVR, radar, hackingManager) {
       model.position.set(-24.5, 0.6, 8);
       model.scale.setScalar(0.7);
       sceneInput.add(model);
+      radar.scanableObjects.push(model);
     },
     undefined,
     function (error) {
@@ -229,6 +234,7 @@ export default function callModels(sceneInput, grabVR, radar, hackingManager) {
       model.position.set(-28, 0.6, 8);
       model.scale.setScalar(0.7);
       sceneInput.add(model);
+      radar.scanableObjects.push(model);
     },
     undefined,
     function (error) {
@@ -260,6 +266,8 @@ export default function callModels(sceneInput, grabVR, radar, hackingManager) {
       model.position.set(-9, 0.6, -2.2);
       model.scale.setScalar(0.7);
       sceneInput.add(model);
+      radar.scanableObjects.push(model);
+
     },
     undefined,
     function (error) {
@@ -274,6 +282,7 @@ export default function callModels(sceneInput, grabVR, radar, hackingManager) {
       model.position.set(-24, 0.6, -9.2);
       model.rotateY(Math.PI / 2);
       model.scale.setScalar(0.7);
+      radar.scanableObjects.push(model);
       sceneInput.add(model);
     },
     undefined,
@@ -290,6 +299,7 @@ export default function callModels(sceneInput, grabVR, radar, hackingManager) {
       model.position.set(-18, 0.6, -8);
       model.rotateY(Math.PI / 2);
       model.scale.setScalar(0.7);
+      radar.scanableObjects.push(model);
       sceneInput.add(model);
     },
     undefined,
