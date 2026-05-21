@@ -140,7 +140,7 @@ function makeJaggedPaperGeometryFlip(width, height, teeth = 15, jagged = 0.04) {
   return geometry;
 }
 
-export default function callModels(sceneInput, grabVR, radar) {
+export default function callModels(sceneInput, grabVR, radar, hackingManager) {
   const loader = new GLTFLoader();
 
   const tableURL = new URL("./models/Table.glb", import.meta.url);

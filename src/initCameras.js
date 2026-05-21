@@ -25,11 +25,14 @@ export default function initCameras() {
   );
   // mapCamera original Position: (0, 1.2, 0) *Moved position to see maze room*
   // Moved 200 units to 184
-  // mapCamera.position.set(200, 18, 0);
-  // mapCamera.lookAt(200, 0, 0);
+  mapCamera.position.set(200, 6, 0);
+  mapCamera.lookAt(200, 0, 0);
 
-  mapCamera.position.set(-10, 17, 0);
-  mapCamera.lookAt(-10, 0, 0);
+  // mapCamera.position.set(211, 10, 0)
+  // mapCamera.lookAt(211, 0, 0)
+
+  // mapCamera.position.set(-10, 17, 0);
+  // mapCamera.lookAt(-10, 0, 0);
 
   const intersectionCamera = new THREE.PerspectiveCamera(
     75,
@@ -37,18 +40,18 @@ export default function initCameras() {
     0.1,
     100,
   );
-  intersectionCamera.position.set(-1, 2.5, -1);
-  intersectionCamera.lookAt(1, 0, 2);
+  intersectionCamera.position.set(-1, 3, 1);
+  intersectionCamera.lookAt(1, 0, 0);
 
   // Cameras for the maze room
-  const R1Camera = new THREE.PerspectiveCamera(
-    75,
-    cameraContainer.clientWidth / cameraContainer.clientHeight,
-    0.1,
-    100,
-  );
-  R1Camera.position.set(9, 2, 0);
-  R1Camera.lookAt(1, 1, 0);
+  // const R1Camera = new THREE.PerspectiveCamera(
+  //   75,
+  //   cameraContainer.clientWidth / cameraContainer.clientHeight,
+  //   0.1,
+  //   100,
+  // );
+  // R1Camera.position.set(9, 2, 0);
+  // R1Camera.lookAt(1, 1, 1);
 
   const urightQuadCamera = new THREE.PerspectiveCamera(
     75,
@@ -101,11 +104,20 @@ export default function initCameras() {
     0.1,
     100,
   );
-  R2Camera.position.set(-9, 2, 0);
-  R2Camera.lookAt(1, 1, 0);
+  R2Camera.position.set(9, 2, -3);
+  R2Camera.lookAt(9, 0, 0);
+
+  const R2Camera2 = new THREE.PerspectiveCamera(
+    75,
+    cameraContainer.clientWidth / cameraContainer.clientHeight,
+    0.1,
+    100,
+  );
+  R2Camera2.position.set(17, 2, -3);
+  R2Camera2.lookAt(9, 0, 0);
 
   const cameras = [
-    [intersectionCamera, R1Camera, R2Camera, intersectionCamera],
+    [intersectionCamera],
     [
       R1Default,
       uleftQuadCamera,
@@ -113,7 +125,7 @@ export default function initCameras() {
       brightQuadCamera,
       bleftQuadCamera,
     ],
-    [R2Camera, intersectionCamera, R1Camera, intersectionCamera],
+    [R2Camera, R2Camera2],
   ];
 
   const cameraManager = new CameraManager({

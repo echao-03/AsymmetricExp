@@ -49,7 +49,7 @@ export default function initPopups({ requiredCode = "", onCodeAccepted = null, l
     });
 
     // Init hacking manager
-    const hackingManager = new HackingManger(droneRef);
+    const hackingManager = new HackingManger(droneRef, radar);
 
     // Call init() for handbook and keypad for event listeners
     keypadObj.init();

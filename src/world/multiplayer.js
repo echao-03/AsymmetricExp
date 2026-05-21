@@ -2,7 +2,7 @@ import NetworkClient from "../NetworkClient.js";
 import Avatar from "../Avatar.js";
 import { Laser } from "../lasers.js";
 
-export function createMultiplayer({ scene, username = "Player", playerClone, laserState }) {
+export function createMultiplayer({ scene, username = "Player", playerClone, laserState, cameraManager, mapCamera }) {
     const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
     const network = new NetworkClient(`${wsProtocol}://${window.location.host}/ws`, username);
     const remoteAvatars = new Map();
@@ -43,6 +43,23 @@ export function createMultiplayer({ scene, username = "Player", playerClone, las
             playerClone.position.x = data.hmdPosition[0] + 200;
             playerClone.position.z = data.hmdPosition[2];
 
+            if(playerClone.position.x > 207){
+                cameraManager.changeRoom(2);
+                mapCamera.position.set(211, 10, 0)
+                mapCamera.lookAt(211, 0, 0)
+
+            }
+            else if (playerClone.position.x < 193) {
+                cameraManager.changeRoom(1);
+                mapCamera.position.set(184, 18, 0);
+                mapCamera.lookAt(184, 0, 0);
+            }
+            else {
+                camaeraManager.changeRoom(0);
+                mapCamera.position.set(200, 6, 0);
+                mapCamera.lookAt(200, 0, 0);
+            }
+
         }
     });
 
@@ -66,7 +83,6 @@ export function createMultiplayer({ scene, username = "Player", playerClone, las
 
         playerRig.updateMatrixWorld(true);
         network.sendPose(camera, leftController, rightController, playerClone);
-
     }
 
     function dispose() {

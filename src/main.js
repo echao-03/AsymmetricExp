@@ -109,9 +109,6 @@ playerRig.add(rightController);
 playerRig.add(controllerGrip0);
 playerRig.add(controllerGrip1);
 
-
-
-
 const controller1Marker = new THREE.Mesh(
   new THREE.BoxGeometry(0.2, 0.08, 0.15),
   new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
@@ -163,6 +160,8 @@ const multiplayer = createMultiplayer({
   username: "Player",
   playerClone,
   laserState,
+  cameraManager,
+  mapCamera,
 });
 
 // multiplayer.network.on("laser-state", (msg) => {
@@ -171,10 +170,6 @@ const multiplayer = createMultiplayer({
 //     laser.setLasersActive(msg.active);
 //   }
 // });
-
-
-
-
 
 const drone = await callDrone(scene);
 
