@@ -182,10 +182,10 @@ VRCamera.add(droneListener);
 const droneSound = new THREE.PositionalAudio(droneListener);
 const audioLoader = new THREE.AudioLoader();
 droneSound.setRefDistance(1);
-droneSound.setMaxDistance(3);
+droneSound.setMaxDistance(2);
 droneSound.setDistanceModel ("inverse");
 
-audioLoader.load("./audio/drone.wav", function(buffer) {
+audioLoader.load("./audio/SWDroid.wav", function(buffer) {
 
   droneSound.setBuffer(buffer);
   droneSound.setLoop(true);
@@ -193,6 +193,20 @@ audioLoader.load("./audio/drone.wav", function(buffer) {
 });
 
 drone.add(droneSound);
+
+// Testing positional audio on drone
+const rumbleListener = new THREE.AudioListener();
+VRCamera.add(rumbleListener);
+
+const rumbleSound = new THREE.Audio(rumbleListener);
+const audioLoader2 = new THREE.AudioLoader();
+
+audioLoader2.load("./audio/drone.wav", function(buffer) {
+
+  rumbleSound.setBuffer(buffer);
+  rumbleSound.setLoop(true);
+  rumbleSound.play();
+});
 
 
 // Initialize popups
