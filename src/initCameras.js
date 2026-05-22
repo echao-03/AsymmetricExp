@@ -25,6 +25,7 @@ export default function initCameras() {
   );
   // mapCamera original Position: (0, 1.2, 0) *Moved position to see maze room*
   // Moved 200 units to 184
+  //default 6
   mapCamera.position.set(200, 6, 0);
   mapCamera.lookAt(200, 0, 0);
 
@@ -41,7 +42,7 @@ export default function initCameras() {
     100,
   );
   intersectionCamera.position.set(-1, 3, 1);
-  intersectionCamera.lookAt(1, 0, 0);
+  intersectionCamera.lookAt(1, 0, 0.5);
 
   // Cameras for the maze room
   // const R1Camera = new THREE.PerspectiveCamera(
@@ -53,6 +54,8 @@ export default function initCameras() {
   // R1Camera.position.set(9, 2, 0);
   // R1Camera.lookAt(1, 1, 1);
 
+
+  //Green camera
   const urightQuadCamera = new THREE.PerspectiveCamera(
     75,
     cameraContainer.clientWidth / cameraContainer.clientHeight,
@@ -62,6 +65,8 @@ export default function initCameras() {
   urightQuadCamera.position.set(-10, 2, -2);
   urightQuadCamera.lookAt(-9, 0, -3.5);
 
+
+  //Cyan
   const brightQuadCamera = new THREE.PerspectiveCamera(
     75,
     cameraContainer.clientWidth / cameraContainer.clientHeight,
@@ -71,6 +76,7 @@ export default function initCameras() {
   brightQuadCamera.position.set(-10, 2, 2);
   brightQuadCamera.lookAt(-9.5, 0, 3.5);
 
+  //Blue
   const uleftQuadCamera = new THREE.PerspectiveCamera(
     75,
     cameraContainer.clientWidth / cameraContainer.clientHeight,
@@ -80,6 +86,7 @@ export default function initCameras() {
   uleftQuadCamera.position.set(-25, 2, -7.5);
   uleftQuadCamera.lookAt(-24, 0, -8.5);
 
+  //Yellow
   const bleftQuadCamera = new THREE.PerspectiveCamera(
     75,
     cameraContainer.clientWidth / cameraContainer.clientHeight,

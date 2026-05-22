@@ -11,6 +11,9 @@ export class CameraManager {
         this.prevButton?.addEventListener("click", () => this.prevCamera());
         this.resetButton?.addEventListener("click", () => this.resetCamera());
         this.nextButton?.addEventListener("click", () => this.nextCamera());
+
+        this.cameraContainer = document.getElementById("camera-quadrant");
+        this.cameraLabel = document.getElementById("camera-label");
     }
 
     setCameraNum(nextCameraNum) {
@@ -33,6 +36,49 @@ export class CameraManager {
     }
 
     getActiveCamera() {
+
+        switch (this.roomNum) {
+            case 0:
+                this.cameraContainer.style.border = "2px solid red";
+                this.cameraLabel.textContent = "Main Laser";
+                break;
+            
+            case 1:
+                switch (this.cameraNum) {
+                    case 0:
+                        this.cameraContainer.style.border = "2px solid red";
+                        this.cameraLabel.textContent = "Main Hall";
+                        break;
+                    case 1:
+                        this.cameraContainer.style.border = "2px solid blue";
+                        this.cameraLabel.textContent = "Office";
+                        break;
+                    case 2:
+                        this.cameraContainer.style.border = "2px solid green";
+                        this.cameraLabel.textContent = "Storage";
+                        break;
+                    case 3:
+                        this.cameraContainer.style.border = "2px solid cyan";
+                        this.cameraLabel.textContent = "Conference";
+                        break;
+                    case 4:
+                        this.cameraContainer.style.border = "2px solid orange";
+                        this.cameraLabel.textContent = "Storage";
+                        break;
+                }
+                break;
+            case 2:
+                switch (this.cameraNum) {
+                    case 0:
+                        this.cameraContainer.style.border = "2px solid red";
+                        this.cameraLabel.textContent = "Security Camera 1";
+                        break;
+                    case 1:
+                        this.cameraContainer.style.border = "2px solid blue";
+                        this.cameraLabel.textContent = "Security Camera 2";
+                        break;
+                }
+        }
         return this.roomCameras[this.roomNum][this.cameraNum];
     }
 

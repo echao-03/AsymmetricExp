@@ -175,6 +175,26 @@ const drone = await callDrone(scene);
 
 const { dronePoints, dronePrevPosition, droneForwardTarget, droneRef } = droneInit(drone);
 
+// Testing positional audio on drone
+const droneListener = new THREE.AudioListener();
+VRCamera.add(droneListener);
+
+const droneSound = new THREE.PositionalAudio(droneListener);
+const audioLoader = new THREE.AudioLoader();
+droneSound.setRefDistance(1);
+droneSound.setMaxDistance(3);
+droneSound.setDistanceModel ("inverse");
+
+audioLoader.load("./audio/drone.wav", function(buffer) {
+
+  droneSound.setBuffer(buffer);
+  droneSound.setLoop(true);
+  droneSound.play();
+});
+
+drone.add(droneSound);
+
+
 // Initialize popups
 initPopups({
   laserState,
