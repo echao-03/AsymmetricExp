@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Laser } from "../lasers";
 
-export function createMap(scene) {
+export function createMap(scene, listener, loader) {
   const floorGeometry = new THREE.BoxGeometry(100, 0.5, 30);
   const floorMaterial = new THREE.MeshStandardMaterial({
     color: "gray",
@@ -43,11 +43,13 @@ export function createMap(scene) {
 
   // laserBox1.position.set(-29.25, 1, -8.7);
   // laserBox1.rotateY(Math.PI / 2);
-
-  const laser1 = new Laser(scene, "Laser1", 0.2, 2, 2.8, -29.25, 1, -8.7, true);
-  const laser2 = new Laser(scene, "Laser2", 0.2, 2, 2.6, -22.2, 0.5, 9, true);
-  const laserTiles = new Laser(scene, "laserTiles", 2, 4, 2.6, 19, 0, 0, true);
-  const masterLaser = new Laser(scene, "masterLaser", 1, 4, 2.5, 0, 0, -2, true);
+  let laser1, laser2, laserTiles, masterLaser;
+  loader.load("./audio/laserSound.wav", (buffer) => {
+    laser1 = new Laser(scene, "Laser1", 0.2, 2, 2.8, -29.25, 1, -8.7, true, listener, buffer);
+    laser2 = new Laser(scene, "Laser2", 0.2, 2, 2.6, -22.2, 0.5, 9, true, listener, buffer);
+    laserTiles = new Laser(scene, "laserTiles", 2, 4, 2.6, 19, 0, 0, true, listener, buffer);
+    masterLaser = new Laser(scene, "masterLaser", 1, 4, 2.5, 0, 0, -2, true, listener, buffer);
+  });
 
   // const laserBox3 = new THREE.Mesh(
   //   new THREE.BoxGeometry(0.2, 0.2, 2.8),

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { walkSound } from "../main.js";
 
 export function createVRMovement({
     renderer,
@@ -222,7 +223,7 @@ export function createVRMovement({
         playerRig.position.z = teleportDestination.z;
         console.log(playerRig.position.x, playerRig.position.z);
 
-
+        walkSound.play();
     };
 
     const fadePlane = new THREE.Mesh(
@@ -308,7 +309,7 @@ export function createVRMovement({
             if (teleportTarget.visible) {
                 startTeleportFade(() => {
                     teleportTarget.visible = true; // I think when changing the target to be visible initially, it changes to false when entering startTeleportFade
-                    teleportPlayer();
+                    teleportPlayer(walkSound);
                 });
                 onDebug?.(`teleport committed`);
             } else {

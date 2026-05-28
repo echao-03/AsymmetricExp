@@ -127,8 +127,12 @@ const debug = document.createElement("pre");
 debug.className = "vr-debug";
 document.body.appendChild(debug);
 
+// Main audio listener and loader
+const listener = new THREE.AudioListener();
+const loader = new THREE.AudioLoader();
+
 // Create map that vr user will navigate through
-const { walls, floor, laserState, tiles, winTile } = createMap(scene);
+const { walls, floor, laserState, tiles, winTile } = createMap(scene, listener, loader);
 
 const tilesOrder = [tiles[2], tiles[1], tiles[3], tiles[0], tiles[5], tiles[4]];
 const tilesPlayer = [];
@@ -171,22 +175,20 @@ const multiplayer = createMultiplayer({
 //   }
 // });
 
+
 const drone = await callDrone(scene);
 
 const { dronePoints, dronePrevPosition, droneForwardTarget, droneRef } = droneInit(drone);
 
 // Testing positional audio on drone
-const droneListener = new THREE.AudioListener();
-VRCamera.add(droneListener);
+VRCamera.add(listener);
 
-const droneSound = new THREE.PositionalAudio(droneListener);
-const audioLoader = new THREE.AudioLoader();
+const droneSound = new THREE.PositionalAudio(listener);
 droneSound.setRefDistance(5);
 droneSound.setMaxDistance(10);
 droneSound.setDistanceModel("linear");
 
-audioLoader.load("./audio/SWDroid.wav", function (buffer) {
-
+loader.load("./audio/SWDroid.wav", function (buffer) {
   droneSound.setBuffer(buffer);
   droneSound.setLoop(true);
   droneSound.play();
@@ -194,20 +196,12 @@ audioLoader.load("./audio/SWDroid.wav", function (buffer) {
 
 drone.add(droneSound);
 
-// Testing positional audio on drone
-// const rumbleListener = new THREE.AudioListener();
-// VRCamera.add(rumbleListener);
-
-// const rumbleSound = new THREE.Audio(rumbleListener);
-// const audioLoader2 = new THREE.AudioLoader();
-
-// audioLoader2.load("./audio/drone.wav", function (buffer) {
-
-//   rumbleSound.setBuffer(buffer);
-//   rumbleSound.setLoop(true);
-//   rumbleSound.play();
-// });
-
+// Adding walking sound
+export const walkSound = new THREE.Audio(listener);
+loader.load("./audio/walkSound.wav", function (buffer) {
+  walkSound.setBuffer(buffer);
+  walkSound.setLoop(false);
+});
 
 // Initialize popups
 initPopups({
