@@ -746,12 +746,12 @@ export default function callModels(sceneInput, grabVR, radar, hackingManager) {
   };
 
   const numberPlacements = [
-    ["5", [211, 1, -1]],
-    ["4", [211, 1, 1]],
-    ["6", [213, 1, -2]],
-    ["3", [213, 1, 2]],
-    ["1", [215, 1, -1]],
-    ["2", [215, 1, 1]],
+    ["5", [215, 1, -1]],
+    ["4", [213, 1, 2]],
+    ["6", [215, 1, 1]],
+    ["3", [213, 1, -2]],
+    ["1", [211, 1, -1]],
+    ["2", [211, 1, 1]],
   ];
 
   numberPlacements.forEach(([value, position]) => {

@@ -146,6 +146,8 @@ class NetworkClient {
                 user.pose = {
                     hmdPosition: message.hmdPosition,
                     hmdRotation: message.hmdRotation,
+                    hmdYaw: message.hmdYaw,
+                    hmdForward: message.hmdForward,
                     leftControllerMatrix: message.leftControllerMatrix,
                     rightControllerMatrix: message.rightControllerMatrix,
                 };
@@ -214,8 +216,14 @@ class NetworkClient {
         const hmdPosition = [hmdWorldPos.x, hmdWorldPos.y, hmdWorldPos.z];
         const hmdRotation = [hmdWorldQuat.x, hmdWorldQuat.y, hmdWorldQuat.z, hmdWorldQuat.w];
 
+        // Compute a world-space forward vector and yaw (heading) so map/UI can display direction.
+        const hmdForwardVec = new THREE.Vector3();
+        camera.getWorldDirection(hmdForwardVec); // unit vector pointing where camera is looking
+        const hmdForward = [hmdForwardVec.x, hmdForwardVec.y, hmdForwardVec.z];
+        // Yaw based on X/Z projection (keeping it level)
+        const hmdYaw = Math.atan2(hmdForwardVec.x, hmdForwardVec.z);
 
-
+        const hmdYawDegrees = THREE.MathUtils.radToDeg(hmdYaw);
         // Controllers already sent in world space
         const leftControllerMatrix = this.matrix4ToArray(leftController.matrixWorld);
         const rightControllerMatrix = this.matrix4ToArray(rightController.matrixWorld);
@@ -224,6 +232,9 @@ class NetworkClient {
             type: "pose-update",
             hmdPosition,
             hmdRotation,
+            hmdForward,
+            hmdYaw,
+            hmdYawDegrees,
             leftControllerMatrix,
             rightControllerMatrix,
         });

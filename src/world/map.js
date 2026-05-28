@@ -1,7 +1,8 @@
 import * as THREE from "three";
+import { FontLoader, TextGeometry } from "three/examples/jsm/Addons.js";
 import { Laser } from "../lasers";
 
-export function createMap(scene) {
+export async function createMap(scene) {
   const floorGeometry = new THREE.BoxGeometry(100, 0.5, 30);
   const floorMaterial = new THREE.MeshStandardMaterial({
     color: "gray",
@@ -160,42 +161,53 @@ export function createMap(scene) {
     { geo: "roomShort", x: -9.5, z: 6.5 },
   ];
 
-  const tile1 = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: "" }),
-  );
+  let tile1, tile2, tile3, tile4, tile5, tile6;
+  const tiles = [];
+  const tilePositions = [
+    { number: "1", pos: [11, 0.2, -1] },
+    { number: "2", pos: [11, 0.2, 1] },
+    { number: "3", pos: [13, 0.2, -2] },
+    { number: "4", pos: [13, 0.2, 2] },
+    { number: "5", pos: [15, 0.2, -1] },
+    { number: "6", pos: [15, 0.2, 1] },
+  ];
 
-  const tile2 = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: "" }),
-  );
+  await new Promise((resolve) => {
+    const fontLoader = new FontLoader();
+    fontLoader.load("/fonts/NotoSansEthiopic.json", (font) => {
+      tilePositions.forEach((tileData) => {
+        const geometry = new TextGeometry(tileData.number, {
+          font,
+          size: 0.8,
+          depth: 0.2,
+          curveSegments: 8,
+          bevelEnabled: false,
+        });
+        geometry.computeBoundingBox();
+        geometry.center();
 
-  const tile3 = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: "" }),
-  );
+        const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.rotation.z = Math.PI / 2;
+        mesh.rotation.y = Math.PI;
+        mesh.rotation.x = Math.PI / 2;
 
-  const tile4 = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: "" }),
-  );
-  const tile5 = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: "" }),
-  );
-  const tile6 = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: "" }),
-  );
+        mesh.position.set(...tileData.pos);
+        scene.add(mesh);
+        tiles.push(mesh);
+      });
 
-  tile1.position.set(11, 0, -1);
-  tile2.position.set(11, 0, 1);
-  tile3.position.set(13, 0, -2);
-  tile4.position.set(13, 0, 2);
-  tile5.position.set(15, 0, -1);
-  tile6.position.set(15, 0, 1);
+      tile1 = tiles[0];
+      tile2 = tiles[1];
+      tile3 = tiles[2];
+      tile4 = tiles[3];
+      tile5 = tiles[4];
+      tile6 = tiles[5];
 
-  scene.add(tile1, tile2, tile3, tile4, tile5, tile6);
+      resolve(); // Resolve after tiles are populated
+    });
+  });
+
 
   const walls = wallSpecs.map(({ geo, x, y = 1, z, ry = 0 }) => {
     const mesh = new THREE.Mesh(wallGeometries[geo], wallMaterial);
@@ -212,7 +224,6 @@ export function createMap(scene) {
   laserState.lasers.push(laserTiles);
   // laserState.lasers.push(masterLaser);
 
-  const tiles = [tile1, tile2, tile3, tile4, tile5, tile6];
 
   const winTile = new THREE.Mesh(
     new THREE.BoxGeometry(1, 1, 1),

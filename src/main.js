@@ -54,6 +54,7 @@ playerRig.add(collisionBox);
 playerRig.children[0].rotateY(20);
 scene.add(playerRig);
 // playerRig.add(rigBoxHelper);
+playerRig.position.set(15, 0, 0);
 
 // Righelper helps find rig position, if reset, camera resets to righelper position
 const rigHelper = new THREE.AxesHelper(1);
@@ -127,9 +128,10 @@ debug.className = "vr-debug";
 document.body.appendChild(debug);
 
 // Create map that vr user will navigate through
-const { walls, floor, laserState, tiles, winTile } = createMap(scene);
+const { walls, floor, laserState, tiles, winTile } = await createMap(scene);
 
 const tilesOrder = [tiles[2], tiles[1], tiles[3], tiles[0], tiles[5], tiles[4]];
+console.log(tilesOrder);
 const tilesPlayer = [];
 
 // Create a copy of the map for the map camera
