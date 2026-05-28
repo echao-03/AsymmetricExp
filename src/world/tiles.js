@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { FontLoader, TextGeometry } from "three/examples/jsm/Addons.js";
 
 export default function tileUpdate(
   tiles,
@@ -50,13 +51,38 @@ export function isCorrect(tilesPlayer, tilesOrder, laserState) {
   }
 }
 
-// export function isWin(winTile) {
-//   let collisionRig = new THREE.Box3().setFromObject(collisionBox);
-//   let collisionTile = new THREE.Box3().setFromObject(winTile);
-//   let collision = collisionRig.intersectsBox(collisionTile);
+export function isWin(winTile, collisionBox, winColliding, scene) {
+  let collisionRig = new THREE.Box3().setFromObject(collisionBox);
+  let collisionTile = new THREE.Box3().setFromObject(winTile);
+  let collision = collisionRig.intersectsBox(collisionTile);
 
-//   if (collision) {
+  if (collision && !winColliding) {
+    console.log("in here");
+    winTile.material.color.set("green");
+    winColliding = true;
 
-//   } 
+    // optional guard: only add once
+    if (!scene.getObjectByName("winText")) {
+      const fontLoader = new FontLoader();
+      fontLoader.load("/fonts/NotoSansEthiopic.json", (font) => {
+        const geometry = new TextGeometry("You Win!", {
+          font,
+          size: 0.4,
+          depth: 0.08,
+          curveSegments: 8,
+          bevelEnabled: false,
+        });
+        geometry.computeBoundingBox();
+        geometry.center();
+        const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const textMesh = new THREE.Mesh(geometry, material);
+        textMesh.name = "winText";
+        textMesh.position.set(0, 1.3, -10.5);
+        scene.add(textMesh);
+      });
+    }
+  }
 
-// }
+  return winColliding;
+}
+

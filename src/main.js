@@ -13,7 +13,7 @@ import GrabVR from "./grabvr/src/client/grabvr.ts";
 import callModels, { callDrone } from "./importModels.js";
 import createMapCopy from "./world/mapCopy";
 import droneInit, { droneUpdate } from "./droneLogic.js";
-import tileUpdate, { isCorrect } from "./world/tiles.js";
+import tileUpdate, { isCorrect, isWin } from "./world/tiles.js";
 
 const container = document.getElementById("app");
 const cameraContainer = document.getElementById("camera-quadrant");
@@ -54,7 +54,6 @@ playerRig.add(collisionBox);
 playerRig.children[0].rotateY(20);
 scene.add(playerRig);
 // playerRig.add(rigBoxHelper);
-playerRig.position.set(6, 0, 0);
 
 // Righelper helps find rig position, if reset, camera resets to righelper position
 const rigHelper = new THREE.AxesHelper(1);
@@ -258,6 +257,7 @@ const moveStartTime = performance.now();
 // playerRig Y position must be < 1 to collide with tiles
 
 let isColliding = false;
+let winColliding = false;
 renderer.setAnimationLoop(() => {
   const delta = clock.getDelta();
 
@@ -296,8 +296,10 @@ renderer.setAnimationLoop(() => {
   );
 
 
+  // Tile logic to check for collision
   tileUpdate(tiles, tilesOrder, tilesPlayer, collisionBox, isColliding);
   isCorrect(tilesPlayer, tilesOrder, laserState);
+  winColliding = isWin(winTile, collisionBox, winColliding, scene);
 
   if (renderer.xr.isPresenting) {
     renderer.render(scene, VRCamera);

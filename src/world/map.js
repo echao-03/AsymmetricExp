@@ -47,7 +47,6 @@ export function createMap(scene) {
   const laser1 = new Laser(scene, "Laser1", 0.2, 2, 2.8, -29.25, 1, -8.7, true);
   const laser2 = new Laser(scene, "Laser2", 0.2, 2, 2.6, -22.2, 0.5, 9, true);
   const laserTiles = new Laser(scene, "laserTiles", 2, 4, 2.6, 19, 0, 0, true);
-  const masterLaser = new Laser(scene, "masterLaser", 1, 4, 2.5, 0, 0, -2, true);
 
   // const laserBox3 = new THREE.Mesh(
   //   new THREE.BoxGeometry(0.2, 0.2, 2.8),
@@ -211,7 +210,7 @@ export function createMap(scene) {
   laserState.lasers.push(laser1);
   laserState.lasers.push(laser2);
   laserState.lasers.push(laserTiles);
-  laserState.lasers.push(masterLaser);
+  // laserState.lasers.push(masterLaser);
 
   const tiles = [tile1, tile2, tile3, tile4, tile5, tile6];
 
