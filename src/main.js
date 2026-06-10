@@ -127,6 +127,10 @@ const debug = document.createElement("pre");
 debug.className = "vr-debug";
 document.body.appendChild(debug);
 
+// Main audio listener and loader
+const listener = new THREE.AudioListener();
+const loader = new THREE.AudioLoader();
+
 // Create map that vr user will navigate through
 const { walls, floor, laserState, tiles, winTile } = await createMap(scene);
 
@@ -186,14 +190,14 @@ droneSound.setRefDistance(5);
 droneSound.setMaxDistance(10);
 droneSound.setDistanceModel("linear");
 
-audioLoader.load("./audio/SWDroid.wav", function (buffer) {
+// audioLoader.load("./audio/SWDroid.wav", function (buffer) {
 
-  droneSound.setBuffer(buffer);
-  droneSound.setLoop(true);
-  droneSound.play();
-});
+//   droneSound.setBuffer(buffer);
+//   droneSound.setLoop(true);
+//   droneSound.play();
+// });
 
-drone.add(droneSound);
+// drone.add(droneSound);
 
 // Testing positional audio on drone
 // const rumbleListener = new THREE.AudioListener();
@@ -208,6 +212,12 @@ drone.add(droneSound);
 //   rumbleSound.setLoop(true);
 //   rumbleSound.play();
 // });
+
+export const walkSound = new THREE.Audio(listener);
+loader.load("./audio/walkSound.wav", function (buffer) {
+  walkSound.setBuffer(buffer);
+  walkSound.setLoop(false);
+});
 
 
 // Initialize popups
