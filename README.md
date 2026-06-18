@@ -39,15 +39,56 @@ npm run dev
 
 ## Gameplay / Controls
 ### Desktop
-The desktop user will have four different panels they can interact with. The top-left panel represents a top-down view of the VR user in the environment, which shows their current position as well. The top-right panel contains a camera feed that displays the VR user's position and their orientation, while emulating as a security camera. The bottom-left panel consists a set of utilities that the desktop user can engage with. The keypad utility allows the desktop user to input a 6-digit code that can unlock certain areas. The handbook utility contains both a dictionary of useful information that relates to each area of the environment, as well as space for the desktop user to take notes. Finally, the bottom-right panel contains the description of each utility features. 
+The desktop user will have four different panels they can interact with. The top-left panel represents a top-down view of the VR user in the environment, which shows their current position as well. The top-right panel contains a camera feed that displays the VR user's position and their orientation, while emulating as a security camera. The bottom-left panel consists a set of utilities that the desktop user can engage with. The keypad utility allows the desktop user to input a 6-digit code that can unlock certain areas. The handbook utility contains both a dictionary of useful information that relates to each area of the environment, as well as space for the desktop user to take notes. Finally, the bottom-right panel contains the description of each utility feature. 
 
 ### Headset
-To navigate around the environment, push the thumbstick up on the right controller to navigate through the environment. To grab any objects-of-interest, use the grip button and hover your 'arms' right next to it. To realign the position, press and hold the controller's 'home' button ie. For Meta Quest, the Meta button. 
+To navigate around the environment, push the thumbstick up on the right controller to navigate through the environment. To grab any objects of interest, use the grip button and hover your 'arms' right next to it. To realign the position, press and hold the controller's 'home' button ie For Meta Quest, the Meta button. 
 
 ## Project Structure
+``` bash
+├── src
+    ├── grabvr
+    ├── models
+    ├── world
+    ├── Avatar.js
+    ├── draggable.js
+    ├── Drone.js
+    ├── droneLogic.js
+    ├── HackingManager.js
+    ├── handbook.js
+    ├── importModels.js
+    ├── initCameras.js
+    ├── initPopups.js
+    ├── keypad.js
+    ├── lasers.js
+    ├── main.js
+    ├── NetworkClient.js
+    ├── radar.js
+    └── style.css
+├── audio
+├── fonts
+├── server
+├── node_modules
+├── index.html
+├── package.json
+├── package-lock.json
+├── vite.config
+├── README.md
+├── package.json
+├── .gitmodules
+└── .gitignore
 ```
 
-```
+## Future Work
+- [ ] Dedicated hosting server: Current setup between VR headset and desktop application requires both users to connect to the same network, as well as executing a local server. Hosting a dedicated server would allow a seamless and "plug-and-play" connection for both users.
+- [ ]  Thumbstick snap rotation: Rotating the VR user's viewport in increments with the thumbstick could reduce motion sickness and allow users to play within a limited physical boundary, where a full physical rotation could be uncomfortable.
+- [ ] Scaling user interface: Current interface scales with resolution, for smaller resolutions, ie Laptops, some UI elements collide with each other, making it slightly difficult to navigate through the interface.
+- [ ] Full audio implementation
+
+## Contributors
+<a href="https://github.com/echao-03/AsymmetricExp/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=echao-03/AsymmetricExp" />
+</a>
 
 
 
