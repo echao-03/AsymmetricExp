@@ -84,6 +84,7 @@ To navigate around the environment, push the thumbstick up on the right controll
 - [ ]  Thumbstick snap rotation: Rotating the VR user's viewport in increments with the thumbstick could reduce motion sickness and allow users to play within a limited physical boundary, where a full physical rotation could be uncomfortable.
 - [ ] Scaling user interface: Current interface scales with resolution, for smaller resolutions, ie Laptops, some UI elements collide with each other, making it slightly difficult to navigate through the interface.
 - [ ] Full audio implementation
+- [ ] More interactions: Current interactions in both the environment and desktop interface are the baseline for future implementations. Utilizing the full range of both locomotion and controller movements can create a multitude of cross-device interactions.
 
 ## Contributors
 <a href="https://github.com/echao-03/AsymmetricExp/graphs/contributors">
